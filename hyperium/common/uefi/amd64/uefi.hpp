@@ -1,5 +1,5 @@
 #pragma once
-#include "../../hyperiumtypes.hpp"
+#include "../../../hyperiumtypes.hpp"
 
 enum EFI_MEMORY_TYPE : uint32_t{
     EfiReservedMemoryType,

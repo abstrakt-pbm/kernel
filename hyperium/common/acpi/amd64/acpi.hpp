@@ -1,5 +1,5 @@
 #pragma once
-#include "../../hyperiumtypes.hpp"
+#include "../../../hyperiumtypes.hpp"
 
 class ACPI_SDT_Header {
     int8_t signature[4];
