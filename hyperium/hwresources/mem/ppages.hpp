@@ -79,17 +79,19 @@ class PT {
 
 class PD {
     public:
-    PT pt_array[512];
+    PT_ENTRY pt_array[512];
 };
 
 class PDPT {
     public:
-    PD pd_array[512];
+    PD_ENTRY pd_array[512];
 };
 
 class PML4 {
     public:
-    PDPT pdpt_array[512];
+    PDPT_ENTRY pdpt_array[512];
+    void link_vaddr_with_paddr( Address vaddr, Address padd );
+    Address vaddr_to_paddr(Address vaddr);
 };
 
 class alignas(8) NPT_ENTRY {
@@ -112,10 +114,11 @@ class NPT {
     NPT_ENTRY npt_array[512];
 };
 
+
 class PhysicalPageAllocator {
     private:
 
     public:
-    void allocate_pages( uint64_t order);
-
+    Address get_free_page();
+    Address allocate_pages( uint64_t order); 
 };

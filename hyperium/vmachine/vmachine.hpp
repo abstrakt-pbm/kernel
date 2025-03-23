@@ -1,7 +1,7 @@
 #pragma once
 #include "../hwresources/mem/ppages.hpp"
 #include "../hwresources/mem/ksa.hpp"
-extern KernelSpaceAllocator kernel_space_allocator;
+extern KernelObjectAllocator kernel_space_allocator;
 
 class VMachine {
     public:

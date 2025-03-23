@@ -3,18 +3,45 @@
 #include "../../../thinlibc/ds/unordered_map.hpp"
 #include "../../../thinlibc/ds/vector.hpp"
 
+
 class ObjectPool {
     public:
     size_t object_size;
-    
-    Address get_free_address();
+    uint64_t allignment;
+    Address allocate();
+    void free( void* ptr );
+    // реализовать механизм отслеживание свободных ячеек для объектов
 };
 
-class KernelSpaceAllocator {
+class ObjectChank {
+    public:
+    void* free_obj;
+    
+};
+
+class VMemSlice {
+    public:
+    Address start;
+};
+
+class VMemSliceAllocator {
+    public:
+    VMemSlice* allocated_head;
+    uint64_t entry_count;
+
+    Address allocate_slice( uint64_t lenght );
+    bool is_address_allocated( Address vaddr );
+
+};
+
+class KernelObjectAllocator { // work in hypervisor virtual memory
     private:
-    unordered_map< size_t, ObjectPool* > obj_pool;
+    unordered_map< size_t, ObjectPool* > obj_pools;
+    ObjectPool* create_obj_pool();
 
     public:
-    void* allocate_memory( size_t size );
-    void free_memory( void* ptr, size_t size );
+    KernelObjectAllocator();
+    void* allocate( size_t object_size );
+    void* calloc( size_t object_size );
+    void free( void* ptr, size_t obj_size );
 };
