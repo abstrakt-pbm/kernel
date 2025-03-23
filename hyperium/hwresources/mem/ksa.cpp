@@ -44,3 +44,13 @@ void KernelObjectAllocator::free(void* ptr, size_t obj_size) {
     ObjectPool* obj_pool = obj_pools[obj_size];
     obj_pool->free( ptr );
 };
+
+
+ObjectChank::ObjectChank( size_t entity_size ) {
+    this->entity_size = entity_size;
+    this->capacity = 0x1000 / entity_size;
+
+    for ( auto i = 0 ; i < capacity ; i++) {
+        // заполнить все ячейки
+    }
+}

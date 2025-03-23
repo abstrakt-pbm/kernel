@@ -6,8 +6,10 @@
 
 class ObjectPool {
     public:
+    ObjectChank* root_chank;
     size_t object_size;
     uint64_t allignment;
+
     Address allocate();
     void free( void* ptr );
     // реализовать механизм отслеживание свободных ячеек для объектов
@@ -15,7 +17,15 @@ class ObjectPool {
 
 class ObjectChank {
     public:
-    void* free_obj;
+    ObjectChank* next;
+    size_t entity_size;
+    uint64_t capacity;
+    void* empty_cell;
+    void* page_vaddr;
+
+    ObjectChank( size_t entity_size );
+    void* allocate();
+    void free();
     
 };
 
