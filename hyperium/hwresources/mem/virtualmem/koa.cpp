@@ -10,6 +10,17 @@ extern KernelObjectAllocator kernel_object_allocator;
 extern PML4 hyper_pml4;
 
 
+namespace KOA {
+
+struct Alloc_Impl {
+    static void* operator new(size_t size) {
+        return (void*)(1);
+    }
+
+    static void operator delete(void* ptr) noexcept {
+    }
+};
+
 
 KernelObjectAllocator::KernelObjectAllocator() { 
     
@@ -59,4 +70,4 @@ ObjectChank::ObjectChank( size_t entity_size ) {
     }
 }
 
-
+}

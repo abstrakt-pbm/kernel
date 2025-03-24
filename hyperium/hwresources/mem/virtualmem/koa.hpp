@@ -22,6 +22,7 @@ class ObjectChank {
 
 class ObjectPool {
     public:
+    ObjectPool* next_pool;
     ObjectChank* root_chank;
     size_t object_size;
     uint64_t allignment;
@@ -35,7 +36,6 @@ class ObjectPool {
 
 class KernelObjectAllocator {
     private:
-    unordered_map< size_t, ObjectPool* > obj_pools;
 
     public:
     KernelObjectAllocator();
