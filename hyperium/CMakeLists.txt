@@ -5,13 +5,13 @@ project( CORE )
 set( CMAKE_CXX_STANDARD 20 )
 
 set ( CORE_HEADERS
-    "hwresources/mem/ppages.hpp"
+    "hwresources/mem/physicalmem/ppages.hpp"
     "hyperiumtypes.hpp"
     "vmachine/vmachine.hpp"
 )
 
 set ( CORE_SRC
-    "hwresources/mem/ppages.cpp"
+    "hwresources/mem/physicalmem/ppages.cpp"
     "vmachine/vmachine.cpp"
 )
 

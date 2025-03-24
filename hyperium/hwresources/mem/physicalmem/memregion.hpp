@@ -1,6 +1,6 @@
 #pragma once
-#include "../../hyperiumtypes.hpp"
-#include "../../common/uefi/amd64/uefi.hpp"
+#include "../../../hyperiumtypes.hpp"
+#include "../../../common/uefi/amd64/uefi.hpp"
 
 enum AllocationResult {
     OK,

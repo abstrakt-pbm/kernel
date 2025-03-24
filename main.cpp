@@ -1,8 +1,8 @@
-#include "hyperium/hwresources/mem/memregion.hpp"
-#include "hyperium/hwresources/mem/ksa.hpp"
+#include "hyperium/hwresources/mem/physicalmem/memregion.hpp"
+#include "hyperium/hwresources/mem/virtualmem/koa.hpp"
 #include "hyperium/common/acpi/amd64/acpi.hpp"
 #include "hyperium/common/uefi/amd64/uefi.hpp"
-#include "hyperium/hwresources/mem/ppages.hpp"
+#include "hyperium/hwresources/mem/physicalmem/ppages.hpp"
 #include "thinlibc/string.hpp"
 
 MemRegionsManager memory_region_manager;
@@ -10,7 +10,7 @@ MemRegionsManager memory_region_manager;
 NPT nested_pages_table;
 PML4 hyper_pml4;
 
-KernelObjectAllocator kernel_space_allocator;
+KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 
 int main( int argc, char** argv ) {
