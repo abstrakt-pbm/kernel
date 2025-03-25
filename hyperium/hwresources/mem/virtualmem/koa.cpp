@@ -59,7 +59,7 @@ void KernelObjectAllocator::free(void* ptr, size_t obj_size) {
     }
 
     ObjectPool* obj_pool = obj_pools.find_pool(obj_size);
-    obj_pool->free( ptr );
+    obj_pool->free( ptr, obj_size );
     if ( obj_pool->is_empty() ) {
         delete obj_pool;
     }
@@ -68,7 +68,7 @@ void KernelObjectAllocator::free(void* ptr, size_t obj_size) {
 
 ObjectPool::ObjectPool( size_t object_size, uint64_t allignment ) {
     this->next_pool = nullptr;
-    this->root_chank = new ObjectChank( object_size );
+    this->root_chank = new ObjectChank( object_size, allignment );
     this->object_size = object_size;
     this->allignment = allignment;
 }
