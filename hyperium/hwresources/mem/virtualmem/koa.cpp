@@ -1,29 +1,36 @@
 #include "koa.hpp"
-#include "ppages.hpp"
+#include "vmemslice.hpp"
+#include "../physicalmem/ppages.hpp"
 
-extern char __bss_end; // Конце секции BSS, начиная с этого адреса куча ядра
 
-constexpr uint64_t KERNEL_HEAP_BASE_LENGHT = 0x10000;
 
 extern PhysicalPageAllocator physical_page_allocator; 
-extern KernelObjectAllocator kernel_object_allocator;
+
+extern VMSLICE::VMemSliceAllocator global_vmemslice_allocator;
+
 extern PML4 hyper_pml4;
 
 
 namespace KOA {
 
-struct Alloc_Impl {
-    static void* operator new(size_t size) {
-        return (void*)(1);
+
+void KernelObjectAllocator::init(  uint64_t base_obj_pool_size ) {
+    ObjectChank* root_object_chank = reinterpret_cast<ObjectChank*>(global_vmemslice_allocator.allocate_direct_memory( base_obj_pool_size * ( sizeof(ObjectPool) + 1 )));
+    if ( root_object_chank == nullptr ) {
+        return;
     }
 
-    static void operator delete(void* ptr) noexcept {
+    root_object_chank->entity_size = sizeof(ObjectChank);
+    root_object_chank->size = 0;
+    root_object_chank->capacity = base_obj_pool_size;
+    root_object_chank->empty_cell = root_object_chank + sizeof(ObjectChank);
+    root_object_chank->page_vaddr = root_object_chank;
+    root_object_chank->next = nullptr;
+    for ( auto i = 0 ; i < base_obj_pool_size - 1 ; i++ ) {
+        reinterpret_cast<uint8_t*>(root_object_chank->empty_cell)[i * sizeof(ObjectChank)] = reinterpret_cast<uint8_t>(root_object_chank->empty_cell) + (i + 1) * sizeof(ObjectChank);
     }
-};
 
-
-KernelObjectAllocator::KernelObjectAllocator() { 
-    
+    obj_pools.root_pool.root_chank =  root_object_chank;
 }
 
 void* KernelObjectAllocator::calloc( size_t object_size ) {
@@ -36,15 +43,14 @@ void* KernelObjectAllocator::calloc( size_t object_size ) {
 
 void* KernelObjectAllocator::allocate( size_t object_size ) {
     ObjectPool* obj_pool = nullptr;
-    if ( !obj_pools.contains(object_size) ) {
-        obj_pool = new ObjectPool( object_size );
-        obj_pools[object_size] = obj_pool;
+    if ( !obj_pools.contains( object_size ) ) {
+        obj_pool = new ObjectPool( object_size, 8 );
+        obj_pools[ object_size ] = obj_pool;
     } else {
-        obj_pool = obj_pools[object_size];
+        obj_pool = obj_pools[ object_size ];
     }
 
-    Address alloc_address = obj_pool->allocate();
-    return reinterpret_cast<void*>(alloc_address);
+    return obj_pool->allocate();
 }
 
 void KernelObjectAllocator::free(void* ptr, size_t obj_size) {
@@ -52,14 +58,50 @@ void KernelObjectAllocator::free(void* ptr, size_t obj_size) {
         return;
     }
 
-    ObjectPool* obj_pool = obj_pools[obj_size];
+    ObjectPool* obj_pool = obj_pools.find_pool(obj_size);
     obj_pool->free( ptr );
     if ( obj_pool->is_empty() ) {
         delete obj_pool;
     }
 };
 
-ObjectChank::ObjectChank( size_t entity_size ) {
+
+ObjectPool::ObjectPool( size_t object_size, uint64_t allignment ) {
+    this->next_pool = nullptr;
+    this->root_chank = new ObjectChank( object_size );
+    this->object_size = object_size;
+    this->allignment = allignment;
+}
+
+void* ObjectPool::allocate() {
+    ObjectChank* allocation_chank = root_chank;
+    while ( allocation_chank != nullptr && allocation_chank->size == allocation_chank->capacity) {
+        allocation_chank = allocation_chank->next;
+    }
+
+    if ( allocation_chank == nullptr ) {
+        return nullptr;
+    }
+    
+    return allocation_chank->allocate();
+    
+};
+
+void ObjectPool::free( void* ptr , size_t obj_size ) {
+    ObjectChank* chank_containing_ptr = root_chank;
+    while ( !(chank_containing_ptr->page_vaddr >= ptr && chank_containing_ptr->page_vaddr + 0x1000 < ptr) ) {
+        chank_containing_ptr = chank_containing_ptr->next;
+    }
+
+    if ( chank_containing_ptr == nullptr ) {
+        return;
+    }
+
+    chank_containing_ptr->free( ptr ); 
+}
+
+
+ObjectChank::ObjectChank( size_t entity_size, uint64_t allignment ) {
     this->entity_size = entity_size;
     this->capacity = 0x1000 / entity_size;
     this->size = 0;
@@ -70,4 +112,28 @@ ObjectChank::ObjectChank( size_t entity_size ) {
     }
 }
 
+void* ObjectChank::allocate() {
+    ObjectChank* current_obj_chunk = this;
+    while ( current_obj_chunk != nullptr && current_obj_chunk->size == current_obj_chunk->capacity ) {
+        current_obj_chunk = current_obj_chunk->next;
+    }
+
+    void* allocated_addr = current_obj_chunk->empty_cell;
+    if (current_obj_chunk->size + 1 == capacity ) {
+        empty_cell = nullptr;
+    } else {
+        current_obj_chunk->empty_cell = (void*)reinterpret_cast<uint64_t>(current_obj_chunk->empty_cell);
+    }
+    current_obj_chunk->size++;
+
+    return allocated_addr;
+
 }
+
+void ObjectChank::free( void* ptr ) {
+      *reinterpret_cast< uint64_t* >( ptr ) = reinterpret_cast<uint64_t>(empty_cell);
+      empty_cell = ptr;
+      size--;
+}
+
+} // koa namespace

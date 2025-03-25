@@ -10,7 +10,7 @@ MemRegionsManager memory_region_manager;
 NPT nested_pages_table;
 PML4 hyper_pml4;
 
-KernelObjectAllocator kernel_object_allocator;
+KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 
 int main( int argc, char** argv ) {
