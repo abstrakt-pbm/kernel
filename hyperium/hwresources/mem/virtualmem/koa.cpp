@@ -10,7 +10,8 @@ extern VMSLICE::VMemSliceAllocator global_vmemslice_allocator;
 
 extern PML4 hyper_pml4;
 
-
+extern char __koa_start;
+extern char __koa_end;
 namespace KOA {
 
 

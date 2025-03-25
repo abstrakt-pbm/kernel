@@ -1,7 +1,6 @@
 #pragma once
 #include "../../../hyperiumtypes.hpp"
 
-extern char __bss_end; // Конце секции BSS, начиная с этого адреса куча ядра
 
 constexpr uint64_t KERNEL_HEAP_BASE_LENGHT = 0x10000;
 
@@ -21,8 +20,10 @@ struct Alloc_Impl {
 
 class VMemSlice {
     public:
+    VMemSlice* next;
+
     Address start;
-    Address end;
+    uint64_t lenght;
     uint64_t flags;
 };
 
@@ -30,7 +31,9 @@ class VMemSliceAllocator {
     public:
 
     VMemSlice* allocated_head;
-    uint64_t entry_count;
+    VMemSlice* free_head;
+
+    void init();
 
     void* allocate_slice( uint64_t lenght );
     void* allocate_direct_memory( uint64_t lenght );
@@ -42,4 +45,4 @@ class VMemSliceAllocator {
 };
 
 
-} // VMSLICE_namespace
+} // vmslice namespace

@@ -4,6 +4,7 @@
 #include "../../../../thinlibc/ds/vector.hpp"
 
 
+
 extern KOA::KernelObjectAllocator kernel_object_allocator;
 
 namespace KOA {
