@@ -9,4 +9,5 @@ using int16_t = short int;
 using uint8_t = unsigned char;
 using int8_t = char;
 
-using size_t = unsigned long;
+using size_t = unsigned long long;
+using size_p = unsigned long long int;

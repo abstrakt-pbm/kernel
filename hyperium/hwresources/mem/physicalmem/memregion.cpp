@@ -42,16 +42,20 @@ void MemRegionsManager::init_using_emds( EfiMemoryDescriptor** emd_array, uint64
             }
             accessible_regions.append( 
                 current_emd->physical_start,
-                current_emd->number_of_pages * 0x1000
+                current_emd->number_of_pages * 0x1000,
+                0,
+                MemoryRegionState::FREE
             );
         } else if ( 
             c_emd_type == EFI_MEMORY_TYPE::EfiUnusableMemory || c_emd_type == EFI_MEMORY_TYPE::EfiBootServicesCode ||
             c_emd_type == EFI_MEMORY_TYPE::EfiBootServicesData || c_emd_type == EFI_MEMORY_TYPE::EfiACPIMemoryNVS ||
             c_emd_type == EFI_MEMORY_TYPE::EfiMemoryMappedIO ) {
+            /*
             unreachable_regions.append(
                 current_emd->physical_start,
                 current_emd->number_of_pages * 0x1000
             );
+            */
         } 
     }
 };

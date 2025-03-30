@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 
-project( CORE )
+project( hv_core )
 
 set( CMAKE_CXX_STANDARD 20 )
 
-set ( CORE_HEADERS
-    "hwresources/mem/physicalmem/ppages.hpp"
+set ( HVC_HEADERS
+    "hwresources/mem/physicalmem/ppa.hpp"
+    "hwresources/mem/virtualmem/koa.hpp"
     "hyperiumtypes.hpp"
-    "vmachine/vmachine.hpp"
 )
 
-set ( CORE_SRC
-    "hwresources/mem/physicalmem/ppages.cpp"
-    "vmachine/vmachine.cpp"
+set ( HVC_SRC
+    "hwresources/mem/physicalmem/ppa.cpp"
+    "hwresources/mem/virtualmem/koa.cpp"
 )
 
-add_library(CORE STATIC ${CORE_HEDERS} ${CORE_SRC})
+add_library( hv_core STATIC ${HVC_HEDERS} ${HVC_SRC} )

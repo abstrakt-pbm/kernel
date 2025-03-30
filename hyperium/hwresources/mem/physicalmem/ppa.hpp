@@ -90,7 +90,7 @@ class PDPT {
 class PML4 {
     public:
     PDPT_ENTRY pdpt_array[512];
-    void link_vaddr_with_paddr( Address vaddr, Address padd );
+    void link_vaddr_with_paddr( Address vaddr, Address paddr );
     Address vaddr_to_paddr(Address vaddr);
 };
 
@@ -119,6 +119,14 @@ class PhysicalPageAllocator {
     private:
 
     public:
-    Address get_free_page();
-    Address allocate_pages( uint64_t order); 
+    void init();
+
+    void* get_free_page();
+    void* allocate_pages( uint64_t order); 
+    void* allocate_in_range( Address start, Address end, uint64_t order );
+    void free_page( void* ptr );
+
 };
+
+uint64_t vaddr_to_paddr_dm( Address vaddr );
+uint64_t paddr_to_vaddr_dm( Address paddr );

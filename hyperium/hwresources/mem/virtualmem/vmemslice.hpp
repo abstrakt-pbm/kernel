@@ -6,17 +6,7 @@ constexpr uint64_t KERNEL_HEAP_BASE_LENGHT = 0x10000;
 
 namespace VMSLICE {
 
-extern VMemSliceAllocator global_vmemslice_allocator;
 
-struct Alloc_Impl {
-    static void* operator new(size_t size) {
-        return global_vmemslice_allocator.allocate_slice( size );
-    }
-
-    static void operator delete(void* ptr) noexcept {
-        global_vmemslice_allocator.free( ptr );
-    }
-};
 
 class VMemSlice {
     public:
@@ -33,6 +23,7 @@ class VMemSliceAllocator {
     VMemSlice* allocated_head;
     VMemSlice* free_head;
 
+    VMemSliceAllocator() = default;
     void init();
 
     void* allocate_slice( uint64_t lenght );
@@ -44,5 +35,17 @@ class VMemSliceAllocator {
     bool is_address_allocated( Address vaddr );
 };
 
+extern VMemSliceAllocator global_vmemslice_allocator;
+
+struct Alloc_Impl {
+    static void* operator new(size_t size) {
+        //return global_vmemslice_allocator.allocate_slice( size );
+        return (void*)(1);
+    }
+
+    static void operator delete(void* ptr) noexcept {
+        //global_vmemslice_allocator.free( ptr );
+    }
+};
 
 } // vmslice namespace

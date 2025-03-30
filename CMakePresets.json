@@ -1,0 +1,30 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "windows_gcc",
+            "displayName": "Windows | GCC",
+            "description": "Build in windows environment",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_ASM_NASM_COMPILER": "nasm",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/bin/"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "win_gcc",
+            "configurePreset": "windows_gcc"
+        }
+    ]
+}
