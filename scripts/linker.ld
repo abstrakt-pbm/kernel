@@ -1,21 +1,21 @@
-ENTRY(start_hypervisor)
+ENTRY(unleash)
 
 SECTIONS {
     . = 0x100000; /* Стартовый адрес ядра */
 
-    /* Заголовки ELF должны быть в загружаемом сегменте */
-    .head : {
-        *(.multiboot)   /* Если используете Multiboot */
+    /* ELF заголовки */
+    .head ALIGN(4K) : {
+        *(.multiboot)   /* Multiboot-заголовок */
         *(.init)        /* Код инициализации */
     } :text
 
-    /* Код ядра */
+    /* Основной код ядра */
     .text ALIGN(4K) : {
         *(.text)
         *(.text.*)
     } :text
 
-    /* Только для чтения: константы и строки */
+    /* Только для чтения (константы, строки) */
     .rodata ALIGN(4K) : {
         *(.rodata)
         *(.rodata.*)
@@ -27,7 +27,7 @@ SECTIONS {
         *(.data.*)
     } :data
 
-    /* Незаполненная память (BSS) */
+    /* Неинициализированные данные (BSS) */
     .bss ALIGN(4K) : {
         *(COMMON)
         *(.bss)
@@ -36,12 +36,12 @@ SECTIONS {
     /* Выравнивание до страницы */
     . = ALIGN(4K);
 
-    /* Символы для указания начала и конца */
+    /* Границы ядра */
     _kernel_start = 0x100000;
     _kernel_end = .;
 }
 
-/* Описание заголовков программных сегментов */
+/* Описание ELF-сегментов */
 PHDRS {
     headers PT_PHDR PHDRS FLAGS(4);  /* Только чтение */
     text    PT_LOAD FILEHDR PHDRS FLAGS(5); /* Чтение + Исполнение */
@@ -49,4 +49,3 @@ PHDRS {
     data    PT_LOAD FLAGS(6);  /* Чтение + Запись */
     bss     PT_LOAD FLAGS(6);  /* Чтение + Запись */
 }
-

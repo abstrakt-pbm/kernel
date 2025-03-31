@@ -1,3 +1,9 @@
+section .multiboot
+align 4
+    dd 0x1BADB002        ; "Magic Number" Multiboot
+    dd 0                 ; Флаги (0 = минимум требований)
+    dd -(0x1BADB002 + 0) ; Контрольная сумма
+
 section .bss
     align 4096
     pml4_table: resd 512       ; PML4 таблица (512 записей)
@@ -26,8 +32,8 @@ unleash: ; Enable 64bit mode
     call setup_gdt
     call setup_identity_mapping
     call enter_long_mode
-    bits 64
-    jmp start_hypervisor  ; 64-битный переход в гипервизор
+
+    jmp far start_hypervisor  ; 64-битный переход в гипервизор
     hlt
 
 enter_long_mode: ; Set CPU 64bit mode
