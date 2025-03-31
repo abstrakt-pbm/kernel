@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project( hyperium_amd64 )
 
 set(CMAKE_ASM_NASM_COMPILER nasm)
-set(CMAKE_ASM_NASM_FLAGS "-f elf32")
+set(CMAKE_ASM_NASM_FLAGS "-f elf64")
 enable_language( ASM_NASM )
 
 set ( ASM_FILES

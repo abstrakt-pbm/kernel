@@ -26,8 +26,8 @@ unleash: ; Enable 64bit mode
     call setup_gdt
     call setup_identity_mapping
     call enter_long_mode
-
-    jmp far start_hypervisor  ; 64-битный переход в гипервизор
+    bits 64
+    jmp start_hypervisor  ; 64-битный переход в гипервизор
     hlt
 
 enter_long_mode: ; Set CPU 64bit mode
