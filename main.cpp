@@ -9,6 +9,6 @@ PML4 hyper_pml4;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 
-extern "C" int start_hypervisor() { // Начальные настройки уже выполнены и мы уже разворачиваем гипервизор  
+extern "C" int start_hypervisor() { // Первая функция в lm  
     return 0;
 }
