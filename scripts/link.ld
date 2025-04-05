@@ -7,26 +7,27 @@ SECTIONS {
     . = KERNEL_LMA;
 
     /* Секция для заголовка Multiboot2 */
-    .multiboot2 ALIGN(4k) : {
+    .multiboot2 ALIGN(0x1000) : {
         *(.multiboot2)
     } :multiboot2
-    _multiboot2_end = .;
 
-    _init_lma = ALIGN(4K, _multiboot2_end);
+    _init_data_lma = ALIGN(0x1000);
 
 
     /* Секция инициализации */
-    .init.data ALIGN(4K) : AT(0x11000) {
+    .init.data ALIGN(0x1000) : AT(_init_data_lma) {
         *(.init.data)
         *(.init.data*)
     } :init
 
-    .init.text ALIGN(4K) : AT(0x16000) {
+    _init_text_lma = ALIGN(0x1000);
+    
+    .init.text ALIGN(0x1000) : AT(_init_text_lma) {
         *(.init.text)
         *(.init.text*)
     } :init
 
-    _init_end = .;
+    _init_end = ALIGN(0x1000);
     _text_lma = _init_end; /* Секция кода ядра начинается после .init */
 
 
@@ -34,34 +35,31 @@ SECTIONS {
     . = KERNEL_VMA; /* Виртуальный адрес ядра начинается с KERNEL_VMA */
 
     /* Секция кода ядра */
-    .text ALIGN(4K) : AT(_text_lma) {
+    .text ALIGN(0x1000) : AT(_text_lma) {
         *(.text)
         *(.text.*)
     } :text
 
-    _text_end = .;
-    _rodata_lma = _text_end - KERNEL_VMA;
+    _rodata_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
 
     /* Секция для только чтения данных */
-    .rodata ALIGN(4K) : AT(_rodata_lma) {
+    .rodata ALIGN(0x1000) : AT(_rodata_lma) {
         *(.rodata)
         *(.rodata.*)
     } :rodata
 
-    _rodata_end = .;
-    _data_lma = _rodata_end - KERNEL_VMA;
+    _data_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
 
     /* Секция данных */
-    .data ALIGN(4K) : AT(_data_lma) {
+    .data ALIGN(0x1000) : AT(_data_lma) {
         *(.data)
         *(.data.*)
     } :data
 
-    _data_end = .;
-    _bss_lma = _data_end - KERNEL_VMA;
+    _bss_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
 
     /* Секция BSS */
-    .bss ALIGN(4K) : AT(_bss_lma) {
+    .bss ALIGN(0x1000) : AT(_bss_lma) {
         *(COMMON)
         *(.bss)
     } :bss
