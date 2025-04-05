@@ -13,8 +13,7 @@ section .multiboot2
     dd 0    ; Тип (0 = конец заголовка)
     dd 8    ; Длина этого тега (8 байт)
 
-
-section .init exec
+section .init.data
     stack_space: times 4096 db 0;
     pml4_table: times 512 dq 0
     pdpt_table: times 512 dq 0
@@ -35,6 +34,7 @@ section .init exec
         dq gdt                 ; Базовый адрес GDT
 
 
+section .init.text exec
 global _init_env
 _init_env:
     bits 32

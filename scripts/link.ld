@@ -16,9 +16,14 @@ SECTIONS {
 
 
     /* Секция инициализации */
-    .init ALIGN(4K) : AT(0x11000) {
-        *(.init)
-        *(.init.*)
+    .init.data ALIGN(4K) : AT(0x11000) {
+        *(.init.data)
+        *(.init.data*)
+    } :init
+
+    .init.text ALIGN(4K) : AT(0x16000) {
+        *(.init.text)
+        *(.init.text*)
     } :init
 
     _init_end = .;
@@ -62,7 +67,7 @@ SECTIONS {
     } :bss
 
     __bss_end = .;
-    
+
     /DISCARD/ : {
         *(.comment)
     }
