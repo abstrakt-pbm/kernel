@@ -16,18 +16,14 @@ SECTIONS {
 
 
     /* Секция инициализации */
-    .init32 ALIGN(4K) : AT(0x11000) {
+    .init ALIGN(4K) : AT(0x11000) {
         *(.init)
         *(.init.*)
-    } :init32
+    } :init
 
-    _init32_end = .;
-    _text_lma = _init32_end; /* Секция кода ядра начинается после .init */
+    _init_end = .;
+    _text_lma = _init_end; /* Секция кода ядра начинается после .init */
 
-    .init64 : AT(0x16000) {
-        *(.init64)
-        *(.init64.*)
-    } :init64
 
     /* --- ПРОМЕЖУТОЧНЫЙ АДРЕС --- */
     . = KERNEL_VMA; /* Виртуальный адрес ядра начинается с KERNEL_VMA */
@@ -66,12 +62,15 @@ SECTIONS {
     } :bss
 
     __bss_end = .;
+    
+    /DISCARD/ : {
+        *(.comment)
+    }
 }
 
 PHDRS {
     multiboot2 PT_LOAD FILEHDR PHDRS FLAGS(4);   /* Загрузить заголовок Multiboot2 */
-    init32     PT_LOAD FLAGS(5);                  /* Загрузить секцию инициализации */
-    init64     PT_LOAD FLAGS(5);                  /* Загрузить секцию инициализации */
+    init       PT_LOAD FLAGS(5);                  /* Загрузить секцию инициализации */
     text       PT_LOAD FLAGS(5);                  /* Загрузить секцию кода ядра */
     rodata     PT_LOAD FLAGS(4);                  /* Загрузить только для чтения данные */
     data       PT_LOAD FLAGS(6);                  /* Загрузить данные (чтение/запись) */

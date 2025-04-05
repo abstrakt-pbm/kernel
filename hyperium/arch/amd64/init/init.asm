@@ -14,7 +14,7 @@ section .multiboot2
     dd 8    ; Длина этого тега (8 байт)
 
 
-section .init32 exec
+section .init exec
     stack_space: times 4096 db 0;
     pml4_table: times 512 dq 0
     pdpt_table: times 512 dq 0
@@ -89,7 +89,7 @@ switch_cpu_to_lm:
     mov cr3, eax
 
     call set_PG_cpu_bit
-    jmp far [jmp_descriptor]
+    jmp far [jmp_descriptor] ; Enter 64bit code
     jmp_descriptor:
         dd reload_cs            ; offset
         dw 0x08                 ; selector
