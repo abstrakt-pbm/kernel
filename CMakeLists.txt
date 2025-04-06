@@ -5,7 +5,7 @@ project( hyperium )
 set( CMAKE_CXX_STANDARD 20 )
 
 
-add_executable( hv.elf main.cpp)
+add_executable( hv.elf main.cpp main.hpp)
 
 
 add_subdirectory(hyperium)

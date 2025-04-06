@@ -1,16 +1,21 @@
-#include "hyperium/hwresources/mem/physicalmem/ppa.hpp"
-#include "hyperium/hwresources/mem/virtualmem/koa.hpp"
-
-char __koa_start;
-char __koa_end;
+#include "main.hpp"
 
 PML4 hyper_pml4;
-
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 
-extern "C" void start_hypervisor() __attribute__((section(".init.text")));
 
-extern "C" void start_hypervisor() { // Первая функция в lm
-    kernel_object_allocator.init(1000);
+void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
+    hypervisor_start_vaddr = lma_to_vma(_init_text_lma);
+    hypervisor_end_vaddr = lma_to_vma(_bss_end);
+}
+ 
+
+extern "C" void start_hypervisor() {
+    add_hypervisor_mapping_to_init_pml4();
+    physical_page_allocator.init();
+
+    
+    //методы вызывать нельзя так как они не отмапленны
+    //сначала создаём полноценную таблицу страниц
 }

@@ -39,8 +39,9 @@ SECTIONS {
         *(.text)
         *(.text.*)
     } :text
+    _text_end_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
 
-    _rodata_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _rodata_lma = _text_end_lma;
 
     /* Секция для только чтения данных */
     .rodata ALIGN(0x1000) : AT(_rodata_lma) {
@@ -48,7 +49,9 @@ SECTIONS {
         *(.rodata.*)
     } :rodata
 
-    _data_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _rodata_lma_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+
+    _data_lma = _rodata_lma_end;
 
     /* Секция данных */
     .data ALIGN(0x1000) : AT(_data_lma) {
@@ -56,7 +59,9 @@ SECTIONS {
         *(.data.*)
     } :data
 
-    _bss_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _data_lma_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+
+    _bss_lma = _data_lma_end;
 
     /* Секция BSS */
     .bss ALIGN(0x1000) : AT(_bss_lma) {
@@ -64,7 +69,7 @@ SECTIONS {
         *(.bss)
     } :bss
 
-    __bss_end = .;
+    _bss_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
 
     /DISCARD/ : {
         *(.comment)

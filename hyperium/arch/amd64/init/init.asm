@@ -14,10 +14,19 @@ section .multiboot2
     dd 8    ; Длина этого тега (8 байт)
 
 section .init.data
+    global pml4_table
+    global pdpt_table
+    global pd_table
+    
+    align 4096
     stack_space: times 4096 db 0;
+    align 4096
     pml4_table: times 512 dq 0
+    align 4096
     pdpt_table: times 512 dq 0
+    align 4096
     pd_table:   times 512 dq 0
+    align 4096
     gdt:
         dq 0x0000000000000000  ; Нулевой дескриптор
 
@@ -29,6 +38,7 @@ section .init.data
 
     gdt_end:
 
+    align 4096
     gdt_desc:
         dw gdt_end - gdt - 1   ; Размер GDT - 1
         dq gdt                 ; Базовый адрес GDT
