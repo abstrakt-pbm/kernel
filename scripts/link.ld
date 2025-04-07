@@ -39,7 +39,7 @@ SECTIONS {
         *(.text)
         *(.text.*)
     } :text
-    _text_end_lma = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _text_end_lma = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
 
     _rodata_lma = _text_end_lma;
 
@@ -49,7 +49,7 @@ SECTIONS {
         *(.rodata.*)
     } :rodata
 
-    _rodata_lma_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _rodata_lma_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
 
     _data_lma = _rodata_lma_end;
 
@@ -59,7 +59,7 @@ SECTIONS {
         *(.data.*)
     } :data
 
-    _data_lma_end = ALIGN(0x200000) - KERNEL_VMA + _init_end;
+    _data_lma_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
 
     _bss_lma = _data_lma_end;
 
@@ -69,7 +69,7 @@ SECTIONS {
         *(.bss)
     } :bss
 
-    _bss_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _bss_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
 
     /DISCARD/ : {
         *(.comment)
