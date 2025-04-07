@@ -7,7 +7,7 @@
 
 uint64_t kvma __attribute__((section(".init.data"))) = 0xffff888000000000;
 
-extern uint64_t _init_text_lma;
+extern uint64_t _text_lma;
 extern uint64_t _bss_end;
 
 extern char pml4_table; // init stage pml4
@@ -18,27 +18,27 @@ extern "C" void start_hypervisor() __attribute__((section(".init.text")));
 void add_hypervisor_mapping_to_init_pml4 () __attribute__((section(".init.text")));
 
 inline Address calc_identity_mapping_paddr( Address vaddr ) {
-    return vaddr - kvma + _init_text_lma;
+    return vaddr - kvma + reinterpret_cast<uint64_t>(&_text_lma);
 }
 
 inline Address lma_to_vma( Address lma ) {
-    return lma + kvma;
+    return lma + kvma - reinterpret_cast<uint64_t>(&_text_lma);
 }
 
 inline Address vma_to_lma( Address vma ) {
-    return kvma - vma;
+    return kvma - vma + reinterpret_cast<uint64_t>(&_text_lma);
 }
 
 inline uint64_t calc_pml4_offset( Address vaddr ) {
-    return (vaddr >> 39) & 0x1FFF;
+    return reinterpret_cast<uint64_t>((vaddr >> 39) & 0x1FF);
 }
 
 inline uint64_t calc_pdpt_offset( Address vaddr ) {
-    return (vaddr >> 30) & 0x1FF;
+    return reinterpret_cast<uint64_t>((vaddr >> 30) & 0x1FF);
 }
 
 inline uint64_t calc_pd_offset( Address vaddr ) {
-    return (vaddr >> 21) & 0x1FF;
+    return reinterpret_cast<uint64_t>((vaddr >> 21) & 0x1FF);
 }
 
 // data
@@ -50,4 +50,8 @@ Address hypervisor_end_vaddr __attribute__((section(".init.data")));
 uint64_t pml4_offset __attribute__((section(".init.data")));
 uint64_t pdpt_offset __attribute__((section(".init.data")));
 uint64_t pd_offset __attribute__((section(".init.data")));
+uint64_t need_page_map __attribute__((section(".init.data")));
 uint64_t i __attribute__((section(".init.data")));
+
+alignas(0x1000) uint64_t pdpt_for_hypervisor[512] __attribute__((section(".init.data")));
+alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.data")));

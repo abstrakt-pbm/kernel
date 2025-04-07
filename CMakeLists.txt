@@ -19,7 +19,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
   -fno-exceptions -fno-rtti \
   -fno-unwind-tables -fno-asynchronous-unwind-tables \
   -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O2 -mcmodel=large ")
+  -O0 -mcmodel=large ")
 
 
 
