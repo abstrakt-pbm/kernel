@@ -25,7 +25,7 @@ uint64_t vaddr_to_paddr_dm( Address vaddr ) {
 }
 
 uint64_t paddr_to_vaddr_dm( Address paddr ) {
-    return 0;
+    return 228;
 }
 
 void PML4::link_vaddr_with_paddr( Address vaddr, Address paddr ) {

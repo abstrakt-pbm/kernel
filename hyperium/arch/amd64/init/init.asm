@@ -17,7 +17,9 @@ section .init.data
     global pml4_table
     global pdpt_table
     global pd_table
-    
+
+    align 4096
+    stack64_space: times 40960 db 0
     align 4096
     stack_space: times 4096 db 0;
     align 4096
@@ -179,8 +181,9 @@ reload_cs:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov rsp, stack_space + 4096
+    mov rsp, stack64_space + 40960
+    and rsp, 0xFFFFFFFFFFFFFFF0
 
     mov rax, start_hypervisor
-    call rax
+    jmp rax
 

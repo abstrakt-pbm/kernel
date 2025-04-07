@@ -26,7 +26,7 @@ inline Address lma_to_vma( Address lma ) {
 }
 
 inline Address vma_to_lma( Address vma ) {
-    return kvma - vma + reinterpret_cast<uint64_t>(&_text_lma);
+    return vma - kvma + reinterpret_cast<uint64_t>(&_text_lma);
 }
 
 inline uint64_t calc_pml4_offset( Address vaddr ) {

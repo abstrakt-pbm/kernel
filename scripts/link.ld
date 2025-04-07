@@ -28,7 +28,7 @@ SECTIONS {
     } :init
 
     _init_end = ALIGN(0x1000);
-    _text_lma = _init_end; /* Секция кода ядра начинается после .init */
+    _text_lma = ALIGN(0x200000); /* Секция кода ядра начинается после .init */
 
 
     /* --- ПРОМЕЖУТОЧНЫЙ АДРЕС --- */
@@ -59,7 +59,7 @@ SECTIONS {
         *(.data.*)
     } :data
 
-    _data_lma_end = ALIGN(0x1000) - KERNEL_VMA + _init_end;
+    _data_lma_end = ALIGN(0x200000) - KERNEL_VMA + _init_end;
 
     _bss_lma = _data_lma_end;
 
