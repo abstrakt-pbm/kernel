@@ -11,6 +11,8 @@ add_executable( hv.elf main.cpp main.hpp)
 add_subdirectory(hyperium)
 add_subdirectory(thinlibcxx)
 add_subdirectory(hyperium/arch/amd64)
+add_subdirectory(loaders)
+add_subdirectory(debug)
 
 set( LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld )
 
@@ -35,4 +37,4 @@ target_link_options( hv.elf
     -m64         # Для 64-битных систем (если нужно, может быть задано через CMAKE_EXE_LINKER_FLAGS)
 )
 
-target_link_libraries( hv.elf hv_core hyperium_amd64 -static )
+target_link_libraries( hv.elf hv_core hyperium_loaders hyperium_amd64 -static )

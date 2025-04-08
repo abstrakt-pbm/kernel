@@ -3,7 +3,9 @@
 PML4 hyper_pml4;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
-
+MultibootInfo mbi;
+CPU cpu;
+SerialPort qemu_port;
 
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
@@ -27,5 +29,10 @@ void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
 extern "C" void start_hypervisor() {
     add_hypervisor_mapping_to_init_pml4();
+    qemu_port.init(0x3F8);
+    char msg[6] = { 'h', 'e', 'l', 'l', 'o', '\n' };
+    qemu_port.write_str( msg, 6);
+    mbi.init(reinterpret_cast<void*>(multiboot2_info_addr));
     physical_page_allocator.init();
+    int mmap_count = mbi.get_tag_type_entry_count(MultibootTagType::EFI_MMAP);
 }

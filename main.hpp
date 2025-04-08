@@ -1,11 +1,12 @@
 #pragma once
 #include "hyperium/hwresources/mem/physicalmem/ppa.hpp"
 #include "hyperium/hwresources/mem/virtualmem/koa.hpp"
+#include "hyperium/hwresources/cpu/amd64/cpu.hpp"
+#include "loaders/grub/multiboot.hpp"
+#include "debug/qemu/serial.cpp"
 
 // data
 
-KOA::KernelObjectAllocator* __attribute__((section(".init.data"))) allocator_test;
-uint64_t page_size __attribute__((section(".init.data")));
 Address hypervisor_start_vaddr __attribute__((section(".init.data")));
 Address hypervisor_end_vaddr __attribute__((section(".init.data")));
 uint64_t pml4_offset __attribute__((section(".init.data")));
@@ -18,12 +19,12 @@ alignas(0x1000) uint64_t pdpt_for_hypervisor[512] __attribute__((section(".init.
 alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.data")));
 
 // externs
-;
 
 uint64_t kvma __attribute__((section(".init.data"))) = 0xffff888000000000;
 
 extern uint64_t _text_lma;
 extern uint64_t _bss_end;
+extern uint32_t multiboot2_info_addr;
 
 extern char pml4_table; // init stage pml4
 extern char pdpt_table; // init stage pdpt

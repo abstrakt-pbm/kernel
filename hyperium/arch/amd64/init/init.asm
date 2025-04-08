@@ -17,6 +17,7 @@ section .init.data
     global pml4_table
     global pdpt_table
     global pd_table
+    global multiboot2_info_addr
 
     align 4096
     stack64_space: times 40960 db 0
@@ -44,12 +45,16 @@ section .init.data
     gdt_desc:
         dw gdt_end - gdt - 1   ; Размер GDT - 1
         dq gdt                 ; Базовый адрес GDT
+    multiboot2_info_addr dd 0
+    
 
 
 section .init.text exec
 global _init_env
 _init_env:
     bits 32
+    mov eax, multiboot2_info_addr
+    mov [eax], ebx
     mov esp, stack_space + 4096 ; Инициализация стека
     and esp, -16
 
