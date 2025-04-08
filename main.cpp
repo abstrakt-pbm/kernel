@@ -33,6 +33,7 @@ extern "C" void start_hypervisor() {
 
     mbi.init(reinterpret_cast<void*>(multiboot2_info_addr));
     physical_page_allocator.init();
-    mmap_count = mbi.get_tag_type_entry_count(MultibootTagType::ACPI_NEW);
-    qemu_port.write_str((char*)(&mmap_count), 1);
+    uint64_t mmap_count = mbi.get_tag_type_entry_count(MultibootTagType::MMAP);
+    qemu_port.write_char(mmap_count);
+    
 }

@@ -4,13 +4,11 @@
 extern CPU cpu;
 
 class SerialPort {
-    private:
-    void write_char( char ch );
     public:
     uint16_t com_port;
     
     void init( uint16_t com_port);
     bool is_port_ready();
     void write_str( char* msg, uint64_t char_count);
-
+    void write_char( char ch );
 };
