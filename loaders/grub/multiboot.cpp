@@ -1,4 +1,7 @@
 #include "multiboot.hpp"
+#include "../../debug/qemu/serial.hpp"
+
+extern SerialPort qemu_port;
 
 void MultibootInfo::init ( void* mbi_ptr) {
     this->multiboot_info_ptr = mbi_ptr;
@@ -51,3 +54,4 @@ void* MultibootInfo::get_particular_tag( MultibootTagType tag_type, uint32_t ind
 
     return tag_ptr;
 }
+

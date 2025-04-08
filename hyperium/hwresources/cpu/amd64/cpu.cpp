@@ -3,15 +3,15 @@
 void CPU::io_out( size_t arg_size, size_t value, uint16_t port ) {
     switch ( arg_size ) {
         case 0x8: {
-            asm volatile ("outb %0, %1" : : "a"(static_cast<int8_t>(value)), "Nd"(port));
+            asm volatile ("outb %0, %1" : : "a"(static_cast<uint8_t>(value)), "Nd"(port));
             break;
         }
         case 0x10: {
-            asm volatile ("outw %0, %1" : : "eax"(static_cast<int16_t>(value)), "Nd"(port));
+            asm volatile ("outw %0, %1" : : "a"(static_cast<uint16_t>(value)), "Nd"(port));
             break;
         }
         case 0x20: {
-            asm volatile ("outl %0, %1" : : "eax"(static_cast<int32_t>(value)), "Nd"(port));
+            asm volatile ("outl %0, %1" : : "a"(static_cast<uint32_t>(value)), "Nd"(port));
             break;
         }
     }

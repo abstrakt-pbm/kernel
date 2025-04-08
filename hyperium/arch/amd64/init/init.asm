@@ -53,8 +53,7 @@ section .init.text exec
 global _init_env
 _init_env:
     bits 32
-    mov eax, multiboot2_info_addr
-    mov [eax], ebx
+    mov dword [multiboot2_info_addr], ebx 
     mov esp, stack_space + 4096 ; Инициализация стека
     and esp, -16
 

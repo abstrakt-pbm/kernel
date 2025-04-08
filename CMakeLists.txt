@@ -16,7 +16,7 @@ add_subdirectory(debug)
 
 set( LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
+set(CMAKE_CXX_FLAGS " -ffreestanding -nostdlib -nostartfiles \
   -fno-pic -fno-pie \
   -fno-exceptions -fno-rtti \
   -fno-unwind-tables -fno-asynchronous-unwind-tables \
