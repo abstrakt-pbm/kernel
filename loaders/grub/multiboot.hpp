@@ -40,15 +40,23 @@ class alignas(8) MultibootMMAP_Entry {
     public:
     uint64_t addr;
     uint64_t len;
-    uint32_t type;
+    uint32_t mem_type;
     uint32_t zero; //always zero
+
+};
+
+class alignas(8) MultibootMMAP_Tag{
+    MultibootHeader header;
+    uint32_t entry_size;
+    uint32_t entry_version;
+    MultibootMMAP_Entry* entries;
 
 };
 
 class MultibootInfo {
     void* multiboot_info_ptr;
-    
     uint32_t total_size;
+
     public:
     void init( void* start_addr );
     uint32_t get_tag_type_entry_count( MultibootTagType tag_type);

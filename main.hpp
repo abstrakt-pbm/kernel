@@ -15,7 +15,6 @@ uint64_t pd_offset __attribute__((section(".init.data")));
 uint64_t need_page_map __attribute__((section(".init.data")));
 uint64_t i __attribute__((section(".init.data")));
 uint64_t page_count __attribute__((section(".init.data")));
-uint64_t mmap_count __attribute__((section(".init.data")));
 
 alignas(0x1000) uint64_t pdpt_for_hypervisor[512] __attribute__((section(".init.data")));
 alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.data")));

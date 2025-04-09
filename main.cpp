@@ -32,8 +32,20 @@ extern "C" void start_hypervisor() {
     qemu_port.init(0x3F8);
 
     mbi.init(reinterpret_cast<void*>(multiboot2_info_addr));
-    physical_page_allocator.init();
     uint64_t mmap_count = mbi.get_tag_type_entry_count(MultibootTagType::MMAP);
-    qemu_port.write_char(mmap_count);
+    if ( mmap_count == 0 ) {
+        return;
+    }
+
+    MultibootMMAP_Tag* mmap_tag = reinterpret_cast<MultibootMMAP_Tag*>(mbi.get_particular_tag(MultibootTagType::MMAP, 0));
+    MultibootHeader* mmap_hdr = reinterpret_cast<MultibootHeader*>(mbi.get_particular_tag(MultibootTagType::MMAP, 0));
+    if ( mmap_tag == nullptr ) {
+        char msg[] = "Failed to get MMAP";
+        qemu_port.write_str(msg, (sizeof(msg) - 1));
+        return;
+    }
+
+    physical_page_allocator.init( mmap_tag );
     
+
 }

@@ -1,7 +1,6 @@
 #include "multiboot.hpp"
 #include "../../debug/qemu/serial.hpp"
 
-extern SerialPort qemu_port;
 
 void MultibootInfo::init ( void* mbi_ptr) {
     this->multiboot_info_ptr = mbi_ptr;
@@ -43,6 +42,10 @@ void* MultibootInfo::get_particular_tag( MultibootTagType tag_type, uint32_t ind
             break;
         } else if ( current_header->type == tag_type ) {
             current_index++;
+        }
+
+        if ( current_header->size == 0 ) {
+            break;
         }
 
         if (current_header->type == MultibootTagType::END) {

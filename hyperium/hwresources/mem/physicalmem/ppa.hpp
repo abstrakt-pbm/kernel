@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../hyperiumtypes.hpp"
+#include "../../../../loaders/grub/multiboot.hpp"
 
 class alignas(8) PML4_ENTRY {
     public:
@@ -120,6 +121,7 @@ class PhysicalPageAllocator {
 
     public:
     void init();
+    void init( MultibootMMAP_Tag* mbi_mmap );
 
     void* get_free_page();
     void* allocate_pages( uint64_t order); 

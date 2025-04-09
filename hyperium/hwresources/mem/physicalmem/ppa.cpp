@@ -4,6 +4,10 @@ void PhysicalPageAllocator::init() {
 
 };
 
+void PhysicalPageAllocator::init( MultibootMMAP_Tag* mbi_mmap ) {
+
+};
+
 void* PhysicalPageAllocator::get_free_page() {
     return (void*)(1);
 }
