@@ -1,6 +1,6 @@
 ENTRY(_init_env)
 
-KERNEL_VMA = 0xFFFF888000000000;  /* Виртуальный адрес */
+KERNEL_VMA = 0xFFFF900000000000;  /* Виртуальный адрес */
 KERNEL_LMA = 0x10000;            /* Физический адрес */
 
 SECTIONS {
@@ -70,6 +70,9 @@ SECTIONS {
     } :bss
 
     _bss_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
+    
+    
+    
 
     /DISCARD/ : {
         *(.comment)

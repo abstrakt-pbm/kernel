@@ -26,6 +26,13 @@ enum MultibootTagType : uint32_t {
     LOAD_BASE_ADDR
 };
 
+enum MultibootMMAP_MEM_TYPE : uint32_t {
+    MULTIBOOT_MEMORY_AVAILABLE = 1,
+    MULTIBOOT_MEMORY_RESERVED = 2,
+    MULTIBOOT_MEMORY_ACPI_RECLAIMABLE = 3,
+    MULTIBOOT_MEMORY_NVS = 4,
+    MULTIBOOT_MEMORY_BADRAM = 5
+};
 
 
 class alignas(8) MultibootHeader {
@@ -46,10 +53,17 @@ class alignas(8) MultibootMMAP_Entry {
 };
 
 class alignas(8) MultibootMMAP_Tag{
+    public:
     MultibootHeader header;
     uint32_t entry_size;
     uint32_t entry_version;
-    MultibootMMAP_Entry* entries;
+    MultibootMMAP_Entry entries;
+
+    uint64_t get_entry_count();
+    uint64_t get_minimal_addr();
+    uint64_t get_maximum_addr();
+
+    MultibootMMAP_Entry* operator[]( size_t index );
 
 };
 

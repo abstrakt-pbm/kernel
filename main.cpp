@@ -7,6 +7,7 @@ MultibootInfo mbi;
 CPU cpu;
 SerialPort qemu_port;
 
+
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     hypervisor_start_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_text_lma));
@@ -38,14 +39,13 @@ extern "C" void start_hypervisor() {
     }
 
     MultibootMMAP_Tag* mmap_tag = reinterpret_cast<MultibootMMAP_Tag*>(mbi.get_particular_tag(MultibootTagType::MMAP, 0));
-    MultibootHeader* mmap_hdr = reinterpret_cast<MultibootHeader*>(mbi.get_particular_tag(MultibootTagType::MMAP, 0));
     if ( mmap_tag == nullptr ) {
         char msg[] = "Failed to get MMAP";
         qemu_port.write_str(msg, (sizeof(msg) - 1));
         return;
     }
-
-    physical_page_allocator.init( mmap_tag );
+    
+    physical_page_allocator.init_using_multiboot_mmap( mmap_tag );
     
 
 }

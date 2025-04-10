@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../hyperiumtypes.hpp"
 #include "../../../common/uefi/amd64/uefi.hpp"
+#include "../../../../loaders/grub/multiboot.hpp"
 
 enum AllocationResult {
     OK,
@@ -21,13 +22,11 @@ class MemoryRegion {
     uint64_t lenght;
     uint64_t flags; // < owner_id | state >
     MemoryRegion* next_reg;
+
 };
 
 class MemRegionList { // Sorted | BLK Merged 
     public:
-
-    MemRegionList() : first_element(nullptr), size(0), capacity(0) {} ; 
-
     MemoryRegion* first_element;
     
     uint64_t size;
@@ -39,16 +38,17 @@ class MemRegionList { // Sorted | BLK Merged
 
 };
 
-class MemRegionsManager {
+class BasicAllocation {
     private:
-    MemRegionList accessible_regions;
-    MemRegionList unreachable_regions;
+    MemRegionList free_space;
+    MemRegionList reserved_space;
     MemoryRegion* find_region_containing_address( Address address );
     MemoryRegion* find_free_region( uint64_t lenght );
 
     public:
 
     void init_using_emds( EfiMemoryDescriptor** emd_array, uint64_t size );
+    void init_using_grub_mmap( MultibootMMAP_Tag* multiboot_mmap_tag);
     
     Address add_accessible_memory( Address base_address, uint64_t lenght );
     void free_memory( Address base_address, uint64_t lenght );

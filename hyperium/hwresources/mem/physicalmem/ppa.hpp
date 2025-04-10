@@ -116,19 +116,41 @@ class NPT {
 };
 
 
+class alignas(1) PhysicalPage {
+    public:
+    uint64_t is_in_use : 1;
+    uint64_t is_reserved : 1;
+    uint64_t is_broken : 1;
+    uint64_t is_freeable : 1;
+    uint64_t read_access: 1;
+    uint64_t write_access: 1;
+    uint64_t execute_access: 1;
+};
+
+
 class PhysicalPageAllocator {
     private:
 
+    void handle_mmap_entry(MultibootMMAP_Entry* entry);
+    
+    uint64_t page_count;
+    PhysicalPage* page_array;
+
     public:
     void init();
-    void init( MultibootMMAP_Tag* mbi_mmap );
+    void init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mmap);
 
     void* get_free_page();
     void* allocate_pages( uint64_t order); 
     void* allocate_in_range( Address start, Address end, uint64_t order );
     void free_page( void* ptr );
 
+    uint64_t pfn_by_paddr( Address paddr );
+
 };
+
+
+
 
 uint64_t vaddr_to_paddr_dm( Address vaddr );
 uint64_t paddr_to_vaddr_dm( Address paddr );
