@@ -59,37 +59,33 @@ void* MultibootInfo::get_particular_tag( MultibootTagType tag_type, uint32_t ind
 
 
 uint64_t MultibootMMAP_Tag::get_entry_count() {
-    return this->header.size - sizeof(MultibootHeader)  / entry_size;
+    return (this->header.size - sizeof(MultibootMMAP_Tag) + sizeof(MultibootMMAP_Entry))  / entry_size;
 }
 
 uint64_t MultibootMMAP_Tag::get_minimal_addr() {
-    /*
     uint64_t entry_count = get_entry_count();
     uint64_t minimal = 0xFFFFFFFFFFFFFFFF;
     for ( auto i = 0 ; i < entry_count ; i++ ) {
-        if (entries[i].addr > minimal) {
-            minimal = entries[i].addr;
+        MultibootMMAP_Entry* current_entry = this->operator[](i);
+        if (current_entry->addr > minimal) {
+            minimal = current_entry->addr;
         }
     }
     return minimal;
-    */
-    return 0;
 }
 
 uint64_t MultibootMMAP_Tag::get_maximum_addr() {
-    /*
     uint64_t entry_count = get_entry_count();
     uint64_t maximum = 0;
     for ( auto i = 0 ; i < entry_count ; i++ ) {
-        if ((entries[i].addr + entries[i].len) > maximum) {
-            maximum = entries[i].addr + entries[i].len;
+        MultibootMMAP_Entry* current_entry = this->operator[](i);
+        if ( current_entry->mem_type == MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_AVAILABLE && (current_entry->addr + current_entry->len) > maximum) {
+            maximum = current_entry->addr + current_entry->len;
         }
     }
     return maximum;
-    */
-    return 0xFFFFFFFFFFFFFFFF;
 }
 
 MultibootMMAP_Entry* MultibootMMAP_Tag::operator[]( size_t index ) {
-    return reinterpret_cast<MultibootMMAP_Entry*>(&entries + sizeof(MultibootMMAP_Entry) * index);
+    return reinterpret_cast<MultibootMMAP_Entry*>(reinterpret_cast<uint8_t*>(&entries) + sizeof(MultibootMMAP_Entry) * index);
 }

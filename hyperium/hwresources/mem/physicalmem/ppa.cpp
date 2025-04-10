@@ -14,6 +14,10 @@ void PhysicalPageAllocator::init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mm
     page_count = ( maximum_physical_addr - minimal_physical_addr + 1 ) / MIN_PAGE_SIZE;
     page_array = reinterpret_cast<PhysicalPage*>(&_bss_end);
 
+    for ( auto i = 0 ; i < page_count * sizeof(PhysicalPage) ; i++ ) {
+        reinterpret_cast<uint8_t*>(page_array)[i] = 0; // zero memory
+    }
+
     
     uint64_t mmap_entry_count = mbi_mmap->get_entry_count();
     for ( auto i = 0 ; i < mmap_entry_count ; i++ ) {
