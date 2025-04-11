@@ -27,7 +27,7 @@ alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.da
 uint64_t kvma __attribute__((section(".init.data"))) = 0xffff900000000000;
 
 extern uint64_t _text_lma;
-extern uint64_t _bss_end;
+extern uint64_t _bss_physical_end;
 extern uint32_t multiboot2_info_addr;
 
 extern char pml4_table; // init stage pml4

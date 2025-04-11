@@ -1,9 +1,70 @@
 #include "ppa.hpp"
 
-extern char _bss_end;
+extern char _bss_virtual_end;
+extern char _bss_physical_end;
+extern char _kernel_virtual_start;
+extern char _text_lma;
+
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
 
-void PhysicalPageAllocator::init() {
+void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_ram_address ) {
+    uint64_t physical_page_count = calc_page_count_in_range( minimal_ram_address, maximum_ram_address );
+    uint64_t ppage_array_pages_count = calc_page_count_in_range(
+        reinterpret_cast<Address>(&_bss_virtual_end),
+        reinterpret_cast<Address>(&_bss_virtual_end) + physical_page_count * sizeof(PhysicalPage)
+    );
+
+    
+
+    uint64_t kernel_page_count = calc_page_count_in_range(
+        reinterpret_cast<Address>(&_kernel_virtual_start), 
+        reinterpret_cast<Address>(&_bss_virtual_end)
+    );
+
+    this->page_array = reinterpret_cast<PhysicalPage*>(&_bss_virtual_end);
+
+    for ( auto i = 0 ; i < physical_page_count; i++) { // mark all pages free
+        page_array[i].is_in_use = false;
+        page_array[i].is_reserved = false;
+        page_array[i].is_broken = false;
+    }
+
+    uint64_t kernel_start_pfn = paddr_to_pfn(
+        kernel_vaddr_to_paddr(
+            reinterpret_cast<Address>(&_kernel_virtual_start)
+        )
+    );
+
+    uint64_t kernel_end_pfn = paddr_to_pfn(reinterpret_cast<Address>(&_bss_physical_end));
+
+    for ( auto i = kernel_start_pfn ; i < kernel_end_pfn ; i++ ) { // sequre kernel from rewriting
+        page_array[i].is_in_use = true;
+        page_array[i].is_reserved = false;
+        page_array[i].is_broken = false;
+    }
+
+    uint64_t page_array_start_pfn = paddr_to_pfn(
+        kernel_vaddr_to_paddr(
+            reinterpret_cast<Address>(page_array)
+        )
+    );
+
+    uint64_t page_array_end_pfn = paddr_to_pfn(
+        kernel_vaddr_to_paddr(
+            reinterpret_cast<Address>(page_array) + physical_page_count * sizeof(PhysicalPage)
+        )
+    );
+
+    for ( auto i = page_array_start_pfn; i < page_array_end_pfn ; i++ ) { //sequre page_array
+        page_array[i].is_in_use = true;
+        page_array[i].is_reserved = false;
+        page_array[i].is_broken = false;
+    }
+
+
+
+
+
 
 };
 
@@ -12,74 +73,58 @@ void PhysicalPageAllocator::init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mm
     uint64_t maximum_physical_addr = mbi_mmap->get_maximum_addr(); 
 
     page_count = ( maximum_physical_addr - minimal_physical_addr + 1 ) / MIN_PAGE_SIZE;
-    page_array = reinterpret_cast<PhysicalPage*>(&_bss_end);
+    page_array = reinterpret_cast<PhysicalPage*>(&_bss_physical_end);
 
-    for ( auto i = 0 ; i < page_count * sizeof(PhysicalPage) ; i++ ) {
-        reinterpret_cast<uint8_t*>(page_array)[i] = 0; // zero memory
+    uint64_t page_array_pages = (sizeof(PhysicalPage) * page_count) / MIN_PAGE_SIZE;
+
+    for ( auto i = 0 ; i < page_array_pages ; i++ ) {
+        uint64_t pfn = paddr_to_pfn(reinterpret_cast<Address>(&_bss_physical_end) + i * MIN_PAGE_SIZE);
+        page_array[pfn].is_in_use = true;
     }
-
     
     uint64_t mmap_entry_count = mbi_mmap->get_entry_count();
     for ( auto i = 0 ; i < mmap_entry_count ; i++ ) {
         MultibootMMAP_Entry* current_mmap_entry = mbi_mmap->operator[](i);
         handle_mmap_entry(current_mmap_entry);
     }
+    
 
 };
 
 void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
     uint64_t page_count_in_entry = (mmap_entry->addr + mmap_entry->len - 1) / MIN_PAGE_SIZE;
     for ( auto i = 0 ; i < page_count_in_entry ; i++ ) {
-        PhysicalPage page = page_array[pfn_by_paddr(mmap_entry->addr + i * MIN_PAGE_SIZE)];
+        uint64_t pfn = paddr_to_pfn(mmap_entry->addr + i * MIN_PAGE_SIZE);
+        PhysicalPage page = page_array[pfn];
         switch ( mmap_entry->mem_type ) {
             case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_AVAILABLE: {
                 page.is_in_use = false;
                 page.is_reserved = false;
                 page.is_broken = false;
-                page.is_freeable = true;
-                page.read_access = false;
-                page.write_access = false;
-                page.execute_access = false;
                 break;
             }
             case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_BADRAM: {
                 page.is_in_use = false;
                 page.is_reserved = false;
                 page.is_broken = true;
-                page.is_freeable = true;
-                page.read_access = false;
-                page.write_access = false;
-                page.execute_access = false;
                 break;
             }
             case MultibootMMAP_MEM_TYPE ::MULTIBOOT_MEMORY_ACPI_RECLAIMABLE: {
                 page.is_in_use = false;
                 page.is_reserved = true;
                 page.is_broken = false;
-                page.is_freeable = true;
-                page.read_access = false;
-                page.write_access = false;
-                page.execute_access = false;
                 break;
             }
             case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_NVS: {
                 page.is_in_use = true;
                 page.is_reserved = true;
                 page.is_broken = false;
-                page.is_freeable = true;
-                page.read_access = false;
-                page.write_access = false;
-                page.execute_access = false;
                 break;
             }
             case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_RESERVED: {
                 page.is_in_use = false;
                 page.is_reserved = true;
                 page.is_broken = false;
-                page.is_freeable = true;
-                page.read_access = false;
-                page.write_access = false;
-                page.execute_access = false;
                 break;
             }
         }
@@ -87,7 +132,16 @@ void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
 }
 
 void* PhysicalPageAllocator::get_free_page() {
-    return (void*)(1);
+    Address allocated_paddr = 0;
+    for ( auto i = 0 ; i < page_count ; i++ ) {
+        PhysicalPage current_ppage = page_array[i];
+        if (page_array[i].is_in_use == false && page_array[i].is_reserved == false) {
+            allocated_paddr = pfn_to_paddr(i);
+            current_ppage.is_in_use = true;
+            break;
+        }
+    }
+    return reinterpret_cast<void*>(allocated_paddr);
 }
 
 void* PhysicalPageAllocator::allocate_pages( uint64_t order ) {
@@ -102,19 +156,27 @@ void PhysicalPageAllocator::free_page( void* ptr ) {
 
 }
 
-uint64_t vaddr_to_paddr_dm( Address vaddr ) {
-    return 0;
+uint64_t kernel_vaddr_to_paddr( Address vaddr ) {
+    return vaddr - reinterpret_cast<Address>(&_kernel_virtual_start) + reinterpret_cast<Address>(&_text_lma);
 }
 
-uint64_t paddr_to_vaddr_dm( Address paddr ) {
-    return 0;
+uint64_t kernel_paddr_to_vaddr( Address paddr ) {
+    return paddr + reinterpret_cast<Address>(&_kernel_virtual_start) - reinterpret_cast<Address>(&_text_lma);
 }
 
 void PML4::link_vaddr_with_paddr( Address vaddr, Address paddr ) {
     
 }
 
+uint64_t PhysicalPageAllocator::calc_page_count_in_range( Address left_address, Address right_address ) {
+    return (right_address - left_address + 1) / MIN_PAGE_SIZE;
+}
 
-uint64_t PhysicalPageAllocator::pfn_by_paddr( Address paddr ) {
+
+inline uint64_t PhysicalPageAllocator::paddr_to_pfn( Address paddr ) {
     return (paddr / MIN_PAGE_SIZE);
+}
+
+inline Address PhysicalPageAllocator::pfn_to_paddr( uint64_t pfn ) {
+    return pfn * MIN_PAGE_SIZE;
 }

@@ -30,9 +30,10 @@ SECTIONS {
     _init_end = ALIGN(0x1000);
     _text_lma = ALIGN(0x200000); /* Секция кода ядра начинается после .init */
 
-
+    
     /* --- ПРОМЕЖУТОЧНЫЙ АДРЕС --- */
     . = KERNEL_VMA; /* Виртуальный адрес ядра начинается с KERNEL_VMA */
+    _kernel_virtual_start = .;
 
     /* Секция кода ядра */
     .text ALIGN(0x1000) : AT(_text_lma) {
@@ -68,8 +69,8 @@ SECTIONS {
         *(COMMON)
         *(.bss)
     } :bss
-
-    _bss_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
+    _bss_virtual_end = .;
+    _bss_physical_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma; /* Физическое расположение bss */
     
     
     

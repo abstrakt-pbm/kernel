@@ -21,8 +21,8 @@ void Alloc_Impl::operator delete(void* ptr, size_t size ) noexcept {
 
 void KernelObjectAllocator::init( uint64_t base_obj_pool_size ) {
     void* paddr = physical_page_allocator.allocate_in_range(
-        vaddr_to_paddr_dm(__koa_start),
-        vaddr_to_paddr_dm(__koa_end),
+        kernel_vaddr_to_paddr(__koa_start),
+        kernel_vaddr_to_paddr(__koa_end),
         0
     );
 
@@ -30,7 +30,7 @@ void KernelObjectAllocator::init( uint64_t base_obj_pool_size ) {
         //panic(); // Паника из за невозможности инициализировать KOA 
     }
 
-    ObjectChank* object_pool_p_chank = reinterpret_cast<ObjectChank*>( paddr_to_vaddr_dm(reinterpret_cast<Address>(paddr)));
+    ObjectChank* object_pool_p_chank = reinterpret_cast<ObjectChank*>( kernel_paddr_to_vaddr(reinterpret_cast<Address>(paddr)));
     object_pool_p_chank->next = nullptr;
     object_pool_p_chank->entity_size = sizeof(ObjectPool);
     object_pool_p_chank->allignment = 8;
@@ -42,7 +42,7 @@ void KernelObjectAllocator::init( uint64_t base_obj_pool_size ) {
         *reinterpret_cast<uint64_t*>( (uint64_t)(object_pool_p_chank->empty_cell) + i*sizeof(ObjectChank) ) = reinterpret_cast<uint64_t>(object_pool_p_chank->empty_cell) + (i + 1)*sizeof(ObjectChank);
     }
     obj_pools.object_poolp.root_chank = object_pool_p_chank;
-    hyper_pml4.link_vaddr_with_paddr( paddr_to_vaddr_dm(*reinterpret_cast<Address*>(paddr)), reinterpret_cast<Address>(paddr) );
+    hyper_pml4.link_vaddr_with_paddr( kernel_paddr_to_vaddr(*reinterpret_cast<Address*>(paddr)), reinterpret_cast<Address>(paddr) );
 }
 
 void* KernelObjectAllocator::calloc( size_t object_size ) {

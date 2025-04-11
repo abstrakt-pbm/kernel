@@ -11,7 +11,7 @@ SerialPort qemu_port;
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     hypervisor_start_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_text_lma));
-    hypervisor_end_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_bss_end));
+    hypervisor_end_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_bss_physical_end));
 
     need_page_map = calc_page_count(hypervisor_start_vaddr, hypervisor_end_vaddr, 0x200000);
 
@@ -27,6 +27,7 @@ void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
     reinterpret_cast<uint64_t*>(&pml4_table)[pml4_offset] = (reinterpret_cast<uint64_t>(&pdpt_for_hypervisor) & 0x000FFFFFFFFFF000) | 0x23;
 }
  
+
 
 extern "C" void start_hypervisor() {
     add_hypervisor_mapping_to_init_pml4();
@@ -45,7 +46,14 @@ extern "C" void start_hypervisor() {
         return;
     }
     
-    physical_page_allocator.init_using_multiboot_mmap( mmap_tag );
+    physical_page_allocator.init(
+        mmap_tag->get_minimal_addr(),
+        mmap_tag->get_maximum_addr()
+    );
+
+    Address test_allocated_page_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
+
+
     
 
 }
