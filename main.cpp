@@ -52,6 +52,7 @@ extern "C" void start_hypervisor() {
     );
 
     Address test_allocated_page_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
+    physical_page_allocator.free_page((void*)test_allocated_page_addr);
 
 
     

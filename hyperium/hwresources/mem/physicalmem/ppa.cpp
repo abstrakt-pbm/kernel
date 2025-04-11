@@ -8,7 +8,7 @@ extern char _text_lma;
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
 
 void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_ram_address ) {
-    uint64_t physical_page_count = calc_page_count_in_range( minimal_ram_address, maximum_ram_address );
+    physical_page_count = calc_page_count_in_range( minimal_ram_address, maximum_ram_address );
     uint64_t ppage_array_pages_count = calc_page_count_in_range(
         reinterpret_cast<Address>(&_bss_virtual_end),
         reinterpret_cast<Address>(&_bss_virtual_end) + physical_page_count * sizeof(PhysicalPage)
@@ -69,25 +69,6 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
 };
 
 void PhysicalPageAllocator::init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mmap ) {
-    uint64_t minimal_physical_addr = 0; 
-    uint64_t maximum_physical_addr = mbi_mmap->get_maximum_addr(); 
-
-    page_count = ( maximum_physical_addr - minimal_physical_addr + 1 ) / MIN_PAGE_SIZE;
-    page_array = reinterpret_cast<PhysicalPage*>(&_bss_physical_end);
-
-    uint64_t page_array_pages = (sizeof(PhysicalPage) * page_count) / MIN_PAGE_SIZE;
-
-    for ( auto i = 0 ; i < page_array_pages ; i++ ) {
-        uint64_t pfn = paddr_to_pfn(reinterpret_cast<Address>(&_bss_physical_end) + i * MIN_PAGE_SIZE);
-        page_array[pfn].is_in_use = true;
-    }
-    
-    uint64_t mmap_entry_count = mbi_mmap->get_entry_count();
-    for ( auto i = 0 ; i < mmap_entry_count ; i++ ) {
-        MultibootMMAP_Entry* current_mmap_entry = mbi_mmap->operator[](i);
-        handle_mmap_entry(current_mmap_entry);
-    }
-    
 
 };
 
@@ -133,9 +114,9 @@ void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
 
 void* PhysicalPageAllocator::get_free_page() {
     Address allocated_paddr = 0;
-    for ( auto i = 0 ; i < page_count ; i++ ) {
-        PhysicalPage current_ppage = page_array[i];
-        if (page_array[i].is_in_use == false && page_array[i].is_reserved == false) {
+    for ( auto i = 0 ; i < physical_page_count ; i++ ) {
+        PhysicalPage& current_ppage = page_array[i];
+        if (current_ppage.is_in_use == false && current_ppage.is_reserved == false) {
             allocated_paddr = pfn_to_paddr(i);
             current_ppage.is_in_use = true;
             break;
@@ -153,7 +134,12 @@ void* PhysicalPageAllocator::allocate_in_range( Address start, Address end, uint
 }
 
 void PhysicalPageAllocator::free_page( void* ptr ) {
-
+    uint64_t page_pfn = paddr_to_pfn(reinterpret_cast<Address>(ptr));
+    if ( page_pfn <= physical_page_count ) {
+        page_array[page_pfn].is_in_use = false;
+        page_array[page_pfn].is_reserved = false;
+        page_array[page_pfn].is_broken = false;
+    }
 }
 
 uint64_t kernel_vaddr_to_paddr( Address vaddr ) {
