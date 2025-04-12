@@ -134,7 +134,6 @@ class PhysicalPageAllocator {
 
     public:
     void init( Address minimal_ram_address, Address maximum_ram_address );
-    void init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mmap);
 
     void* get_free_page();
     void* allocate_pages( uint64_t order); 
@@ -144,6 +143,8 @@ class PhysicalPageAllocator {
     uint64_t paddr_to_pfn( Address paddr );
     Address pfn_to_paddr( uint64_t pfn );
     uint64_t calc_page_count_in_range( Address left_address, Address right_address);
+    void update_page_state( uint64_t pfn, bool is_in_use, bool is_reserved, bool is_broken );
+    bool check_is_page_in_use( uint64_t pfn );
 
 };
 

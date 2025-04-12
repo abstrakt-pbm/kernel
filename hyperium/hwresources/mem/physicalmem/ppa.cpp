@@ -37,7 +37,7 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
 
     uint64_t kernel_end_pfn = paddr_to_pfn(reinterpret_cast<Address>(&_bss_physical_end));
 
-    for ( auto i = kernel_start_pfn ; i < kernel_end_pfn ; i++ ) { // sequre kernel from rewriting
+    for ( auto i = kernel_start_pfn ; i < kernel_end_pfn ; i++ ) { // secure kernel from rewriting
         page_array[i].is_in_use = true;
         page_array[i].is_reserved = false;
         page_array[i].is_broken = false;
@@ -55,7 +55,7 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
         )
     );
 
-    for ( auto i = page_array_start_pfn; i < page_array_end_pfn ; i++ ) { //sequre page_array
+    for ( auto i = page_array_start_pfn; i < page_array_end_pfn ; i++ ) { //secure page_array
         page_array[i].is_in_use = true;
         page_array[i].is_reserved = false;
         page_array[i].is_broken = false;
@@ -68,9 +68,7 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
 
 };
 
-void PhysicalPageAllocator::init_using_multiboot_mmap( MultibootMMAP_Tag* mbi_mmap ) {
 
-};
 
 void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
     uint64_t page_count_in_entry = (mmap_entry->addr + mmap_entry->len - 1) / MIN_PAGE_SIZE;
@@ -110,6 +108,13 @@ void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
             }
         }
     } 
+}
+
+void PhysicalPageAllocator::update_page_state( uint64_t pfn, bool is_in_use, bool is_reserved, bool is_broken ) {
+    PhysicalPage& page = page_array[pfn];
+    page.is_in_use = is_in_use;
+    page.is_reserved = is_reserved;
+    page.is_broken = is_broken;
 }
 
 void* PhysicalPageAllocator::get_free_page() {
@@ -155,7 +160,13 @@ void PML4::link_vaddr_with_paddr( Address vaddr, Address paddr ) {
 }
 
 uint64_t PhysicalPageAllocator::calc_page_count_in_range( Address left_address, Address right_address ) {
-    return (right_address - left_address + 1) / MIN_PAGE_SIZE;
+    Address alligned_left = left_address & ~(MIN_PAGE_SIZE - 1);
+    uint64_t page_count = (right_address - alligned_left + 1) / MIN_PAGE_SIZE;
+    if ((right_address - left_address + 1) % MIN_PAGE_SIZE) {
+        page_count++;
+    }
+
+    return page_count; 
 }
 
 
@@ -164,5 +175,11 @@ inline uint64_t PhysicalPageAllocator::paddr_to_pfn( Address paddr ) {
 }
 
 inline Address PhysicalPageAllocator::pfn_to_paddr( uint64_t pfn ) {
+
     return pfn * MIN_PAGE_SIZE;
+}
+
+
+bool PhysicalPageAllocator::check_is_page_in_use( uint64_t pfn ) {
+    return page_array[pfn].is_in_use;
 }

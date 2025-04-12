@@ -26,7 +26,62 @@ void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     reinterpret_cast<uint64_t*>(&pml4_table)[pml4_offset] = (reinterpret_cast<uint64_t>(&pdpt_for_hypervisor) & 0x000FFFFFFFFFF000) | 0x23;
 }
- 
+
+void handle_multiboot_mmap_entry( MultibootMMAP_Entry* entry ) {
+    uint64_t ppages_in_entry = physical_page_allocator.calc_page_count_in_range( 
+        entry->addr,
+        entry->addr + entry->len
+     );
+
+     for ( auto i = 0 ; i < ppages_in_entry ; i++ ) {
+        uint64_t page_pfn = physical_page_allocator.paddr_to_pfn( entry->addr + i * 0x1000 );
+        switch ( entry->mem_type ) {
+            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_AVAILABLE: {
+                if ( !physical_page_allocator.check_is_page_in_use(page_pfn)) {
+                    physical_page_allocator.update_page_state( page_pfn, false, false, false);
+                }
+                break;
+            }
+            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_BADRAM: {
+                if ( physical_page_allocator.check_is_page_in_use(page_pfn)) {
+                    physical_page_allocator.update_page_state( page_pfn, true, false, true);
+                }
+                break;
+            }
+            case MultibootMMAP_MEM_TYPE ::MULTIBOOT_MEMORY_ACPI_RECLAIMABLE: {
+                if ( !physical_page_allocator.check_is_page_in_use(page_pfn) ) {
+                    physical_page_allocator.update_page_state( page_pfn, false, true, false );
+                }
+                break;
+            }
+            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_NVS: {
+                if ( !physical_page_allocator.check_is_page_in_use(page_pfn) ) {
+                    physical_page_allocator.update_page_state( page_pfn, false, true, false );
+                }
+                break;
+            }
+            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_RESERVED: {
+                if ( !physical_page_allocator.check_is_page_in_use(page_pfn) ) {
+                    physical_page_allocator.update_page_state( page_pfn, false, true, false );
+                }
+                break;
+            }
+        }
+     }
+}
+
+void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
+    uint64_t mmap_entries = mmap_tag.get_entry_count();
+    uint64_t max_addr = mmap_tag.get_maximum_addr();
+
+    for ( auto i = 0 ; i < mmap_entries ; i++ ) {
+        MultibootMMAP_Entry* current_entry = mmap_tag[i];
+        if ( current_entry->addr + current_entry->len > max_addr ) {
+            continue;
+        }
+        handle_multiboot_mmap_entry(current_entry);
+    }
+}
 
 
 extern "C" void start_hypervisor() {
@@ -51,8 +106,11 @@ extern "C" void start_hypervisor() {
         mmap_tag->get_maximum_addr()
     );
 
-    Address test_allocated_page_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
-    physical_page_allocator.free_page((void*)test_allocated_page_addr);
+    handle_multiboot_mmap_table( *mmap_tag );
+
+    uint64_t allocated_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
+
+
 
 
     
