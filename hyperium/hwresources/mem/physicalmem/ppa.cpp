@@ -60,55 +60,10 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
         page_array[i].is_reserved = false;
         page_array[i].is_broken = false;
     }
-
-
-
-
-
-
 };
 
 
 
-void PhysicalPageAllocator::handle_mmap_entry(MultibootMMAP_Entry* mmap_entry) {
-    uint64_t page_count_in_entry = (mmap_entry->addr + mmap_entry->len - 1) / MIN_PAGE_SIZE;
-    for ( auto i = 0 ; i < page_count_in_entry ; i++ ) {
-        uint64_t pfn = paddr_to_pfn(mmap_entry->addr + i * MIN_PAGE_SIZE);
-        PhysicalPage page = page_array[pfn];
-        switch ( mmap_entry->mem_type ) {
-            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_AVAILABLE: {
-                page.is_in_use = false;
-                page.is_reserved = false;
-                page.is_broken = false;
-                break;
-            }
-            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_BADRAM: {
-                page.is_in_use = false;
-                page.is_reserved = false;
-                page.is_broken = true;
-                break;
-            }
-            case MultibootMMAP_MEM_TYPE ::MULTIBOOT_MEMORY_ACPI_RECLAIMABLE: {
-                page.is_in_use = false;
-                page.is_reserved = true;
-                page.is_broken = false;
-                break;
-            }
-            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_NVS: {
-                page.is_in_use = true;
-                page.is_reserved = true;
-                page.is_broken = false;
-                break;
-            }
-            case MultibootMMAP_MEM_TYPE::MULTIBOOT_MEMORY_RESERVED: {
-                page.is_in_use = false;
-                page.is_reserved = true;
-                page.is_broken = false;
-                break;
-            }
-        }
-    } 
-}
 
 void PhysicalPageAllocator::update_page_state( uint64_t pfn, bool is_in_use, bool is_reserved, bool is_broken ) {
     PhysicalPage& page = page_array[pfn];

@@ -126,9 +126,6 @@ class alignas(1) PhysicalPage {
 
 class PhysicalPageAllocator {
     private:
-
-    void handle_mmap_entry(MultibootMMAP_Entry* entry);
-    
     uint64_t physical_page_count;
     PhysicalPage* page_array;
 

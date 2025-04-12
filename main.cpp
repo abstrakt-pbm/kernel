@@ -109,7 +109,7 @@ extern "C" void start_hypervisor() {
     handle_multiboot_mmap_table( *mmap_tag );
 
     uint64_t allocated_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
-
+    uint64_t allocated_addr1 = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
 
 
 
