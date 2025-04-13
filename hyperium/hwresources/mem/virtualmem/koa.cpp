@@ -5,7 +5,7 @@
 extern PhysicalPageAllocator physical_page_allocator; 
 extern KOA::KernelObjectAllocator kernel_object_allocator;
 
-extern PML4 hyper_pml4;
+extern VirtualPageTable hyper_pml4;
 
 extern char __koa_start;
 extern char __koa_end;

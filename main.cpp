@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-PML4 hyper_pml4;
+PML4_Table hyper_pml4;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 MultibootInfo mbi;
@@ -27,10 +27,28 @@ void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
     reinterpret_cast<uint64_t*>(&pml4_table)[pml4_offset] = (reinterpret_cast<uint64_t>(&pdpt_for_hypervisor) & 0x000FFFFFFFFFF000) | 0x23;
 }
 
+void make_direct_mapping_in_init_pml4() { // can be enabled only after init ppa
+    uint64_t dm_start = physical_page_allocator.DIRECT_MAPPING_VSTART;
+    uint64_t dm_end = physical_page_allocator.DIRECT_MAPPING_VSTART + physical_page_allocator.get_maximum_paddr();
+
+    uint64_t pages_to_map = calc_page_count_in_range(dm_start, dm_end, PAGE_SIZE::MB_2);
+
+    for ( i = 0  ; i < pages_to_map ; i++ ) {
+        pd_offset = calc_pd_offset( i * PAGE_SIZE::MB_2 + dm_start);
+        pdpt_offset = calc_pdpt_offset(i * PAGE_SIZE::MB_2 + dm_start);
+        pml4_offset = calc_pml4_offset(i * PAGE_SIZE::MB_2 + dm_start);
+
+        pd_for_dm[ pd_offset ] = ( vaddr_to_paddr_direct_mapping(i * 0x200000 + dm_start) & 0x000FFFFFFFFFF000 ) | 0x83 ;
+        pdpt_for_hypervisor[ pdpt_offset ] = (reinterpret_cast<uint64_t>(&(pd_for_dm[ pd_offset ])) & 0x000FFFFFFFFFF000) | 0x23;
+    }
+
+}
+
 void handle_multiboot_mmap_entry( MultibootMMAP_Entry* entry ) {
-    uint64_t ppages_in_entry = physical_page_allocator.calc_page_count_in_range( 
+    uint64_t ppages_in_entry = calc_page_count_in_range( 
         entry->addr,
-        entry->addr + entry->len
+        entry->addr + entry->len,
+        PAGE_SIZE::KB_4
      );
 
      for ( auto i = 0 ; i < ppages_in_entry ; i++ ) {
@@ -84,6 +102,7 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
 }
 
 
+
 extern "C" void start_hypervisor() {
     add_hypervisor_mapping_to_init_pml4();
     qemu_port.init(0x3F8);
@@ -106,13 +125,8 @@ extern "C" void start_hypervisor() {
         mmap_tag->get_maximum_addr()
     );
 
+    make_direct_mapping_in_init_pml4();
+
     handle_multiboot_mmap_table( *mmap_tag );
-
-    uint64_t allocated_addr = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
-    uint64_t allocated_addr1 = reinterpret_cast<Address>(physical_page_allocator.get_free_page());
-
-
-
-    
 
 }

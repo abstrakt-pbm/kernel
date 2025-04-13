@@ -22,6 +22,9 @@ MemoryRegion mem_regions __attribute__((section(".init.data")));
 alignas(0x1000) uint64_t pdpt_for_hypervisor[512] __attribute__((section(".init.data")));
 alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.data")));
 
+alignas(0x1000) uint64_t pdpt_for_dm[512] __attribute__((section(".init.data")));
+alignas(0x1000) uint64_t pd_for_dm[512] __attribute__((section(".init.data")));
+
 // externs
 
 uint64_t kvma __attribute__((section(".init.data"))) = 0xffff900000000000;
@@ -30,9 +33,13 @@ extern uint64_t _text_lma;
 extern uint64_t _bss_physical_end;
 extern uint32_t multiboot2_info_addr;
 
+extern char _bss_virtual_end;
+extern char _kernel_virtual_start;
+
 extern char pml4_table; // init stage pml4
 extern char pdpt_table; // init stage pdpt
 extern char pd_table; // init stage pd
+
 
 extern "C" void start_hypervisor() __attribute__((section(".init.text")));
 void add_hypervisor_mapping_to_init_pml4 () __attribute__((section(".init.text")));

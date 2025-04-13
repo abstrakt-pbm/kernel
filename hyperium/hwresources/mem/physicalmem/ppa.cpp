@@ -5,20 +5,37 @@ extern char _bss_physical_end;
 extern char _kernel_virtual_start;
 extern char _text_lma;
 
+extern PhysicalPageAllocator physical_page_allocator;
+
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
 
+
+uint64_t calc_page_count_in_range( Address left_address, Address right_address, PAGE_SIZE page_size ) {
+    Address alligned_left = left_address & ~(page_size - 1);
+    uint64_t page_count = (right_address - alligned_left + 1) / page_size;
+    if ((right_address - left_address + 1) % page_size) {
+        page_count++;
+    }
+
+    return page_count; 
+}
+
 void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_ram_address ) {
-    physical_page_count = calc_page_count_in_range( minimal_ram_address, maximum_ram_address );
+    this->minimal_addr = minimal_ram_address;
+    this->maximum_addr = maximum_ram_address;
+    physical_page_count = calc_page_count_in_range( minimal_ram_address, maximum_ram_address, PAGE_SIZE::KB_4 );
     uint64_t ppage_array_pages_count = calc_page_count_in_range(
         reinterpret_cast<Address>(&_bss_virtual_end),
-        reinterpret_cast<Address>(&_bss_virtual_end) + physical_page_count * sizeof(PhysicalPage)
+        reinterpret_cast<Address>(&_bss_virtual_end) + physical_page_count * sizeof(PhysicalPage),
+        PAGE_SIZE::KB_4
     );
 
     
 
     uint64_t kernel_page_count = calc_page_count_in_range(
         reinterpret_cast<Address>(&_kernel_virtual_start), 
-        reinterpret_cast<Address>(&_bss_virtual_end)
+        reinterpret_cast<Address>(&_bss_virtual_end),
+        PAGE_SIZE::KB_4
     );
 
     this->page_array = reinterpret_cast<PhysicalPage*>(&_bss_virtual_end);
@@ -60,6 +77,8 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
         page_array[i].is_reserved = false;
         page_array[i].is_broken = false;
     }
+
+    DIRECT_MAPPING_VSTART = align_up( reinterpret_cast<Address>(page_array) + physical_page_count * sizeof(PhysicalPage), 0x400000000 );
 };
 
 
@@ -110,20 +129,6 @@ uint64_t kernel_paddr_to_vaddr( Address paddr ) {
     return paddr + reinterpret_cast<Address>(&_kernel_virtual_start) - reinterpret_cast<Address>(&_text_lma);
 }
 
-void PML4::link_vaddr_with_paddr( Address vaddr, Address paddr ) {
-    
-}
-
-uint64_t PhysicalPageAllocator::calc_page_count_in_range( Address left_address, Address right_address ) {
-    Address alligned_left = left_address & ~(MIN_PAGE_SIZE - 1);
-    uint64_t page_count = (right_address - alligned_left + 1) / MIN_PAGE_SIZE;
-    if ((right_address - left_address + 1) % MIN_PAGE_SIZE) {
-        page_count++;
-    }
-
-    return page_count; 
-}
-
 
 inline uint64_t PhysicalPageAllocator::paddr_to_pfn( Address paddr ) {
     return (paddr / MIN_PAGE_SIZE);
@@ -137,4 +142,72 @@ inline Address PhysicalPageAllocator::pfn_to_paddr( uint64_t pfn ) {
 
 bool PhysicalPageAllocator::check_is_page_in_use( uint64_t pfn ) {
     return page_array[pfn].is_in_use;
+}
+
+Address PhysicalPageAllocator::get_page_array_end_addr() {
+    return reinterpret_cast<Address>(reinterpret_cast<uint8_t*>(page_array) + sizeof(PhysicalPage) * physical_page_count);
+}
+Address PhysicalPageAllocator::get_maximum_paddr() {
+    return maximum_addr; 
+}
+
+void VirtualPageTable::create_page_mapping( Address vaddr, Address paddr, PAGE_SIZE page_size ) {
+   switch ( page_size ) {
+    case MB_2 : {
+        create_2mb_page( vaddr, paddr );
+        break;
+    }
+   }
+   
+
+}
+
+
+void VirtualPageTable::create_2mb_page( Address vaddr, Address paddr ) {
+    uint64_t pml4_offset = calc_pml4_offset(vaddr);
+    uint64_t pdpt_offset = calc_pdpt_offset(vaddr);
+    uint64_t pd_offset = calc_pd_offset(vaddr);
+
+    PML4_ENTRY& pml4_entry = pml4_table.pml4_array[pml4_offset];
+    PDP_Table* pdp_table = pml4_table.pdp_tables[pml4_offset];
+    if ( pdp_table == nullptr) {
+
+    }
+
+    PD_Table* pd_table = pdp_table->pd_tables[pdpt_offset];
+    PDPT_ENTRY pdpt_entry = pdp_table->pdpt_array[pdpt_offset];
+    if ( pd_table == nullptr ) {
+        // нужны рабочие аллокаторы
+    }
+
+
+
+}
+
+uint64_t VirtualPageTable::calc_pml4_offset( Address vaddr ) {
+    return 0;
+}
+
+uint64_t VirtualPageTable::calc_pdpt_offset( Address vaddr ) {
+    return 0;
+}
+
+uint64_t VirtualPageTable::calc_pd_offset( Address vaddr ) {
+    return 0;
+}
+
+uint64_t VirtualPageTable::calc_pt_offset( Address vaddr ) {
+    return 0;
+}
+
+uint64_t align_up(uint64_t value, uint64_t align) {
+    return (value + align - 1) & ~(align - 1);
+}
+
+uint64_t vaddr_to_paddr_direct_mapping( Address vaddr ) {
+    return vaddr - physical_page_allocator.DIRECT_MAPPING_VSTART;
+}
+
+uint64_t paddr_to_vaddr_direct_mapping( Address paddr ) {
+    return paddr + physical_page_allocator.DIRECT_MAPPING_VSTART;
 }
