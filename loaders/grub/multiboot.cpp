@@ -67,7 +67,7 @@ uint64_t MultibootMMAP_Tag::get_minimal_addr() {
     uint64_t minimal = 0xFFFFFFFFFFFFFFFF;
     for ( auto i = 0 ; i < entry_count ; i++ ) {
         MultibootMMAP_Entry* current_entry = this->operator[](i);
-        if (current_entry->addr > minimal) {
+        if (current_entry->addr < minimal) {
             minimal = current_entry->addr;
         }
     }
