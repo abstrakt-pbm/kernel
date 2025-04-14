@@ -126,7 +126,8 @@ extern "C" void start_hypervisor() {
     );
 
     make_direct_mapping_in_init_pml4();
-
     handle_multiboot_mmap_table( *mmap_tag );
+
+    
 
 }
