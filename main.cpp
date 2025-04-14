@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-VirtualPageTable hyper_pml4;
+VirtualPageTable kernel_vpt;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 MultibootInfo mbi;
@@ -99,9 +99,40 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
         }
         handle_multiboot_mmap_entry(current_entry);
     }
+
+    
 }
 
-void fill_hypervisor_final_vpt();
+void fill_hypervisor_final_vpt() {
+    Address kernel_start_vaddr = reinterpret_cast<Address>(&_kernel_virtual_start);
+    Address kernel_end_vaddr = align_up(kernel_start_vaddr + physical_page_allocator.get_page_array_end_addr(), PAGE_SIZE::MB_2);
+    uint64_t page_need_to_map = calc_page_count_in_range( kernel_start_vaddr, kernel_end_vaddr, PAGE_SIZE::MB_2);
+
+    for ( auto i = 0 ; i < page_need_to_map ; i++ ) { // make kernel mapping
+        uint64_t current_vaddr = kernel_start_vaddr + i * PAGE_SIZE::MB_2;
+        kernel_vpt.create_page_mapping( 
+            current_vaddr,
+            kernel_vaddr_to_paddr(current_vaddr),
+            PAGE_SIZE::MB_2,
+            0x23
+        );
+    }
+
+    Address direct_mapping_vstart = physical_page_allocator.DIRECT_MAPPING_VSTART;
+    Address direct_mapping_vend = align_up( direct_mapping_vstart + physical_page_allocator.get_maximum_paddr(), PAGE_SIZE::MB_2 );
+    uint64_t dm_page_count = calc_page_count_in_range( direct_mapping_vstart, direct_mapping_vend, PAGE_SIZE::MB_2);
+
+    for ( auto i = 0 ; i < dm_page_count ; i++ ) { // make direct mapping
+        uint64_t current_vaddr = direct_mapping_vstart + i * PAGE_SIZE::MB_2;
+        kernel_vpt.create_page_mapping(
+            current_vaddr,
+            vaddr_to_paddr_direct_mapping( current_vaddr ),
+            PAGE_SIZE::MB_2,
+            0x23
+        );
+    }
+
+}
 
 
 extern "C" void start_hypervisor() {
@@ -128,6 +159,6 @@ extern "C" void start_hypervisor() {
 
     make_direct_mapping_in_init_pml4(  );
     handle_multiboot_mmap_table( *mmap_tag );
-
-
+    kernel_object_allocator.init();
+    
 }

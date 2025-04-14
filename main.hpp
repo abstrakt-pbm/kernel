@@ -1,6 +1,8 @@
 #pragma once
 #include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
+#include <hyperium/hwresources/mem/physicalmem/paging.hpp>
 #include <hyperium/hwresources/mem/virtualmem/koa.hpp>
+
 #include "hyperium/hwresources/cpu/amd64/cpu.hpp"
 #include "loaders/grub/multiboot.hpp"
 #include "debug/qemu/serial.cpp"

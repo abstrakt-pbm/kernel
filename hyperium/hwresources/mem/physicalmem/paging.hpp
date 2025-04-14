@@ -1,13 +1,10 @@
 #pragma once
 #include "../../../hyperiumtypes.hpp"
+#include "paging_utils.hpp"
+#include "ppa.hpp"
 
-enum PAGE_SIZE : uint64_t {
-    KB_4 = 0x1000,
-    MB_2 = 0x200000,
-    GB_1 = 0x400000000
-};
+extern PhysicalPageAllocator physical_page_allocator;
 
-uint64_t calc_page_count_in_range( Address left_address, Address right_address, PAGE_SIZE page_size);
 
 class alignas(8) PD_ENTRY {
     public:
@@ -99,7 +96,7 @@ class PDP_Table {
     PD_Table* pd_tables[512];
 };
 
-class VirtualPageTable {
+class PML4_Table {
     public:
     PML4_ENTRY pml4_array[512];
     PDP_Table* pdp_tables[512];
@@ -108,17 +105,14 @@ class VirtualPageTable {
 
 class VirtualPageTable {
     private:
-    VirtualPageTable pml4_table;
-    PDP_Table pdp_table;
-    PD_Table pd_table;
-    PT_Table page_table;
+    PML4_Table pml4_table;
 
 
     void create_2mb_page( Address vaddr, Address paddr );
 
     public:
     
-    void create_page_mapping( Address vaddr, Address paddr, PAGE_SIZE page_size ); // may rewrite
+    void create_page_mapping( Address vaddr, Address paddr, PAGE_SIZE page_size, uint64_t flags ); // may rewrite
     
     Address vaddr_to_paddr(Address vaddr);
 

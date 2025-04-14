@@ -2,10 +2,7 @@
 #include "../physicalmem/ppa.hpp"
 
 
-extern PhysicalPageAllocator physical_page_allocator; 
-extern KOA::KernelObjectAllocator kernel_object_allocator;
 
-extern VirtualPageTable hyper_pml4;
 
 extern char __koa_start;
 extern char __koa_end;

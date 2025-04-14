@@ -8,7 +8,8 @@ set ( HVC_HEADERS
     "hwresources/cpu/amd64/cpu.hpp"
     "hwresources/mem/physicalmem/ppa.hpp"
     "hwresources/mem/physicalmem/paging.hpp"
-   #"hwresources/mem/virtualmem/koa.hpp"
+    "hwresources/mem/physicalmem/paging_utils.hpp"
+   "hwresources/mem/virtualmem/koa.hpp"
     "hyperiumtypes.hpp"
 )
 
@@ -16,7 +17,8 @@ set ( HVC_SRC
     "hwresources/cpu/amd64/cpu.cpp"
     "hwresources/mem/physicalmem/ppa.cpp"
     "hwresources/mem/physicalmem/paging.cpp"
-    #"hwresources/mem/virtualmem/koa.cpp"
+    "hwresources/mem/physicalmem/paging_utils.cpp"
+    "hwresources/mem/virtualmem/koa.cpp"
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \

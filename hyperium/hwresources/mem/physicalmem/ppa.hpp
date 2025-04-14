@@ -1,8 +1,7 @@
 #pragma once
 #include <hyperium/hyperiumtypes.hpp>
 #include "../../../../loaders/grub/multiboot.hpp"
-#include "paging.hpp"
-
+#include "paging_utils.hpp"
 
 
 class  PhysicalPage {
