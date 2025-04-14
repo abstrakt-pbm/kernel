@@ -12,4 +12,8 @@ set ( THINLIBCXX_SRC
     "unwind/unwind.cpp"
 )
 
-add_library( thinlibcxx STATIC ${THINLIBCXX_HEDERS} ${THINLIBCXX_SRC} )
+add_library( thinlibcxx STATIC ${THINLIBCXX_HEADERS} ${THINLIBCXX_SRC} )
+
+target_include_directories(thinlibcxx PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)

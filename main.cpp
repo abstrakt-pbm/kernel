@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-PML4_Table hyper_pml4;
+VirtualPageTable hyper_pml4;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 MultibootInfo mbi;
@@ -101,6 +101,7 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
     }
 }
 
+void fill_hypervisor_final_vpt();
 
 
 extern "C" void start_hypervisor() {
@@ -125,9 +126,8 @@ extern "C" void start_hypervisor() {
         mmap_tag->get_maximum_addr()
     );
 
-    make_direct_mapping_in_init_pml4();
+    make_direct_mapping_in_init_pml4(  );
     handle_multiboot_mmap_table( *mmap_tag );
 
-    
 
 }

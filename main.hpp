@@ -1,7 +1,6 @@
 #pragma once
-#include "hyperium/hwresources/mem/physicalmem/ppa.hpp"
-#include "hyperium/hwresources/mem/physicalmem/memregion.hpp"
-#include "hyperium/hwresources/mem/virtualmem/koa.hpp"
+#include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
+#include <hyperium/hwresources/mem/virtualmem/koa.hpp>
 #include "hyperium/hwresources/cpu/amd64/cpu.hpp"
 #include "loaders/grub/multiboot.hpp"
 #include "debug/qemu/serial.cpp"
@@ -17,7 +16,6 @@ uint64_t need_page_map __attribute__((section(".init.data")));
 uint64_t i __attribute__((section(".init.data")));
 uint64_t page_count __attribute__((section(".init.data")));
 
-MemoryRegion mem_regions __attribute__((section(".init.data")));
 
 alignas(0x1000) uint64_t pdpt_for_hypervisor[512] __attribute__((section(".init.data")));
 alignas(0x1000) uint64_t pd_for_hypervisor[512] __attribute__((section(".init.data")));

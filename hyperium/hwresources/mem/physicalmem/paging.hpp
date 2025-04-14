@@ -99,7 +99,7 @@ class PDP_Table {
     PD_Table* pd_tables[512];
 };
 
-class PML4_Table {
+class VirtualPageTable {
     public:
     PML4_ENTRY pml4_array[512];
     PDP_Table* pdp_tables[512];
@@ -108,7 +108,7 @@ class PML4_Table {
 
 class VirtualPageTable {
     private:
-    PML4_Table pml4_table;
+    VirtualPageTable pml4_table;
     PDP_Table pdp_table;
     PD_Table pd_table;
     PT_Table page_table;

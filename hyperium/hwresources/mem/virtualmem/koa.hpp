@@ -62,7 +62,7 @@ class KernelObjectAllocator {
     ObjectChank* allocate_chank();
 
     public:
-    void init( uint64_t base_obj_pool_size );
+    void init( );
     void* allocate( size_t object_size );
     void* calloc( size_t object_size );
     void free( void* ptr, size_t obj_size );

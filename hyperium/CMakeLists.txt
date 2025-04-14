@@ -28,3 +28,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
 
 
 add_library( hv_core STATIC ${HVC_HEDERS} ${HVC_SRC} )
+target_link_libraries( hv_core )
+
+target_include_directories( hv_core PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/hwresources/mem/physicalmem
+    ${CMAKE_CURRENT_SOURCE_DIR}/hwresources/mem/virtualmem
+)
