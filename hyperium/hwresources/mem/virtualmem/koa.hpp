@@ -13,9 +13,32 @@ struct Alloc_Impl {
 };
 
 
+class KOAPage {
+    public:
+    KOAPage* next_koa_page;
+    uint64_t object_size;
+    uint64_t lenght;
+    uint64_t capacity;
+    void* free_object;
+
+    KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity);
+    void* operator new(size_t size);
+
+};
+
+class KOAPagePool {
+    public:
+    KOAPagePool* next_page_pool;
+    uint64_t object_size;
+    KOAPage* root_page;
+
+};
+
+
 
 class KernelObjectAllocator {
     private:
+    KOAPagePool root_page_pool;
 
     public:
     void init( );
