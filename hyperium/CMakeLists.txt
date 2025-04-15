@@ -18,6 +18,7 @@ set ( HVC_SRC
     "hwresources/mem/physicalmem/ppa.cpp"
     "hwresources/mem/physicalmem/paging.cpp"
     "hwresources/mem/physicalmem/paging_utils.cpp"
+    "hwresources/mem/alloc_impl.cpp"
     "hwresources/mem/virtualmem/koa.cpp"
 )
 

@@ -160,5 +160,6 @@ extern "C" void start_hypervisor() {
     make_direct_mapping_in_init_pml4(  );
     handle_multiboot_mmap_table( *mmap_tag );
     kernel_object_allocator.init();
+    KOA::KOAPagePool* test_pool = new KOA::KOAPagePool(nullptr,10,nullptr);
     
 }

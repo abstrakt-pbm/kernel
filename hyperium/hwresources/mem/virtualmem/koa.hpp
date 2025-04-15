@@ -6,7 +6,6 @@ extern PhysicalPageAllocator physical_page_allocator;
 
 namespace KOA {
 
-
 struct Alloc_Impl {
     void* operator new(size_t size);
     void operator delete(void* ptr, size_t size ) noexcept;
@@ -21,16 +20,22 @@ class KOAPage {
     uint64_t capacity;
     void* free_object;
 
-    KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity);
     void* operator new(size_t size);
+    KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity);
+    void* allocate();
 
 };
 
-class KOAPagePool {
+class KOAPagePool : public Alloc_Impl{
     public:
     KOAPagePool* next_page_pool;
     uint64_t object_size;
     KOAPage* root_page;
+
+    KOAPagePool() = default;
+    KOAPagePool( KOAPagePool* next_page_pool, uint64_t object_size, KOAPage* root_page );
+
+    void* allocate();
 
 };
 
