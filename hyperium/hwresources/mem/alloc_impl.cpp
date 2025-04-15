@@ -9,4 +9,7 @@ namespace KOA {
         return  kernel_object_allocator.allocate(size);
     }
 
+    void Alloc_Impl::operator delete(void* ptr, size_t size ) noexcept {
+        kernel_object_allocator.free(ptr, size);
+    }
 }

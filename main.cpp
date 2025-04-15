@@ -8,6 +8,12 @@ CPU cpu;
 SerialPort qemu_port;
 
 
+class Aloc_Test : public KOA::Alloc_Impl{
+    public:
+    int i;
+    int b;
+};
+
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     hypervisor_start_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_text_lma));
@@ -160,6 +166,11 @@ extern "C" void start_hypervisor() {
     make_direct_mapping_in_init_pml4(  );
     handle_multiboot_mmap_table( *mmap_tag );
     kernel_object_allocator.init();
-    KOA::KOAPagePool* test_pool = new KOA::KOAPagePool(nullptr,10,nullptr);
+
+    Aloc_Test* test1 = new Aloc_Test();
+    Aloc_Test* test2 = new Aloc_Test();
+    delete test1;
+    delete test2;
+    
     
 }

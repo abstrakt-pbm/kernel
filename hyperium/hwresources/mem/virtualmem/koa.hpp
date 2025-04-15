@@ -23,6 +23,9 @@ class KOAPage {
     void* operator new(size_t size);
     KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity);
     void* allocate();
+    void free(void* ptr);
+
+    bool page_containing_address( Address addr );
 
 };
 
@@ -36,6 +39,7 @@ class KOAPagePool : public Alloc_Impl{
     KOAPagePool( KOAPagePool* next_page_pool, uint64_t object_size, KOAPage* root_page );
 
     void* allocate();
+    void free( void* ptr );
 
 };
 
