@@ -7,13 +7,6 @@ MultibootInfo mbi;
 CPU cpu;
 SerialPort qemu_port;
 
-
-class Aloc_Test : public KOA::Alloc_Impl{
-    public:
-    int i;
-    int b;
-};
-
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     hypervisor_start_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_text_lma));
@@ -34,8 +27,8 @@ void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 }
 
 void make_direct_mapping_in_init_pml4() { // can be enabled only after init ppa
-    uint64_t dm_start = physical_page_allocator.DIRECT_MAPPING_VSTART;
-    uint64_t dm_end = physical_page_allocator.DIRECT_MAPPING_VSTART + physical_page_allocator.get_maximum_paddr();
+    uint64_t dm_start = DIRECT_MAPPING_VSTART;
+    uint64_t dm_end = DIRECT_MAPPING_VSTART + physical_page_allocator.get_maximum_paddr();
 
     uint64_t pages_to_map = calc_page_count_in_range(dm_start, dm_end, PAGE_SIZE::MB_2);
 
@@ -124,7 +117,7 @@ void fill_hypervisor_final_vpt() {
         );
     }
 
-    Address direct_mapping_vstart = physical_page_allocator.DIRECT_MAPPING_VSTART;
+    Address direct_mapping_vstart = DIRECT_MAPPING_VSTART;
     Address direct_mapping_vend = align_up( direct_mapping_vstart + physical_page_allocator.get_maximum_paddr(), PAGE_SIZE::MB_2 );
     uint64_t dm_page_count = calc_page_count_in_range( direct_mapping_vstart, direct_mapping_vend, PAGE_SIZE::MB_2);
 
@@ -164,13 +157,9 @@ extern "C" void start_hypervisor() {
     );
 
     make_direct_mapping_in_init_pml4(  );
+
     handle_multiboot_mmap_table( *mmap_tag );
+
     kernel_object_allocator.init();
 
-    Aloc_Test* test1 = new Aloc_Test();
-    Aloc_Test* test2 = new Aloc_Test();
-    delete test1;
-    delete test2;
-    
-    
 }
