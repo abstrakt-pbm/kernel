@@ -8,7 +8,7 @@ extern char _text_lma;
 extern PhysicalPageAllocator physical_page_allocator;
 
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
-
+uint64_t DIRECT_MAPPING_VSTART;
 
 
 
@@ -148,9 +148,9 @@ uint64_t align_up(uint64_t value, uint64_t align) {
 }
 
 uint64_t vaddr_to_paddr_direct_mapping( Address vaddr ) {
-    return vaddr - physical_page_allocator.DIRECT_MAPPING_VSTART;
+    return vaddr - DIRECT_MAPPING_VSTART;
 }
 
 uint64_t paddr_to_vaddr_direct_mapping( Address paddr ) {
-    return paddr + physical_page_allocator.DIRECT_MAPPING_VSTART;
+    return paddr + DIRECT_MAPPING_VSTART;
 }

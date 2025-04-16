@@ -3,6 +3,7 @@
 #include "../../../../loaders/grub/multiboot.hpp"
 #include "paging_utils.hpp"
 
+extern uint64_t DIRECT_MAPPING_VSTART;
 
 class  PhysicalPage {
     public:
@@ -14,7 +15,6 @@ class  PhysicalPage {
 
 class PhysicalPageAllocator {
     public:
-    uint64_t DIRECT_MAPPING_VSTART;
     uint64_t minimal_addr;
     uint64_t maximum_addr;
 
