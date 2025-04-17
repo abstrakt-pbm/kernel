@@ -83,6 +83,8 @@ void PhysicalPageAllocator::update_page_state( uint64_t pfn, bool is_in_use, boo
     page.is_broken = is_broken;
 }
 
+
+
 void* PhysicalPageAllocator::get_free_page() {
     Address allocated_paddr = 0;
     for ( auto i = 0 ; i < physical_page_count ; i++ ) {
@@ -135,8 +137,8 @@ bool PhysicalPageAllocator::check_is_page_in_use( uint64_t pfn ) {
     return page_array[pfn].is_in_use;
 }
 
-Address PhysicalPageAllocator::get_page_array_end_addr() {
-    return reinterpret_cast<Address>(reinterpret_cast<uint8_t*>(page_array) + sizeof(PhysicalPage) * physical_page_count);
+Address PhysicalPageAllocator::get_page_array_end_vaddr() {
+    return reinterpret_cast<Address>(reinterpret_cast<Address>(page_array) + sizeof(PhysicalPage) * physical_page_count);
 }
 Address PhysicalPageAllocator::get_maximum_paddr() {
     return maximum_addr; 

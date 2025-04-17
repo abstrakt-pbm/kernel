@@ -33,7 +33,7 @@ class PhysicalPageAllocator {
     void update_page_state( uint64_t pfn, bool is_in_use, bool is_reserved, bool is_broken );
     bool check_is_page_in_use( uint64_t pfn );
 
-    Address get_page_array_end_addr();
+    Address get_page_array_end_vaddr();
 
     Address get_minimal_paddr();
     Address get_maximum_paddr();

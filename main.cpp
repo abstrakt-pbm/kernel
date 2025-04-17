@@ -104,7 +104,7 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
 
 void fill_hypervisor_final_vpt() {
     Address kernel_start_vaddr = reinterpret_cast<Address>(&_kernel_virtual_start);
-    Address kernel_end_vaddr = align_up(kernel_start_vaddr + physical_page_allocator.get_page_array_end_addr(), PAGE_SIZE::MB_2);
+    Address kernel_end_vaddr = align_up(physical_page_allocator.get_page_array_end_vaddr(), PAGE_SIZE::MB_2);
     uint64_t page_need_to_map = calc_page_count_in_range( kernel_start_vaddr, kernel_end_vaddr, PAGE_SIZE::MB_2);
 
     for ( auto i = 0 ; i < page_need_to_map ; i++ ) { // make kernel mapping
@@ -132,7 +132,6 @@ void fill_hypervisor_final_vpt() {
     }
 
 }
-
 
 extern "C" void start_hypervisor() {
     add_hypervisor_mapping_to_init_pml4();
@@ -162,4 +161,15 @@ extern "C" void start_hypervisor() {
 
     kernel_object_allocator.init();
 
+    fill_hypervisor_final_vpt();
+
+    void* new_hypervisor_stack = physical_page_allocator.get_free_page();
+    for ( auto i = 0 ; i < 512 ; i++ ) {
+        reinterpret_cast<uint64_t*>(new_hypervisor_stack)[i] = 0;
+    }
+
+    uint64_t new_stack_top = paddr_to_vaddr_direct_mapping(reinterpret_cast<Address>(new_hypervisor_stack) + PAGE_SIZE::KB_4);
+    cpu.change_stack( new_stack_top + 0x1000 );
+    cpu.change_cr3( kernel_vpt.get_pml4_paddr_start() );
+    
 }
