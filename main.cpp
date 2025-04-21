@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 VirtualPageTable kernel_vpt;
+ACPI acpi;
 KOA::KernelObjectAllocator kernel_object_allocator;
 PhysicalPageAllocator physical_page_allocator;
 MultibootInfo mbi;
@@ -102,6 +103,17 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
     
 }
 
+RootSystemDescriptionPointer* find_acpi_rsdp_bios() { 
+    char rdpt_magic[8] = {'R','S','D',' ','P','T','R',' '};
+    for ( Address i = 0xE0000 ; i < 0xFFFFF ; i++ ) {
+        if ( memcmp( reinterpret_cast<char*>(i), reinterpret_cast<char*>(&rdpt_magic), 8 )) {
+            return reinterpret_cast<RootSystemDescriptionPointer*>(i);
+        }
+    }
+    return nullptr;
+}
+
+
 void fill_hypervisor_final_vpt() {
     Address kernel_start_vaddr = reinterpret_cast<Address>(&_kernel_virtual_start);
     Address kernel_end_vaddr = align_up(physical_page_allocator.get_page_array_end_vaddr(), PAGE_SIZE::MB_2);
@@ -161,7 +173,11 @@ extern "C" void start_hypervisor() {
 
     kernel_object_allocator.init();
 
+    uint64_t acpi_tab =  mbi.get_tag_type_entry_count(MultibootTagType::ACPI_NEW);
+
+    /*
     fill_hypervisor_final_vpt();
+
 
     void* new_hypervisor_stack = physical_page_allocator.get_free_page();
     for ( auto i = 0 ; i < 512 ; i++ ) {
@@ -171,5 +187,7 @@ extern "C" void start_hypervisor() {
     uint64_t new_stack_top = paddr_to_vaddr_direct_mapping(reinterpret_cast<Address>(new_hypervisor_stack) + PAGE_SIZE::KB_4);
     cpu.change_stack( new_stack_top + 0x1000 );
     cpu.change_cr3( kernel_vpt.get_pml4_paddr_start() );
-    
+    */    
 }
+
+// transfer to hypervisor is chain

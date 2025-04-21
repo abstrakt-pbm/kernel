@@ -3,6 +3,10 @@
 #include <hyperium/hwresources/mem/physicalmem/paging.hpp>
 #include <hyperium/hwresources/mem/virtualmem/koa.hpp>
 
+#include <hyperium/common/acpi/acpi.hpp>
+
+#include <thinlibcxx/memory.hpp>
+
 #include "hyperium/hwresources/cpu/amd64/cpu.hpp"
 #include "loaders/grub/multiboot.hpp"
 #include "debug/qemu/serial.cpp"

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../hyperiumtypes.hpp"
+#include <hyperium/hyperiumtypes.hpp>
 
 class ACPI_SDT_Header {
     int8_t signature[4];
@@ -66,7 +66,7 @@ class RootSystemDescriptionPointer {
     int8_t oem_id[6];
     uint8_t revision;
     uint32_t rsdt_address;
-    uint32_t lenght;
+    uint32_t length;
     Address xsdt_address;
     uint8_t extended_checksum;
     uint8_t reserved[3];
@@ -80,5 +80,6 @@ class ACPI {
     StaticResourceAffinityTable* srat;
 
     public:
-    ACPI( Address rsdp_address );
+    void init( RootSystemDescriptionPointer* rsdp );
+
 };

@@ -6,10 +6,12 @@ set( CMAKE_CXX_STANDARD 20 )
 
 set ( THINLIBCXX_HEADERS
     "cstdint.hpp"
+    "memory.hpp"
 )
 
 set ( THINLIBCXX_SRC
     "unwind/unwind.cpp"
+    "memory.cpp"
 )
 
 add_library( thinlibcxx STATIC ${THINLIBCXX_HEADERS} ${THINLIBCXX_SRC} )

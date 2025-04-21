@@ -3,3 +3,5 @@ build
 
 hv.iso
 hv.elf
+
+OVMF_VARS.fd

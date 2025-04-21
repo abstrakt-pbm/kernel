@@ -9,7 +9,10 @@ set ( HVC_HEADERS
     "hwresources/mem/physicalmem/ppa.hpp"
     "hwresources/mem/physicalmem/paging.hpp"
     "hwresources/mem/physicalmem/paging_utils.hpp"
-   "hwresources/mem/virtualmem/koa.hpp"
+    "hwresources/mem/virtualmem/koa.hpp"
+
+    "common/acpi/acpi.hpp"
+
     "hyperiumtypes.hpp"
 )
 
@@ -20,6 +23,8 @@ set ( HVC_SRC
     "hwresources/mem/physicalmem/paging_utils.cpp"
     "hwresources/mem/alloc_impl.cpp"
     "hwresources/mem/virtualmem/koa.cpp"
+
+    "common/acpi/acpi.cpp"
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
