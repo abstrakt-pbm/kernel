@@ -98,7 +98,7 @@ void KernelObjectAllocator::free( void* ptr, size_t obj_size ) {
 void* KOAPagePool::allocate() {
     KOAPage* page_allocate_from = this->root_page;
     while ( page_allocate_from != nullptr) {
-        if ( page_allocate_from->lenght < page_allocate_from->capacity) {
+        if ( page_allocate_from->length < page_allocate_from->capacity) {
             break;
         } 
         page_allocate_from = page_allocate_from->next_koa_page;
@@ -148,7 +148,7 @@ KOAPagePool::KOAPagePool( KOAPagePool* next_page_pool, uint64_t object_size, KOA
 
 //KOA_PAGE/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-KOAPage::KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity) : next_koa_page(next_koa_page), object_size(object_size), lenght(lenght), capacity(capacity) {
+KOAPage::KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t length, uint64_t capacity) : next_koa_page(next_koa_page), object_size(object_size), length(length), capacity(capacity) {
     Address free_object_area_start = reinterpret_cast<Address>(this) + sizeof(KOAPage);
     this->free_object = reinterpret_cast<void*>(free_object_area_start);
 
@@ -170,7 +170,7 @@ void* KOAPage::operator new(size_t size) {
 
 
 void* KOAPage::allocate() {
-    if ( this->lenght == this->capacity ) {
+    if ( this->length == this->capacity ) {
         return nullptr;
     }
 
@@ -182,13 +182,13 @@ void* KOAPage::allocate() {
 
     Address next_free_obj = *reinterpret_cast<Address*>(this->free_object);
     this->free_object = reinterpret_cast<void*>(next_free_obj);
-    this->lenght++;
+    this->length++;
 
     return allocated_object;
 }
 
 void KOAPage::free(void* ptr) {
-    if ( lenght == 0) {
+    if ( length == 0) {
         return;
     }
 
@@ -199,7 +199,7 @@ void KOAPage::free(void* ptr) {
 
     *reinterpret_cast<Address*>(ptr) = reinterpret_cast<Address>(free_object);
     free_object = ptr;
-    lenght--;
+    length--;
 }
 
 bool KOAPage::page_containing_address( Address addr ) {

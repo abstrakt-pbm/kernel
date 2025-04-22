@@ -13,7 +13,7 @@ class VMemSlice {
     VMemSlice* next;
 
     Address start;
-    uint64_t lenght;
+    uint64_t length;
     uint64_t flags;
 };
 
@@ -26,9 +26,9 @@ class VMemSliceAllocator {
     VMemSliceAllocator() = default;
     void init();
 
-    void* allocate_slice( uint64_t lenght );
-    void* allocate_direct_memory( uint64_t lenght );
-    void* allcate_discrete_memory( uint64_t lenght );
+    void* allocate_slice( uint64_t length );
+    void* allocate_direct_memory( uint64_t length );
+    void* allcate_discrete_memory( uint64_t length );
 
     void free_slice( void* ptr );
 

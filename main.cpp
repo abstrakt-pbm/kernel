@@ -173,9 +173,10 @@ extern "C" void start_hypervisor() {
 
     kernel_object_allocator.init();
 
-    uint64_t acpi_tab =  mbi.get_tag_type_entry_count(MultibootTagType::ACPI_NEW);
+    Multiboot_ACPI_NEW_Tag* acpi_tab = reinterpret_cast<Multiboot_ACPI_NEW_Tag*>(mbi.get_particular_tag(MultibootTagType::ACPI_NEW, 0));
+    RootSystemDescriptionPointer* rsdp = reinterpret_cast<RootSystemDescriptionPointer*>(&acpi_tab->rsdp_addr);
+    acpi.init( rsdp );
 
-    /*
     fill_hypervisor_final_vpt();
 
 
@@ -184,6 +185,7 @@ extern "C" void start_hypervisor() {
         reinterpret_cast<uint64_t*>(new_hypervisor_stack)[i] = 0;
     }
 
+    /*
     uint64_t new_stack_top = paddr_to_vaddr_direct_mapping(reinterpret_cast<Address>(new_hypervisor_stack) + PAGE_SIZE::KB_4);
     cpu.change_stack( new_stack_top + 0x1000 );
     cpu.change_cr3( kernel_vpt.get_pml4_paddr_start() );

@@ -67,6 +67,13 @@ class alignas(8) MultibootMMAP_Tag{
 
 };
 
+class alignas(8) Multiboot_ACPI_NEW_Tag {
+    public:
+    uint32_t type;
+    uint32_t size;
+    void* rsdp_addr; // & to get addr;
+};
+
 class MultibootInfo {
     void* multiboot_info_ptr;
     uint32_t total_size;

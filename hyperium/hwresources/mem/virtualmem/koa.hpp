@@ -16,12 +16,12 @@ class KOAPage {
     public:
     KOAPage* next_koa_page;
     uint64_t object_size;
-    uint64_t lenght;
+    uint64_t length;
     uint64_t capacity;
     void* free_object;
 
     void* operator new(size_t size);
-    KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t lenght, uint64_t capacity);
+    KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t length, uint64_t capacity);
     void* allocate();
     void free(void* ptr);
 

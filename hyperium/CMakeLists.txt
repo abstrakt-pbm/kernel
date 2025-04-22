@@ -40,6 +40,7 @@ target_link_libraries( hv_core )
 
 target_include_directories( hv_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/acpi
     ${CMAKE_CURRENT_SOURCE_DIR}/hwresources/mem/physicalmem
     ${CMAKE_CURRENT_SOURCE_DIR}/hwresources/mem/virtualmem
 )
