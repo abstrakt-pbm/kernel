@@ -37,15 +37,4 @@ class VMemSliceAllocator {
 
 extern VMemSliceAllocator global_vmemslice_allocator;
 
-struct Alloc_Impl {
-    static void* operator new(size_t size) {
-        //return global_vmemslice_allocator.allocate_slice( size );
-        return (void*)(1);
-    }
-
-    static void operator delete(void* ptr) noexcept {
-        //global_vmemslice_allocator.free( ptr );
-    }
-};
-
 } // vmslice namespace

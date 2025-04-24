@@ -2,6 +2,7 @@
 #include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
 #include <hyperium/hwresources/mem/physicalmem/paging.hpp>
 #include <hyperium/hwresources/mem/virtualmem/koa.hpp>
+#include <hyperium/hwresources/device/bus/pcie/pcie.hpp>
 
 #include <hyperium/common/acpi/acpi.hpp>
 

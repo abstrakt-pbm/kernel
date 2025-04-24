@@ -10,6 +10,7 @@ set ( HVC_HEADERS
     "hwresources/mem/physicalmem/paging.hpp"
     "hwresources/mem/physicalmem/paging_utils.hpp"
     "hwresources/mem/virtualmem/koa.hpp"
+    "hwresources/device/bus/pcie/pcie.hpp"
 
     "common/acpi/acpi.hpp"
 
@@ -23,6 +24,7 @@ set ( HVC_SRC
     "hwresources/mem/physicalmem/paging_utils.cpp"
     "hwresources/mem/alloc_impl.cpp"
     "hwresources/mem/virtualmem/koa.cpp"
+    "hwresources/device/bus/pcie/pcie.cpp"
 
     "common/acpi/acpi.cpp"
 )

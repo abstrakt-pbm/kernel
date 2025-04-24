@@ -8,6 +8,8 @@ MultibootInfo mbi;
 CPU cpu;
 SerialPort qemu_port;
 
+PCI pci;
+
 void add_hypervisor_mapping_to_init_pml4 () { // kernel mapping to pml4
 
     hypervisor_start_vaddr = lma_to_vma(reinterpret_cast<uint64_t>(&_text_lma));
@@ -177,6 +179,27 @@ extern "C" void start_hypervisor() {
     RootSystemDescriptionPointer* rsdp = reinterpret_cast<RootSystemDescriptionPointer*>(&acpi_tab->rsdp_addr);
     acpi.init( rsdp );
 
+    MemoryMappedConfigurationSpaceBaseAddressDescriptionTable* mcfg = acpi.mcfg;
+
+    if ( mcfg == nullptr) {
+        return;
+    }
+
+    pci.init();
+    for ( auto i = 0 ; i < mcfg->get_entry_count(); i++) {
+        PCIDomain* new_dom = new PCIDomain(
+            mcfg->entries[i].segment_group_number,
+            reinterpret_cast<void*>(paddr_to_vaddr_direct_mapping( mcfg->entries[i].base_address )),
+            mcfg->entries[i].start_bus_number,
+            mcfg->entries[i].end_bus_number 
+        );
+
+        pci.append_pci_domain(new_dom);
+    }
+
+
+
+    /*
     fill_hypervisor_final_vpt();
 
 
@@ -184,6 +207,7 @@ extern "C" void start_hypervisor() {
     for ( auto i = 0 ; i < 512 ; i++ ) {
         reinterpret_cast<uint64_t*>(new_hypervisor_stack)[i] = 0;
     }
+    */
 
     /*
     uint64_t new_stack_top = paddr_to_vaddr_direct_mapping(reinterpret_cast<Address>(new_hypervisor_stack) + PAGE_SIZE::KB_4);

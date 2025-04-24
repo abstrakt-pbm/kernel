@@ -31,7 +31,7 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
     );
 
     this->page_array = reinterpret_cast<PhysicalPage*>(&_bss_virtual_end);
-
+    DIRECT_MAPPING_VSTART = align_up( reinterpret_cast<Address>(page_array) + physical_page_count * sizeof(PhysicalPage), 0x400000000 );
     for ( auto i = 0 ; i < physical_page_count; i++) { // mark all pages free
         page_array[i].is_in_use = false;
         page_array[i].is_reserved = false;
@@ -70,7 +70,7 @@ void PhysicalPageAllocator::init( Address minimal_ram_address, Address maximum_r
         page_array[i].is_broken = false;
     }
 
-    DIRECT_MAPPING_VSTART = align_up( reinterpret_cast<Address>(page_array) + physical_page_count * sizeof(PhysicalPage), 0x400000000 );
+    
 };
 
 

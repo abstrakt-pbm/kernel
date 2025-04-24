@@ -46,3 +46,7 @@ void ACPI::init( RootSystemDescriptionPointer* rsdp ) {
     }
 
 }
+
+uint64_t MemoryMappedConfigurationSpaceBaseAddressDescriptionTable::get_entry_count() {
+    return (header.length - sizeof(ACPI_SDT_Header)) / sizeof(MCFG_Entry);
+}

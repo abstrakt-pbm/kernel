@@ -162,6 +162,8 @@ class __attribute__((packed)) MemoryMappedConfigurationSpaceBaseAddressDescripti
     uint64_t reserved;
     MCFG_Entry entries[];
 
+    uint64_t get_entry_count();
+
 };
 
 class RootSystemDescriptionPointer {
