@@ -46,6 +46,7 @@ void make_direct_mapping_in_init_pml4() { // can be enabled only after init ppa
 
 }
 
+
 void handle_multiboot_mmap_entry( MultibootMMAP_Entry* entry ) {
     uint64_t ppages_in_entry = calc_page_count_in_range( 
         entry->addr,
@@ -101,8 +102,6 @@ void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
         }
         handle_multiboot_mmap_entry(current_entry);
     }
-
-    
 }
 
 RootSystemDescriptionPointer* find_acpi_rsdp_bios() { 

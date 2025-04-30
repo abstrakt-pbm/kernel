@@ -6,6 +6,7 @@ set( CMAKE_CXX_STANDARD 20 )
 
 set ( HVC_HEADERS
     "hwresources/cpu/amd64/cpu.hpp"
+    "hwresources/mem/physicalmem/mem_slice.hpp"
     "hwresources/mem/physicalmem/ppa.hpp"
     "hwresources/mem/physicalmem/paging.hpp"
     "hwresources/mem/physicalmem/paging_utils.hpp"
@@ -19,6 +20,7 @@ set ( HVC_HEADERS
 
 set ( HVC_SRC
     "hwresources/cpu/amd64/cpu.cpp"
+    "hwresources/mem/physicalmem/mem_slice.cpp"
     "hwresources/mem/physicalmem/ppa.cpp"
     "hwresources/mem/physicalmem/paging.cpp"
     "hwresources/mem/physicalmem/paging_utils.cpp"
