@@ -146,7 +146,7 @@ void fill_hypervisor_final_vpt() {
 
 }
 
-extern "C" void start_hypervisor() {
+extern "C" void init_hwrc() {
     add_hypervisor_mapping_to_init_pml4();
     qemu_port.init(0x3F8);
 

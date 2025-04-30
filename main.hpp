@@ -46,7 +46,7 @@ extern char pdpt_table; // init stage pdpt
 extern char pd_table; // init stage pd
 
 
-extern "C" void start_hypervisor() __attribute__((section(".init.text")));
+extern "C" void init_hwrc() __attribute__((section(".init.text")));
 void add_hypervisor_mapping_to_init_pml4 () __attribute__((section(".init.text")));
 uint64_t calc_page_count(Address start, Address end, uint64_t page_allignment ) __attribute__((section(".init.text")));
 Address calc_identity_mapping_paddr( Address vaddr ) __attribute__((section(".init.text")));
