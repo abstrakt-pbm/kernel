@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project( hyperium_amd64 )
+project( hwrc_amd64 )
 
 set(CMAKE_ASM_NASM_COMPILER nasm)
 set(CMAKE_ASM_NASM_FLAGS "-f elf64")
@@ -10,4 +10,4 @@ set ( ASM_FILES
     "init/init.asm"
 )
 
-add_library( hyperium_amd64 STATIC ${ASM_FILES} )
+add_library( hwrc_amd64 STATIC ${ASM_FILES} )

@@ -1,6 +1,5 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp>
-#include "../../../../loaders/grub/multiboot.hpp"
 #include "paging_utils.hpp"
 
 extern uint64_t DIRECT_MAPPING_VSTART;

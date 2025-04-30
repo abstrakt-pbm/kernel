@@ -15,7 +15,7 @@ set ( HWRC_HEADERS
 
     "common/acpi/acpi.hpp"
 
-    "hyperiumtypes.hpp"
+    "hwrctypes.hpp"
 )
 
 set ( HWRC_SRC
@@ -38,8 +38,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
   -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
   -O0 -mcmodel=large ")
 
+add_subdirectory(arch/amd64)
+add_subdirectory(bootway)
 
-add_library( HWRC STATIC ${HWRC_HEDERS} ${HWRC_SRC} )
+add_library( HWRC STATIC
+    ${HWRC_HEDERS}
+    ${HWRC_SRC}
+)
+
+
+target_link_libraries( HWRC PUBLIC thinlibcxx hwrc_amd64 bootway -static )
 
 target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../thinlibcxx/cstdint.hpp"
+#include "../../../hwrctypes.hpp" 
 
 enum MultibootTagType : uint32_t {
     END,
