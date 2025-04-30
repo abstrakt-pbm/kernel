@@ -1,5 +1,5 @@
 #pragma once
-#include <hyperium/hyperiumtypes.hpp>
+#include <HWRC/hyperiumtypes.hpp>
 
 enum ACPI_SPACE_ID : uint8_t {
     IO_PORT,

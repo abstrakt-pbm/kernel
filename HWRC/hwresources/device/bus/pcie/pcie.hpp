@@ -1,6 +1,6 @@
 #pragma once
-#include <hyperium/hyperiumtypes.hpp>
-#include <hyperium/hwresources/mem/virtualmem/koa.hpp>
+#include <HWRC/hyperiumtypes.hpp>
+#include <HWRC/hwresources/mem/virtualmem/koa.hpp>
 
 extern Address ECAM_BASE;
 

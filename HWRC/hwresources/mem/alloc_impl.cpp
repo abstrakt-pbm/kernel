@@ -1,5 +1,5 @@
-#include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
-#include <hyperium/hwresources/mem/virtualmem/koa.hpp>
+#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRC/hwresources/mem/virtualmem/koa.hpp>
 
 extern KOA::KernelObjectAllocator kernel_object_allocator;
 

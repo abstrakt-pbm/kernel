@@ -10,7 +10,6 @@ set ( THINLIBCXX_HEADERS
 )
 
 set ( THINLIBCXX_SRC
-    "unwind/unwind.cpp"
     "memory.cpp"
 )
 

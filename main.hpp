@@ -1,14 +1,14 @@
 #pragma once
-#include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
-#include <hyperium/hwresources/mem/physicalmem/paging.hpp>
-#include <hyperium/hwresources/mem/virtualmem/koa.hpp>
-#include <hyperium/hwresources/device/bus/pcie/pcie.hpp>
+#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRC/hwresources/mem/physicalmem/paging.hpp>
+#include <HWRC/hwresources/mem/virtualmem/koa.hpp>
+#include <HWRC/hwresources/device/bus/pcie/pcie.hpp>
 
-#include <hyperium/common/acpi/acpi.hpp>
+#include <HWRC/common/acpi/acpi.hpp>
 
 #include <thinlibcxx/memory.hpp>
 
-#include "hyperium/hwresources/cpu/amd64/cpu.hpp"
+#include "HWRC/hwresources/cpu/amd64/cpu.hpp"
 #include "loaders/grub/multiboot.hpp"
 #include "debug/qemu/serial.cpp"
 

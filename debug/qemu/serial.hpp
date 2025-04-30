@@ -1,5 +1,5 @@
 #pragma once
-#include "../../hyperium/hwresources/cpu/amd64/cpu.hpp"
+#include "../../HWRC/hwresources/cpu/amd64/cpu.hpp"
 
 extern CPU cpu;
 

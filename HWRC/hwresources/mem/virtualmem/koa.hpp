@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../hyperiumtypes.hpp"
-#include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
 
 extern PhysicalPageAllocator physical_page_allocator;
 

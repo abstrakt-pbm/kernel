@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hyperium/hyperiumtypes.hpp>
+#include <HWRC/hyperiumtypes.hpp>
 
 
 enum class MemArea_Masks : uint8_t {

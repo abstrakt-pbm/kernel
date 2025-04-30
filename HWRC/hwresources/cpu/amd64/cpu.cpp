@@ -1,5 +1,5 @@
 #include "cpu.hpp"
-#include <hyperium/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
 
 void CPU::io_out( size_t arg_size, size_t value, uint16_t port ) {
     switch ( arg_size ) {

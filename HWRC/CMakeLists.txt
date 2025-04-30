@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-project( hv_core )
+project( HWRC )
 
 set( CMAKE_CXX_STANDARD 20 )
 
-set ( HVC_HEADERS
+set ( HWRC_HEADERS
     "hwresources/cpu/amd64/cpu.hpp"
     "hwresources/mem/physicalmem/mem_slice.hpp"
     "hwresources/mem/physicalmem/ppa.hpp"
@@ -18,7 +18,7 @@ set ( HVC_HEADERS
     "hyperiumtypes.hpp"
 )
 
-set ( HVC_SRC
+set ( HWRC_SRC
     "hwresources/cpu/amd64/cpu.cpp"
     "hwresources/mem/physicalmem/mem_slice.cpp"
     "hwresources/mem/physicalmem/ppa.cpp"
@@ -39,10 +39,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
   -O0 -mcmodel=large ")
 
 
-add_library( hv_core STATIC ${HVC_HEDERS} ${HVC_SRC} )
-target_link_libraries( hv_core )
+add_library( HWRC STATIC ${HWRC_HEDERS} ${HWRC_SRC} )
 
-target_include_directories( hv_core PUBLIC
+target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${CMAKE_CURRENT_SOURCE_DIR}/common/acpi
     ${CMAKE_CURRENT_SOURCE_DIR}/hwresources/mem/physicalmem
