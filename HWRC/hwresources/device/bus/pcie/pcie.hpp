@@ -1,5 +1,5 @@
 #pragma once
-#include <HWRC/hyperiumtypes.hpp>
+#include <HWRC/hwrctypes.hpp>
 #include <HWRC/hwresources/mem/virtualmem/koa.hpp>
 
 extern Address ECAM_BASE;

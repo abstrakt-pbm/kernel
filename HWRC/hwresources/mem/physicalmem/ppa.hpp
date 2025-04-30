@@ -1,5 +1,5 @@
 #pragma once
-#include <HWRC/hyperiumtypes.hpp>
+#include <HWRC/hwrctypes.hpp>
 #include "../../../../loaders/grub/multiboot.hpp"
 #include "paging_utils.hpp"
 

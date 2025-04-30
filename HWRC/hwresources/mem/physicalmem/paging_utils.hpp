@@ -1,5 +1,5 @@
 #pragma once
-#include <HWRC/hyperiumtypes.hpp>
+#include <HWRC/hwrctypes.hpp>
 
 enum PAGE_SIZE : uint64_t {
     KB_4 = 0x1000,
