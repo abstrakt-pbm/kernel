@@ -10,6 +10,10 @@ enum class MemArea_Masks : uint8_t {
     is_init_purpose = 0b00001000
 };
 
+enum class MIA_PURPOSE {
+    KERNEL,
+    INIT
+};
 
 
 class MemArea {
@@ -42,5 +46,7 @@ class MemoryInitAllocator{
     public:
     void init( uint64_t start_addr, uint64_t length); // init using first free area
     void add_free_area( uint64_t start_address, uint64_t length );
+    void reserve( uint64_t lenght, uint64_t allignment, MIA_PURPOSE purpose );
+    void reserve( Address start_addr, Address end_addr, uint64_t allignment, MIA_PURPOSE purpose );
 
 };

@@ -1,5 +1,5 @@
 #include "cpu.hpp"
-#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRCMemory/physicalmem/ppa.hpp>
 
 void CPU::io_out( size_t arg_size, size_t value, uint16_t port ) {
     switch ( arg_size ) {

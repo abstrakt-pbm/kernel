@@ -8,3 +8,7 @@ bool memcmp( char* str1, char* str2, uint64_t str_lenght) {
     }
     return true;
 }
+
+uint64_t addr_to_gb( uint64_t addr ) {
+    return 1;
+}

@@ -2,8 +2,13 @@
 
 VirtualPageTable kernel_vpt;
 ACPI acpi;
+/*
 KOA::KernelObjectAllocator kernel_object_allocator;
-PhysicalPageAllocator physical_page_allocator;
+extern PhysicalPageAllocator physical_page_allocator;
+
+MemoryInitAllocator mem_init_allocator;
+*/
+
 MultibootInfo mbi;
 CPU cpu;
 SerialPort qemu_port;

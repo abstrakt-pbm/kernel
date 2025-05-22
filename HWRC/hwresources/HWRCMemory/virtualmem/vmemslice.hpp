@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../hyperiumtypes.hpp"
+#include <HWRC/hwrctypes.hpp>
 
 
 constexpr uint64_t KERNEL_HEAP_BASE_LENGHT = 0x10000;

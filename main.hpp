@@ -1,11 +1,9 @@
 #pragma once
-#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
-#include <HWRC/hwresources/mem/physicalmem/paging.hpp>
-#include <HWRC/hwresources/mem/virtualmem/koa.hpp>
+
+#include <HWRCMemory/HWRCMemory.hpp>
+
 #include <HWRC/hwresources/device/bus/pcie/pcie.hpp>
-
 #include <HWRC/common/acpi/acpi.hpp>
-
 #include <thinlibcxx/memory.hpp>
 
 #include <HWRC/hwresources/cpu/amd64/cpu.hpp>

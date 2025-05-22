@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../hwrctypes.hpp"
-#include <HWRC/hwresources/mem/physicalmem/ppa.hpp>
+#include <HWRCMemory/physicalmem/ppa.hpp>
 
 extern PhysicalPageAllocator physical_page_allocator;
 

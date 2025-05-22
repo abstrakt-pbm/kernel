@@ -1,4 +1,4 @@
-#include "mem_slice.hpp"
+#include "mem_init.hpp"
 
 enum class BASE_MEM_AREA_ARRAY_SIZE : uint8_t {
     RAM_AREAS_ARRAY_SIZE = 128,

@@ -5,10 +5,10 @@ extern char _bss_physical_end;
 extern char _kernel_virtual_start;
 extern char _text_lma;
 
-extern PhysicalPageAllocator physical_page_allocator;
+PhysicalPageAllocator physical_page_allocator;
 
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
-uint64_t DIRECT_MAPPING_VSTART;
+extern Address DIRECT_MAPPING_VSTART;
 
 
 

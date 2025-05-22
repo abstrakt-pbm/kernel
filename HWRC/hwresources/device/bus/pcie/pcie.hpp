@@ -1,6 +1,6 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp>
-#include <HWRC/hwresources/mem/virtualmem/koa.hpp>
+#include <HWRCMemory/virtualmem/koa.hpp>
 
 extern Address ECAM_BASE;
 
