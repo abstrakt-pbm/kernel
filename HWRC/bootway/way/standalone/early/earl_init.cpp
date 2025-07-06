@@ -12,8 +12,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
 
    for ( auto i = 0 ; i < efi_mmap_tagg->get_entry_count() ; i++ ) {
       if ( (efi_mmap_tagg->operator[](i)->type == EFI_MEMORY_DESCRIPTOR_TYPE::EfiConventionalMemory) && 
-         (efi_mmap_tagg->operator[](i)->get_lenght() >= sizeof(MemBlk) * MEMBLK_BASE_CAPACITY * 2)
-      ) {
+         (efi_mmap_tagg->operator[](i)->get_lenght() >= sizeof(MemBlk) * MEMBLK_BASE_CAPACITY * 2)) {
          suitable_mmap_desc = efi_mmap_tagg->operator[](i);
          suitable_dec_ind = i; 
          break;
@@ -41,6 +40,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
                mmap_desc->physical_start,
                mmap_desc->physical_start + mmap_desc->get_lenght()
             );
+            break;
          }
          case EFI_MEMORY_DESCRIPTOR_TYPE::EfiUnusableMemory: {
             memory_blocks.reserve_blk(
@@ -48,6 +48,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
                mmap_desc->physical_start + mmap_desc->get_lenght(),
                BlkPurpose::BROKEN
             );
+            break;
          }
          case EFI_MEMORY_DESCRIPTOR_TYPE::EfiReservedMemoryType: {
             memory_blocks.reserve_blk(
@@ -55,7 +56,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
                mmap_desc->physical_start + mmap_desc->get_lenght(),
                BlkPurpose::RESERVED
             );
-
+            break;
          }
       }
    }
@@ -64,9 +65,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
 extern "C" void early_init() {
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
    Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
-
    fill_memblks_using_efi_mmap( efi_mmap_tag );
-   standalone_init();
-   
 
+   standalone_init();
 }
