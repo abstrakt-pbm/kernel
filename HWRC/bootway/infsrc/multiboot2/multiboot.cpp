@@ -57,6 +57,7 @@ void* MultibootInfo::get_particular_tag( MultibootTagType tag_type, uint32_t ind
     return tag_ptr;
 }
 
+///MultibootMMAP
 
 uint64_t MultibootMMAP_Tag::get_entry_count() {
     return (this->header.size - sizeof(MultibootMMAP_Tag) + sizeof(MultibootMMAP_Entry))  / entry_size;
@@ -88,4 +89,19 @@ uint64_t MultibootMMAP_Tag::get_maximum_addr() {
 
 MultibootMMAP_Entry* MultibootMMAP_Tag::operator[]( size_t index ) {
     return reinterpret_cast<MultibootMMAP_Entry*>(reinterpret_cast<uint8_t*>(&entries) + sizeof(MultibootMMAP_Entry) * index);
+}
+
+///MultibootEFIMMAP
+
+
+Multiboot_EFI_MMAP_Descriptor* Multiboot_EFI_MMAP_Tag::operator[]( size_t index ) {
+    return reinterpret_cast<Multiboot_EFI_MMAP_Descriptor*>(reinterpret_cast<uint8_t*>(&entries) + sizeof(Multiboot_EFI_MMAP_Descriptor) * index);
+}
+
+uint64_t Multiboot_EFI_MMAP_Tag::get_entry_count() {
+    return (this->header.size - sizeof(Multiboot_EFI_MMAP_Tag) + sizeof(Multiboot_EFI_MMAP_Descriptor))  / descr_size;
+}
+
+uint64_t Multiboot_EFI_MMAP_Descriptor::get_lenght() {
+     return this->num_pages * 0x1000;
 }

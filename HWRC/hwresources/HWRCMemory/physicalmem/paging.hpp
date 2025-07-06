@@ -109,7 +109,10 @@ class VirtualPageTable {
     uint64_t calc_pdpt_offset( Address vaddr );
     uint64_t calc_pd_offset( Address vaddr );
     uint64_t calc_pt_offset( Address vaddr );
+
+    void make_mapping( uint64_t vaddr_start, uint64_t vaddr_end );
     
+
 };
 
 class alignas(8) NPT_ENTRY {

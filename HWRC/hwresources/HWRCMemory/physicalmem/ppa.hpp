@@ -21,6 +21,7 @@ class PhysicalPageAllocator {
     PhysicalPage* page_array;
 
     void init( Address minimal_ram_address, Address maximum_ram_address );
+    void init( void* page_array );
 
     void* get_free_page();
     void* allocate_pages( uint64_t order); 

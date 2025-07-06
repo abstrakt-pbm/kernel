@@ -26,7 +26,7 @@ enum MultibootTagType : uint32_t {
     LOAD_BASE_ADDR
 };
 
-enum MultibootMMAP_MEM_TYPE : uint32_t {
+enum class MultibootMMAP_MEM_TYPE : uint32_t {
     MULTIBOOT_MEMORY_AVAILABLE = 1,
     MULTIBOOT_MEMORY_RESERVED = 2,
     MULTIBOOT_MEMORY_ACPI_RECLAIMABLE = 3,
@@ -34,7 +34,7 @@ enum MultibootMMAP_MEM_TYPE : uint32_t {
     MULTIBOOT_MEMORY_BADRAM = 5
 };
 
-enum EFI_MEMORY_DESCRIPTOR_TYPE : uint32_t {
+enum class EFI_MEMORY_DESCRIPTOR_TYPE : uint32_t {
     EfiReservedMemoryType = 0x00000000,  // Зарезервированная память
     EfiLoaderCode = 0x00000001,          // Код загрузчика
     EfiLoaderData = 0x00000002,          // Данные загрузчика
@@ -54,7 +54,7 @@ enum EFI_MEMORY_DESCRIPTOR_TYPE : uint32_t {
 
 };
 
-class alignas(8) MultibootHeader {
+class __attribute__((packed)) MultibootHeader {
     public:
     MultibootTagType type;
     uint32_t size;
@@ -62,21 +62,21 @@ class alignas(8) MultibootHeader {
 
 };
 
-class alignas(8) MultibootMMAP_Entry {
+class __attribute__((packed)) MultibootMMAP_Entry {
     public:
     uint64_t addr;
     uint64_t len;
-    uint32_t mem_type;
+    MultibootMMAP_MEM_TYPE mem_type;
     uint32_t zero; //always zero
 
 };
 
-class alignas(8) MultibootMMAP_Tag{
+class __attribute__((packed)) MultibootMMAP_Tag{
     public:
     MultibootHeader header;
     uint32_t entry_size;
     uint32_t entry_version;
-    MultibootMMAP_Entry entries;
+    void *entries;
 
     uint64_t get_entry_count();
     uint64_t get_minimal_addr();
@@ -86,14 +86,14 @@ class alignas(8) MultibootMMAP_Tag{
 
 };
 
-class alignas(8) Multiboot_ACPI_NEW_Tag {
+class __attribute__((packed)) Multiboot_ACPI_NEW_Tag {
     public:
     uint32_t type;
     uint32_t size;
     void* rsdp_addr; // & to get addr;
 };
 
-class Multiboot_EFI_MMAP_Descriptor { 
+class __attribute__((packed)) Multiboot_EFI_MMAP_Descriptor { 
     public:
     EFI_MEMORY_DESCRIPTOR_TYPE type;
     uint32_t pad;
@@ -101,14 +101,22 @@ class Multiboot_EFI_MMAP_Descriptor {
     uint64_t virtual_start;
     uint64_t num_pages;
     uint64_t attribute;
+    uint64_t extended_attribute;
+
+    uint64_t get_lenght() __attribute__((section(".init.text")));
 };
 
-class Mutliboot_EFI_MMAP_Tag {
+class __attribute__((packed)) Multiboot_EFI_MMAP_Tag {
     public:
     MultibootHeader header;
     uint32_t descr_size;
     uint32_t descr_version;
-    uint8_t mmap[];
+
+    uint64_t get_entry_count() __attribute__((section(".init.text")));
+
+    void *entries;
+    Multiboot_EFI_MMAP_Descriptor* operator[]( size_t index ) __attribute__((section(".init.text")));
+
 };
 
 class MultibootInfo {
@@ -116,7 +124,7 @@ class MultibootInfo {
     uint32_t total_size;
 
     public:
-    void init( void* start_addr );
-    uint32_t get_tag_type_entry_count( MultibootTagType tag_type);
-    void* get_particular_tag( MultibootTagType tag_type, uint32_t index );
+    void init( void* start_addr ) __attribute__((section(".init.text")));
+    uint32_t get_tag_type_entry_count( MultibootTagType tag_type)  __attribute__((section(".init.text")));
+    void* get_particular_tag( MultibootTagType tag_type, uint32_t index )  __attribute__((section(".init.text")));
 };

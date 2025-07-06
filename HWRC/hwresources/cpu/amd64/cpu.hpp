@@ -12,4 +12,5 @@ class CPU  {
 
     void change_stack( uint64_t new_stack_start);
     uint64_t get_current_stack_addr();
+
 };

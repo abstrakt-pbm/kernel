@@ -1,6 +1,7 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp> 
 
+
 enum EFI_MEMORY_TYPE : uint32_t{
     EfiReservedMemoryType,
     EfiLoaderCode,
@@ -37,5 +38,4 @@ class EfiRuntimeServices {
 class UEFI {
     public:
     UEFI( EfiMemoryDescriptor* emd);
-    void init();
 };

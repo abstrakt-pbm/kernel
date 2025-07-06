@@ -9,6 +9,7 @@ set ( HWRC_HEADERS
     "hwresources/device/bus/pcie/pcie.hpp"
     "common/acpi/acpi.hpp"
     "hwrctypes.hpp"
+    "kernel_config.hpp"
 )
 
 set ( HWRC_SRC

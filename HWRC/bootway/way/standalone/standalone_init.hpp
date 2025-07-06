@@ -1,0 +1,1 @@
+extern "C" void standalone_init();

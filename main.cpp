@@ -156,7 +156,7 @@ extern "C" void init_hwrc() {
     qemu_port.init(0x3F8);
 
     mbi.init(reinterpret_cast<void*>(multiboot2_info_addr));
-    uint64_t mmap_count = mbi.get_tag_type_entry_count(MultibootTagType::MMAP);
+    uint64_t mmap_count = mbi.get_tag_type_entry_count( MultibootTagType::MMAP );
     if ( mmap_count == 0 ) {
         return;
     }
@@ -219,5 +219,3 @@ extern "C" void init_hwrc() {
     cpu.change_cr3( kernel_vpt.get_pml4_paddr_start() );
     */    
 }
-
-// transfer to hypervisor is chain

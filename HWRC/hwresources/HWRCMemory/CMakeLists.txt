@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project( HWRCMemory )
 
 set ( HWRCMemory_HEADERS
-    "physicalmem/mem_init.hpp"
+    "physicalmem/mem_block.hpp"
     "physicalmem/ppa.hpp"
     "physicalmem/paging.hpp"
     "physicalmem/paging_utils.hpp"
@@ -12,7 +12,7 @@ set ( HWRCMemory_HEADERS
 )
 
 set ( HWRCMemory_SRC
-    "physicalmem/mem_init.cpp"
+    "physicalmem/mem_block.cpp"
     "physicalmem/ppa.cpp"
     "physicalmem/paging.cpp"
     "physicalmem/paging_utils.cpp"

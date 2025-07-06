@@ -8,7 +8,7 @@ extern char _text_lma;
 PhysicalPageAllocator physical_page_allocator;
 
 constexpr uint64_t MIN_PAGE_SIZE = 0x1000;
-extern Address DIRECT_MAPPING_VSTART;
+Address DIRECT_MAPPING_VSTART;
 
 
 

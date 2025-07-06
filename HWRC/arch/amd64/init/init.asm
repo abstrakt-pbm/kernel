@@ -176,7 +176,7 @@ setup_GDT:
     
 
 bits 64
-extern init_hwrc 
+extern early_init 
 
 reload_cs:
     mov ax, 0x10
@@ -188,6 +188,6 @@ reload_cs:
     mov rsp, stack64_space + 40960
     and rsp, 0xFFFFFFFFFFFFFFF0
 
-    mov rax, init_hwrc
+    mov rax, early_init
     jmp rax
 
