@@ -142,3 +142,64 @@ void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr ) {
         free_blks.insert_blk(start_paddr, end_paddr, BlkPurpose::NONE);
     }
 }
+
+
+Address MemBlocks::allocate( uint64_t atleast_length, uint64_t adjustment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) {
+    MemBlk* suitable_blk = nullptr;
+    for ( auto i = 0 ; i < free_blks.length ; i++ ) {
+        MemBlk* current_blk = free_blks.operator[](i);
+        if (( current_blk->start_address >= diapasone_start && current_blk->end_address <= diapasone_end ) &&
+            ( current_blk->end_address - current_blk->start_address >= atleast_length )) {
+                suitable_blk = current_blk;
+                break;
+        }       
+    }
+
+    if ( suitable_blk == nullptr ) {
+        return 0;
+    }
+
+    reserve_blk( suitable_blk->start_address, suitable_blk->start_address + atleast_length, purpose);
+
+    return suitable_blk->start_address;
+}
+
+uint64_t MemBlocks::get_minimal_addr() {
+    Address minimal_paddr = 0xFFFFFFFFFFFFFFFF;
+    for ( auto i = 0 ; i < reserved_blks.length ; i++ ) {
+        MemBlk* current_blk = reserved_blks[i];
+        if ( current_blk->start_address < minimal_paddr ) {
+            minimal_paddr = current_blk->start_address;
+        }
+
+    }
+
+    for ( auto i = 0 ; i < free_blks.length ; i++ ) {
+        MemBlk* current_blk = free_blks[i];
+        if ( current_blk->start_address < minimal_paddr ) {
+            minimal_paddr = current_blk->start_address;
+        }
+
+    }
+    return minimal_paddr;
+}
+
+uint64_t MemBlocks::get_maximum_addr() {
+    Address maximum_paddr = 0;
+    for ( auto i = 0 ; i < reserved_blks.length ; i++ ) {
+        MemBlk* current_blk = reserved_blks[i];
+        if ( current_blk->start_address > maximum_paddr ) {
+            maximum_paddr = current_blk->start_address;
+        }
+
+    }
+
+    for ( auto i = 0 ; i < free_blks.length ; i++ ) {
+        MemBlk* current_blk = free_blks[i];
+        if ( current_blk->start_address > maximum_paddr ) {
+            maximum_paddr = current_blk->start_address;
+        }
+
+    }
+    return maximum_paddr;
+}

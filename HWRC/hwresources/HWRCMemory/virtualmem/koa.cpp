@@ -14,7 +14,7 @@ void KernelObjectAllocator::init( ) {
         nullptr, 
         sizeof(KOAPagePool), 
         0, 
-        (PAGE_SIZE::KB_4 - sizeof(KOAPage)) / sizeof(KOAPagePool)
+        ((uint64_t)PAGE_SIZE::KB_4 - sizeof(KOAPage)) / sizeof(KOAPagePool)
     );
 
     this->root_page_pool.object_size = sizeof(KOAPagePool);
@@ -48,7 +48,7 @@ void* KernelObjectAllocator::allocate( size_t object_size ) {
             nullptr, 
             object_size, 
             0, 
-            (PAGE_SIZE::KB_4 - sizeof(KOAPage)) / object_size
+            ((uint64_t)PAGE_SIZE::KB_4 - sizeof(KOAPage)) / object_size
         );
 
         allocation_pool = new KOAPagePool( 
@@ -144,7 +144,7 @@ KOAPagePool::KOAPagePool( KOAPagePool* next_page_pool, uint64_t object_size, KOA
         nullptr,
         object_size,
         0,
-        (PAGE_SIZE::KB_4 - sizeof(KOAPage)) / object_size
+        ((uint64_t)PAGE_SIZE::KB_4 - sizeof(KOAPage)) / object_size
     );
 }
 

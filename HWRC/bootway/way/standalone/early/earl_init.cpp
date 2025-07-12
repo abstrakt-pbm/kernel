@@ -42,24 +42,22 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
             );
             break;
          }
-         case EFI_MEMORY_DESCRIPTOR_TYPE::EfiUnusableMemory: {
-            memory_blocks.reserve_blk(
-               mmap_desc->physical_start,
-               mmap_desc->physical_start + mmap_desc->get_lenght(),
-               BlkPurpose::BROKEN
-            );
-            break;
-         }
-         case EFI_MEMORY_DESCRIPTOR_TYPE::EfiReservedMemoryType: {
-            memory_blocks.reserve_blk(
-               mmap_desc->physical_start,
-               mmap_desc->physical_start + mmap_desc->get_lenght(),
-               BlkPurpose::RESERVED
-            );
-            break;
-         }
       }
    }
+}
+
+void setup_vmem() {
+   Address pml4_addr = memory_blocks.allocate(
+      MINIMAL_PAGE_SIZE,
+      MINIMAL_PAGE_SIZE,
+      0,
+      IDENTITY_MAPPING_SIZE,
+      BlkPurpose::KERNEL
+   );
+
+
+
+
 }
 
 extern "C" void early_init() {
@@ -67,5 +65,33 @@ extern "C" void early_init() {
    Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
    fill_memblks_using_efi_mmap( efi_mmap_tag );
 
-   standalone_init();
+   memory_blocks.reserve_blk(
+      reinterpret_cast<Address>(&_text_lma),
+      reinterpret_cast<Address>(&_bss_physical_end),
+      BlkPurpose::KERNEL
+   );
+   uint64_t ppage_count = (memory_blocks.get_maximum_addr() - memory_blocks.get_minimal_addr()) / MINIMAL_PAGE_SIZE;
+   Address page_array = memory_blocks.allocate(
+      sizeof(PhysicalPage) * ppage_count,
+      MINIMAL_PAGE_SIZE,
+      0,
+      IDENTITY_MAPPING_SIZE,
+      BlkPurpose::KERNEL
+   );
+
+   if ( page_array == 0 ) {
+      return;
+   }
+
+   initialize_ppa(
+      reinterpret_cast<void*>(page_array),
+      ppage_count
+   );
+   memblk_to_ppa( 
+      &memory_blocks,
+      reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr(reinterpret_cast<Address>(&physical_page_allocator)))
+   );
+   
+
+   standalone_init(); // init all subsystems
 }

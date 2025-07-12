@@ -2,7 +2,7 @@
 
 void VirtualPageTable::create_page_mapping( Address vaddr, Address paddr, PAGE_SIZE page_size, uint64_t flags ) {
    switch ( page_size ) {
-    case MB_2 : {
+    case PAGE_SIZE::MB_2 : {
         create_2mb_page( vaddr, paddr );
         break;
     }

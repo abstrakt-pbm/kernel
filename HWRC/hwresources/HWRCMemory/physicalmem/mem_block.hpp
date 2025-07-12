@@ -51,15 +51,16 @@ class MemBlkArray {
 
 
 class MemBlocks{
-    private:
+    public:
     MemBlkArray reserved_blks;
     MemBlkArray free_blks;
 
-    public:
     void init( void* base_array, uint64_t base_array_lenght ) __attribute__((section(".init.text")));
     void add_free_blk( Address start_paddr, Address end_paddr ) __attribute__((section(".init.text")));
     void reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose ) __attribute__((section(".init.text")));
 
-    void allocate( uint64_t atleast_length, uint64_t adjustment ) __attribute__((section(".init.text")));
+    Address allocate( uint64_t atleast_length, uint64_t adjustment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) __attribute__((section(".init.text")));
+    uint64_t get_minimal_addr() __attribute__((section(".init.text")));
+    uint64_t get_maximum_addr() __attribute__((section(".init.text")));
 
 };

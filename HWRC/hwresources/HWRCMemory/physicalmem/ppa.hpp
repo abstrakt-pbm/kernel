@@ -1,6 +1,7 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp>
 #include "paging_utils.hpp"
+#include "mem_block.hpp"
 
 extern uint64_t DIRECT_MAPPING_VSTART;
 
@@ -12,7 +13,8 @@ class  PhysicalPage {
 };
 
 
-class PhysicalPageAllocator {
+
+class PhysicalPageAllocator { 
     public:
     uint64_t minimal_addr;
     uint64_t maximum_addr;
@@ -21,7 +23,7 @@ class PhysicalPageAllocator {
     PhysicalPage* page_array;
 
     void init( Address minimal_ram_address, Address maximum_ram_address );
-    void init( void* page_array );
+    void init( void* page_array, uint64_t page_count );
 
     void* get_free_page();
     void* allocate_pages( uint64_t order); 
@@ -44,8 +46,12 @@ uint64_t align_up(uint64_t value, uint64_t align);
 
 
 
-uint64_t kernel_vaddr_to_paddr( Address vaddr );
+uint64_t kernel_vaddr_to_paddr( Address vaddr ) __attribute__((section(".init.text")));
 uint64_t kernel_paddr_to_vaddr( Address paddr );
 
 uint64_t vaddr_to_paddr_direct_mapping( Address vaddr );
 uint64_t paddr_to_vaddr_direct_mapping( Address paddr );
+
+bool initialize_ppa( void* page_array, uint64_t page_count ) __attribute__((section(".init.text")));
+void memblk_to_ppa( MemBlocks *memblk, PhysicalPageAllocator *ppa ) __attribute__((section(".init.text")));
+uint64_t paddr_to_pfn_initstage( Address paddr ) __attribute__((section(".init.text")));
