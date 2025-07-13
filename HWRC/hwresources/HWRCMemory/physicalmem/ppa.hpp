@@ -1,7 +1,6 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp>
 #include "paging_utils.hpp"
-#include "mem_block.hpp"
 
 extern uint64_t DIRECT_MAPPING_VSTART;
 

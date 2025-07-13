@@ -2,6 +2,7 @@
 #include <HWRC/hwrctypes.hpp>
 #include <HWRC/kernel_config.hpp>
 
+
 enum class MemBlkErrors {
     NONE,
     OVERLAP,
@@ -59,8 +60,10 @@ class MemBlocks{
     void add_free_blk( Address start_paddr, Address end_paddr ) __attribute__((section(".init.text")));
     void reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose ) __attribute__((section(".init.text")));
 
-    Address allocate( uint64_t atleast_length, uint64_t adjustment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) __attribute__((section(".init.text")));
+    Address allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) __attribute__((section(".init.text")));
     uint64_t get_minimal_addr() __attribute__((section(".init.text")));
     uint64_t get_maximum_addr() __attribute__((section(".init.text")));
 
 };
+
+extern MemBlocks memory_blocks;

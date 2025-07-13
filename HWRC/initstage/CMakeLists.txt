@@ -13,6 +13,8 @@ set ( INITSTAGE_HEADERS
 
     "utility/memory_morph.hpp"
     "utility/alignment.hpp"
+
+    "memoryblocks/mem_block.hpp"
 )
 
 set ( INITSTAGE_SRC
@@ -24,6 +26,8 @@ set ( INITSTAGE_SRC
 
     "utility/memory_morph.cpp"
     "utility/alignment.cpp"
+
+    "memoryblocks/mem_block.cpp"
 )
 
 

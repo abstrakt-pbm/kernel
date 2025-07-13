@@ -1,5 +1,7 @@
 #include "mem_block.hpp"
+#include <initstage/utility/alignment.hpp>
 
+MemBlocks memory_blocks __attribute__((section(".init.data")));;
 
 ///MemBlk
 void MemBlk::init( Address start_address, Address end_address, BlkPurpose purpose ) {
@@ -144,22 +146,26 @@ void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr ) {
 }
 
 
-Address MemBlocks::allocate( uint64_t atleast_length, uint64_t adjustment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) {
+Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) {
     MemBlk* suitable_blk = nullptr;
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
         MemBlk* current_blk = free_blks.operator[](i);
         if (( current_blk->start_address >= diapasone_start && current_blk->end_address <= diapasone_end ) &&
-            ( current_blk->end_address - current_blk->start_address >= atleast_length )) {
+            ( align_up_initstage( current_blk->end_address, alignment) - align_down_initstage( current_blk->start_address, alignment ) >= atleast_length )) {
                 suitable_blk = current_blk;
                 break;
-        }       
+        }
     }
 
     if ( suitable_blk == nullptr ) {
         return 0;
     }
 
-    reserve_blk( suitable_blk->start_address, suitable_blk->start_address + atleast_length, purpose);
+    reserve_blk(
+        align_up_initstage(suitable_blk->start_address, alignment),
+        align_down_initstage(suitable_blk->start_address + atleast_length, alignment),
+        purpose
+    );
 
     return suitable_blk->start_address;
 }

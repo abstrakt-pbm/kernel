@@ -6,6 +6,7 @@
 #include <initstage/infsrc/infsrc.hpp>
 #include <initstage/way/standalone/standalone_init.hpp>
 #include <initstage/utility/memory_morph.hpp>
+#include <initstage/memoryblocks/mem_block.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk

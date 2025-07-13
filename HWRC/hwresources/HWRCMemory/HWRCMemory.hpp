@@ -1,5 +1,4 @@
 #pragma once
-#include <HWRCMemory/physicalmem/mem_block.hpp>
 
 #include <HWRCMemory/physicalmem/ppa.hpp>
 #include <HWRCMemory/virtualmem/koa.hpp>
@@ -8,7 +7,6 @@
 #include <HWRCMemory/physicalmem/paging.hpp>
 
 
-extern MemBlocks memory_blocks;
 extern PhysicalPageAllocator physical_page_allocator;
 extern KOA::KernelObjectAllocator kernel_object_allocator;
 

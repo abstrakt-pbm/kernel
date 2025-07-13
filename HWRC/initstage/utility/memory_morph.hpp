@@ -1,5 +1,6 @@
 #pragma once
 #include <HWRCMemory/HWRCMemory.hpp>
+#include <initstage/memoryblocks/mem_block.hpp>
 
 uint64_t paddr_to_pfn_initstage( Address paddr ) __attribute__((section(".init.text")));
 uint64_t kernel_vaddr_to_paddr_initstage( Address vaddr ) __attribute__((section(".init.text")));
