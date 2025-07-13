@@ -28,7 +28,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
 add_subdirectory(hwresources/HWRCMemory)
 
 add_subdirectory(arch/amd64)
-add_subdirectory(bootway)
+add_subdirectory(initstage)
 
 add_library( HWRC STATIC
     ${HWRC_HEDERS}
@@ -36,7 +36,7 @@ add_library( HWRC STATIC
 )
 
 
-target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 bootway -static )
+target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 initstage -static )
 
 target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

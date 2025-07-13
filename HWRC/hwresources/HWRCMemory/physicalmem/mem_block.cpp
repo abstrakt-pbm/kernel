@@ -191,7 +191,6 @@ uint64_t MemBlocks::get_maximum_addr() {
         if ( current_blk->start_address > maximum_paddr ) {
             maximum_paddr = current_blk->start_address;
         }
-
     }
 
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
@@ -199,7 +198,6 @@ uint64_t MemBlocks::get_maximum_addr() {
         if ( current_blk->start_address > maximum_paddr ) {
             maximum_paddr = current_blk->start_address;
         }
-
     }
     return maximum_paddr;
 }

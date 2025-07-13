@@ -1,9 +1,11 @@
 #include "earl_init.hpp"
 #include <HWRC/kernel_config.hpp>
 #include <HWRCMemory/HWRCMemory.hpp>
-#include <HWRC/bootway/infsrc/uefi/uefi.hpp>
-#include "../../../infsrc/infsrc.hpp"
-#include "../standalone_init.hpp"
+#include <HWRC/initstage/infsrc/uefi/uefi.hpp>
+#include <initstage/subsystems/subsystems_init.hpp>
+#include <initstage/infsrc/infsrc.hpp>
+#include <initstage/way/standalone/standalone_init.hpp>
+#include <initstage/utility/memory_morph.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -55,6 +57,8 @@ void setup_vmem() {
       BlkPurpose::KERNEL
    );
 
+   
+
 
 
 
@@ -87,11 +91,14 @@ extern "C" void early_init() {
       reinterpret_cast<void*>(page_array),
       ppage_count
    );
-   memblk_to_ppa( 
-      &memory_blocks,
-      reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr(reinterpret_cast<Address>(&physical_page_allocator)))
-   );
+
    
 
+   memblk_to_ppa( 
+      &memory_blocks,
+      reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr_initstage(reinterpret_cast<Address>(&physical_page_allocator)))
+   );
+   
+   setup_vmem();
    standalone_init(); // init all subsystems
 }
