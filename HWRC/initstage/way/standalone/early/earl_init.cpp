@@ -7,6 +7,7 @@
 #include <initstage/way/standalone/standalone_init.hpp>
 #include <initstage/utility/memory_morph.hpp>
 #include <initstage/memoryblocks/mem_block.hpp>
+#include <initstage/utility/alignment.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -40,8 +41,8 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
       switch ( mmap_desc->type ) {
          case EFI_MEMORY_DESCRIPTOR_TYPE::EfiConventionalMemory: {
             memory_blocks.add_free_blk(
-               mmap_desc->physical_start,
-               mmap_desc->physical_start + mmap_desc->get_lenght()
+               align_down_initstage( mmap_desc->physical_start, MINIMAL_PAGE_SIZE ),
+               align_up_initstage( mmap_desc->physical_start + mmap_desc->get_lenght(), MINIMAL_PAGE_SIZE)
             );
             break;
          }
@@ -59,9 +60,6 @@ void setup_vmem() {
    );
 
    
-
-
-
 
 }
 
@@ -93,13 +91,11 @@ extern "C" void early_init() {
       ppage_count
    );
 
+   setup_vmem();
    
-
    memblk_to_ppa( 
       &memory_blocks,
       reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr_initstage(reinterpret_cast<Address>(&physical_page_allocator)))
    );
-   
-   setup_vmem();
    standalone_init(); // init all subsystems
 }

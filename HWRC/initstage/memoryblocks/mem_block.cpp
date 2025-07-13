@@ -162,12 +162,12 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
     }
 
     reserve_blk(
-        align_up_initstage(suitable_blk->start_address, alignment),
-        align_down_initstage(suitable_blk->start_address + atleast_length, alignment),
+        align_down_initstage(suitable_blk->start_address, alignment),
+        align_up_initstage(suitable_blk->start_address + atleast_length, alignment),
         purpose
     );
 
-    return suitable_blk->start_address;
+    return align_down_initstage(suitable_blk->start_address, alignment);
 }
 
 uint64_t MemBlocks::get_minimal_addr() {
