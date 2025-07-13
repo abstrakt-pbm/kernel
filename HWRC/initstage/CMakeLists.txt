@@ -10,6 +10,8 @@ set ( INITSTAGE_HEADERS
     "way/standalone/standalone_init.hpp"
 
     "subsystems/subsystems_init.hpp"
+    "subsystems/memory_subsystem_init.hpp"
+    "subsystems/vmem_subsystem_init.hpp"
 
     "utility/memory_morph.hpp"
     "utility/alignment.hpp"
@@ -22,7 +24,8 @@ set ( INITSTAGE_SRC
     "way/standalone/early/earl_init.cpp"
     "way/standalone/standalone_init.cpp"
 
-    "subsystems/subsystems_init.cpp"
+    "subsystems/memory_subsystem_init.cpp"
+    "subsystems/vmem_subsystem_init.cpp"
 
     "utility/memory_morph.cpp"
     "utility/alignment.cpp"

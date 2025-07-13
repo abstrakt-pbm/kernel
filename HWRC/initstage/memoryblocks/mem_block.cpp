@@ -81,7 +81,6 @@ MemBlk* MemBlkArray::operator[]( size_t index) {
 }
 
 ///MemBlocks
-
 void MemBlocks::init( void *base_array, uint64_t base_array_lenght ) {
     reserved_blks.init( base_array );
     free_blks.init( 
@@ -109,8 +108,6 @@ void MemBlocks::init( void *base_array, uint64_t base_array_lenght ) {
             BlkPurpose::NONE
         );
     }
-
-
 }
 
 void MemBlocks::reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose ) {
@@ -144,7 +141,6 @@ void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr ) {
         free_blks.insert_blk(start_paddr, end_paddr, BlkPurpose::NONE);
     }
 }
-
 
 Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) {
     MemBlk* suitable_blk = nullptr;

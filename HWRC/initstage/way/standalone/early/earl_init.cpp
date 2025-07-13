@@ -2,6 +2,7 @@
 #include <HWRC/kernel_config.hpp>
 #include <HWRCMemory/HWRCMemory.hpp>
 #include <HWRC/initstage/infsrc/uefi/uefi.hpp>
+
 #include <initstage/subsystems/subsystems_init.hpp>
 #include <initstage/infsrc/infsrc.hpp>
 #include <initstage/way/standalone/standalone_init.hpp>
@@ -50,18 +51,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    }
 }
 
-void setup_vmem() {
-   Address pml4_addr = memory_blocks.allocate(
-      MINIMAL_PAGE_SIZE,
-      MINIMAL_PAGE_SIZE,
-      0,
-      IDENTITY_MAPPING_SIZE,
-      BlkPurpose::KERNEL
-   );
 
-   
-
-}
 
 extern "C" void early_init() {
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
@@ -91,11 +81,12 @@ extern "C" void early_init() {
       ppage_count
    );
 
-   setup_vmem();
-   
+   initialize_vmem();
+
    memblk_to_ppa( 
       &memory_blocks,
       reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr_initstage(reinterpret_cast<Address>(&physical_page_allocator)))
    );
+
    standalone_init(); // init all subsystems
 }
