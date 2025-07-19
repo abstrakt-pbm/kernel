@@ -10,4 +10,12 @@ set ( ASM_FILES
     "init/init.asm"
 )
 
+set( AMD64_HDR 
+    "vmemsubsystem/vmemsubsystem.hpp"
+)
+
+set( AMD64_SOURCES 
+    "vmemsubsystem/vmemsubsystem.cpp"
+)
+
 add_library( hwrc_amd64 STATIC ${ASM_FILES} )

@@ -10,12 +10,14 @@ set ( HWRC_HEADERS
     "common/acpi/acpi.hpp"
     "hwrctypes.hpp"
     "kernel_config.hpp"
+    "start_kernel.hpp"
 )
 
 set ( HWRC_SRC
     "hwresources/cpu/amd64/cpu.cpp"
     "hwresources/device/bus/pcie/pcie.cpp"
     "common/acpi/acpi.cpp"
+    "start_kernel.cpp"
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \

@@ -3,18 +3,14 @@ cmake_minimum_required(VERSION 3.20)
 project( HWRCMemory )
 
 set ( HWRCMemory_HEADERS
-    #"physicalmem/mem_block.hpp"
     "physicalmem/ppa.hpp"
-    "physicalmem/paging.hpp"
     "physicalmem/paging_utils.hpp"
     "virtualmem/koa.hpp"
     "HWRCMemory.hpp"
 )
 
 set ( HWRCMemory_SRC
-    #"physicalmem/mem_block.cpp"
     "physicalmem/ppa.cpp"
-    "physicalmem/paging.cpp"
     "physicalmem/paging_utils.cpp"
     "alloc_impl.cpp"
     "virtualmem/koa.cpp"

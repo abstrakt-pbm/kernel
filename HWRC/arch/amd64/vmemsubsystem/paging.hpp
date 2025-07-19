@@ -1,9 +1,7 @@
 #pragma once
 #include <HWRC/hwrctypes.hpp>
 #include "paging_utils.hpp"
-#include "ppa.hpp"
 
-extern PhysicalPageAllocator physical_page_allocator;
 
 enum VPT_X64_MASKS : uint64_t {
     PAGE_PRESENT = 1ULL << 0,
@@ -113,24 +111,4 @@ class VirtualPageTable {
     void make_mapping( uint64_t vaddr_start, uint64_t vaddr_end );
     
 
-};
-
-class alignas(8) NPT_ENTRY {
-    public:
-    uint64_t addr : 40;
-    uint64_t reserved : 3;
-    uint64_t accessed : 1;
-    uint64_t dirty : 1;
-    uint64_t write_through : 1;
-    uint64_t cache_disable : 1;
-    uint64_t user_supervisor : 1;
-    uint64_t read_write : 1;
-    uint64_t present : 1;
-    uint64_t nx : 1;
-    uint64_t unused : 1;
-};
-
-class NPT {
-    public:
-    NPT_ENTRY npt_array[512];
 };

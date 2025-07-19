@@ -1,5 +1,6 @@
 #include "memory_morph.hpp"
 #include <initstage/utility/alignment.hpp>
+#include <HWRC/kernel_config.hpp>
 
 extern char _kernel_virtual_start;
 extern char _text_lma;
@@ -58,6 +59,14 @@ void memblk_to_ppa( MemBlocks *memblks, PhysicalPageAllocator* ppa ) {
             }
         }
     }
+}
+
+uint64_t calc_page_count_initstage( Address minimal_paddr, Address maximum_paddr, uint64_t page_size ) {
+    uint64_t page_count = ( maximum_paddr - minimal_paddr / page_size );
+    if ( maximum_paddr - minimal_paddr % page_size != 0) {
+        page_count += 1;
+    }
+    return page_count;
 }
 
 Address get_direct_mapping_base_addr_initstage() {

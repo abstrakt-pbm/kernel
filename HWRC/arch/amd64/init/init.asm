@@ -176,7 +176,7 @@ setup_GDT:
     
 
 bits 64
-extern early_init 
+extern start_initstage 
 
 reload_cs:
     mov ax, 0x10
@@ -188,6 +188,6 @@ reload_cs:
     mov rsp, stack64_space + 40960
     and rsp, 0xFFFFFFFFFFFFFFF0
 
-    mov rax, early_init
+    mov rax, start_initstage
     jmp rax
 

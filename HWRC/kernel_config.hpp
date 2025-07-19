@@ -1,5 +1,11 @@
 #pragma once
 
+enum class ARCH {
+    AMD64
+};
+
+constexpr ARCH arch = ARCH::AMD64;
+
 //INFO SOURCES
 constexpr bool USE_MULTIBOOT2 = true;
 constexpr bool USE_UEFI = true;

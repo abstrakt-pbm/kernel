@@ -6,8 +6,7 @@ set( CMAKE_CXX_STANDARD 20 )
 
 set ( INITSTAGE_HEADERS
     "infsrc/multiboot2/multiboot.hpp"
-    "way/standalone/early/earl_init.hpp"
-    "way/standalone/standalone_init.hpp"
+    "start_initstage.hpp"
 
     "subsystems/subsystems_init.hpp"
     "subsystems/memory_subsystem_init.hpp"
@@ -21,8 +20,7 @@ set ( INITSTAGE_HEADERS
 
 set ( INITSTAGE_SRC
     "infsrc/multiboot2/multiboot.cpp"
-    "way/standalone/early/earl_init.cpp"
-    "way/standalone/standalone_init.cpp"
+    "start_initstage.cpp"
 
     "subsystems/memory_subsystem_init.cpp"
     "subsystems/vmem_subsystem_init.cpp"

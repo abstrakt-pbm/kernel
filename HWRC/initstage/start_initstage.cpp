@@ -1,14 +1,14 @@
-#include "earl_init.hpp"
-#include <HWRC/kernel_config.hpp>
-#include <HWRCMemory/HWRCMemory.hpp>
-#include <HWRC/initstage/infsrc/uefi/uefi.hpp>
-
+#include <initstage/start_initstage.hpp>
 #include <initstage/subsystems/subsystems_init.hpp>
 #include <initstage/infsrc/infsrc.hpp>
-#include <initstage/way/standalone/standalone_init.hpp>
 #include <initstage/utility/memory_morph.hpp>
 #include <initstage/memoryblocks/mem_block.hpp>
 #include <initstage/utility/alignment.hpp>
+
+#include <HWRC/kernel_config.hpp>
+#include <HWRC/start_kernel.hpp>
+#include <HWRCMemory/HWRCMemory.hpp>
+#include <HWRC/initstage/infsrc/uefi/uefi.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -42,8 +42,8 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
       switch ( mmap_desc->type ) {
          case EFI_MEMORY_DESCRIPTOR_TYPE::EfiConventionalMemory: {
             memory_blocks.add_free_blk(
-               align_down_initstage( mmap_desc->physical_start, MINIMAL_PAGE_SIZE ),
-               align_up_initstage( mmap_desc->physical_start + mmap_desc->get_lenght(), MINIMAL_PAGE_SIZE)
+               mmap_desc->physical_start,
+               mmap_desc->physical_start + mmap_desc->get_lenght()
             );
             break;
          }
@@ -51,20 +51,36 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    }
 }
 
+void transfer_to_kernel() {
+   //change stack
+   //transfer to vmem
 
+   start_kernel();
+}
 
-extern "C" void early_init() {
+extern "C" void start_initstage() {
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
    Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
    fill_memblks_using_efi_mmap( efi_mmap_tag );
 
-   memory_blocks.reserve_blk(
+   memory_blocks.reserve_blk ( //safe initstage
+      reinterpret_cast<Address>(&_init_data_lma),
+      reinterpret_cast<Address>(&_init_end),
+      BlkPurpose::INITSTAGE
+   );
+
+   memory_blocks.reserve_blk( //safe kernel
       reinterpret_cast<Address>(&_text_lma),
       reinterpret_cast<Address>(&_bss_physical_end),
       BlkPurpose::KERNEL
    );
-   uint64_t ppage_count = (memory_blocks.get_maximum_addr() - memory_blocks.get_minimal_addr()) / MINIMAL_PAGE_SIZE;
-   Address page_array = memory_blocks.allocate(
+
+   uint64_t ppage_count = calc_page_count_initstage(
+      memory_blocks.get_minimal_addr(),
+      memory_blocks.get_maximum_addr()
+   );
+
+   Address page_array = memory_blocks.allocate( //allocation to ppa page_array
       sizeof(PhysicalPage) * ppage_count,
       MINIMAL_PAGE_SIZE,
       0,
@@ -88,5 +104,5 @@ extern "C" void early_init() {
       reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr_initstage(reinterpret_cast<Address>(&physical_page_allocator)))
    );
 
-   standalone_init(); // init all subsystems
+   transfer_to_kernel();
 }

@@ -10,9 +10,7 @@ void MemBlk::init( Address start_address, Address end_address, BlkPurpose purpos
     this->purpose = purpose;
 }
 
-
 ///MemBlkArray
-
 void MemBlkArray::init( void *array ) {
     this->blk_array = reinterpret_cast<MemBlk*>(array);
     this->capacity = MEMBLK_BASE_CAPACITY;
@@ -24,36 +22,67 @@ MemBlkErrors MemBlkArray::insert_blk( Address start_address, Address end_address
         return MemBlkErrors::OUT_OF_BOUNDS;
     }
 
-    uint64_t insert_possition = 0;
-    for ( auto i = 0 ; i < length ; i++ ) {
-        if ( blk_array[i].start_address < start_address ) {
-            insert_possition++;
+    int64_t blk_cont_start_addr = find_blk_containing_start_addr( start_address );
+    int64_t blk_cont_end_addr = find_blk_containing_end_addr( end_address );
+
+    if ( blk_cont_start_addr == blk_cont_end_addr && blk_cont_start_addr != -1 ) {
+        return MemBlkErrors::ALREADY_EXISTS;
+    } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr == -1) {
+        MemBlk* blk = operator[](blk_cont_start_addr);
+        blk->end_address = end_address;
+
+    } else if ( blk_cont_start_addr == -1 && blk_cont_end_addr != -1 ) {
+        MemBlk* blk = operator[](blk_cont_end_addr);
+        blk->start_address = start_address;
+
+    } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr != -1) {
+        MemBlk* blk_start_addr = operator[](blk_cont_start_addr);
+        MemBlk* blk_end_addr = operator[](blk_cont_end_addr);
+        blk_start_addr->end_address = blk_end_addr->end_address;
+        for ( auto i = blk_cont_start_addr ; i < blk_cont_end_addr ; ++i) {
+            delete_blk(i);
         }
-        // add overlap check
+
+    } else {
+        int64_t insert_ind = -1;
+        for ( auto i = 0 ; i < length ; i++ ) {
+            MemBlk *current_blk = operator[](i);
+            if ( current_blk->start_address > start_address ) {
+                insert_ind = i; 
+                break;
+            }
+        } 
+
+        move_right( insert_ind , length - 1);
+        blk_array[insert_ind].init(
+            start_address,
+            end_address,
+            purpose
+        );
+        ++length;
+
     }
 
-    if ( insert_possition < length ) {
-        move_right(insert_possition, length - insert_possition);
-    }
-
-    blk_array[insert_possition].init( start_address, end_address, purpose );
-    length++;
     return MemBlkErrors::NONE;
 }
 
-void MemBlkArray::delete_blk( uint64_t index ) {
-    if ( index >= length ) {
-        return;
-    } else if (  length == 1) {
-        length = 0;
-        return;
-    } else if ( index < length ) {
-        move_left(length, length - index);
+MemBlkErrors MemBlkArray::delete_blk( uint64_t index ) {
+    if ( index > length - 1) {
+        return MemBlkErrors::OUT_OF_BOUNDS;
     }
+
+    if ( length == 1 || index == length - 1 ) {
+        length--;
+        return MemBlkErrors::NONE;
+    } 
+    
+    move_left( index + 1 , length - 1);
+    
     length--;
+    return MemBlkErrors::NONE;
 }
 
-int64_t MemBlkArray::find_blk( Address start_address, Address end_address ) {
+int64_t MemBlkArray::find_blk_containing_diapasone( Address start_address, Address end_address ) {
     int64_t ind = -1;
     for ( auto i = 0 ; i < length ; i++ ) {
         if ( blk_array->start_address >= start_address && blk_array->end_address <= end_address) {
@@ -64,14 +93,48 @@ int64_t MemBlkArray::find_blk( Address start_address, Address end_address ) {
     return ind;
 }
 
-void MemBlkArray::move_left( uint64_t start_from, uint64_t count ) {
-    for ( auto i = start_from - count ; i < start_from - 1 ; i++ ) {
-        blk_array[i] = blk_array[i + 1];
+int64_t MemBlkArray::find_blk_containing_start_addr( Address start_address ) {
+    int64_t blk_ind = -1;
+    for ( auto i = 0 ; i < length ; i++ ) {
+        MemBlk* current_blk = operator[](i);
+        if ( current_blk->start_address >= start_address && start_address <= current_blk->end_address ) {
+            blk_ind = i;
+            break;
+        }
+    }
+
+    return blk_ind;
+}
+
+int64_t MemBlkArray::find_blk_containing_end_addr( Address end_address ) {
+    int64_t blk_ind = -1;
+    for ( auto i = 0 ; i < length ; i++ ) {
+        MemBlk* current_blk = operator[](i);
+        if ( current_blk->start_address >= end_address && end_address <= current_blk->end_address ) {
+            blk_ind = i;
+            break;
+        }
+    }
+
+    return blk_ind;
+}
+
+void MemBlkArray::move_left( uint64_t start_ind, uint64_t end_ind) {
+    if ( start_ind <= 1) {
+        return;
+    }
+
+    for ( auto i = start_ind ; i < end_ind ; i++ ) {
+        blk_array[i - 1] = blk_array[i];
     }
 }
 
-void MemBlkArray::move_right( uint64_t start_from, uint64_t count ) {
-    for ( auto i = start_from + count ; i  > start_from ; i-- ) {
+void MemBlkArray::move_right( uint64_t start_ind, uint64_t end_ind) {
+    if ( end_ind > length - 1) {
+        return;
+    }
+
+    for ( auto i = end_ind ; i > start_ind ; i-- ) {
         blk_array[i + 1] = blk_array[i];
     }
 }
@@ -81,7 +144,8 @@ MemBlk* MemBlkArray::operator[]( size_t index) {
 }
 
 ///MemBlocks
-void MemBlocks::init( void *base_array, uint64_t base_array_lenght ) {
+void MemBlocks::init( void *base_array, uint64_t base_array_lenght )
+{
     reserved_blks.init( base_array );
     free_blks.init( 
         reinterpret_cast<void*>(reinterpret_cast<Address>(base_array) + sizeof(MemBlk) * MEMBLK_BASE_CAPACITY) 
@@ -90,7 +154,7 @@ void MemBlocks::init( void *base_array, uint64_t base_array_lenght ) {
     reserved_blks.insert_blk( 
         reinterpret_cast<Address>(base_array), 
         reinterpret_cast<Address>(base_array) + 2 * MEMBLK_BASE_CAPACITY * sizeof(MemBlk), 
-        BlkPurpose::INIT_PURPOSE
+        BlkPurpose::INITSTAGE
     );
 
     if ( reinterpret_cast<Address>(base_array) > 1) {
@@ -110,9 +174,10 @@ void MemBlocks::init( void *base_array, uint64_t base_array_lenght ) {
     }
 }
 
-void MemBlocks::reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose ) {
+void MemBlocks::reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose )
+{
     reserved_blks.insert_blk( start_paddr, end_paddr, purpose );
-    uint64_t blk_ind = free_blks.find_blk( start_paddr, end_paddr);
+    uint64_t blk_ind = free_blks.find_blk_containing_diapasone( start_paddr, end_paddr);
     if ( blk_ind == -1 ) {
         return;
     }
@@ -135,19 +200,21 @@ void MemBlocks::reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose 
     }
 }
 
-void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr ) {
-    int64_t blk_ind = free_blks.find_blk( start_paddr, end_paddr);
+void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr )
+{
+    int64_t blk_ind = free_blks.find_blk_containing_diapasone( start_paddr, end_paddr );
     if ( blk_ind == -1 ) {
         free_blks.insert_blk(start_paddr, end_paddr, BlkPurpose::NONE);
     }
 }
 
-Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) {
+Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose )
+{
     MemBlk* suitable_blk = nullptr;
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
         MemBlk* current_blk = free_blks.operator[](i);
         if (( current_blk->start_address >= diapasone_start && current_blk->end_address <= diapasone_end ) &&
-            ( align_up_initstage( current_blk->end_address, alignment) - align_down_initstage( current_blk->start_address, alignment ) >= atleast_length )) {
+            ( current_blk->end_address - current_blk->start_address >= atleast_length )) {
                 suitable_blk = current_blk;
                 break;
         }
@@ -158,22 +225,22 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
     }
 
     reserve_blk(
-        align_down_initstage(suitable_blk->start_address, alignment),
-        align_up_initstage(suitable_blk->start_address + atleast_length, alignment),
+        suitable_blk->start_address,
+        suitable_blk->start_address + atleast_length,
         purpose
     );
 
-    return align_down_initstage(suitable_blk->start_address, alignment);
+    return suitable_blk->start_address;
 }
 
-uint64_t MemBlocks::get_minimal_addr() {
+uint64_t MemBlocks::get_minimal_addr() 
+{
     Address minimal_paddr = 0xFFFFFFFFFFFFFFFF;
     for ( auto i = 0 ; i < reserved_blks.length ; i++ ) {
         MemBlk* current_blk = reserved_blks[i];
         if ( current_blk->start_address < minimal_paddr ) {
             minimal_paddr = current_blk->start_address;
         }
-
     }
 
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
@@ -186,19 +253,20 @@ uint64_t MemBlocks::get_minimal_addr() {
     return minimal_paddr;
 }
 
-uint64_t MemBlocks::get_maximum_addr() {
+uint64_t MemBlocks::get_maximum_addr() 
+{
     Address maximum_paddr = 0;
     for ( auto i = 0 ; i < reserved_blks.length ; i++ ) {
         MemBlk* current_blk = reserved_blks[i];
-        if ( current_blk->start_address > maximum_paddr ) {
-            maximum_paddr = current_blk->start_address;
+        if ( current_blk->end_address > maximum_paddr ) {
+            maximum_paddr = current_blk->end_address;
         }
     }
 
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
         MemBlk* current_blk = free_blks[i];
-        if ( current_blk->start_address > maximum_paddr ) {
-            maximum_paddr = current_blk->start_address;
+        if ( current_blk->end_address > maximum_paddr ) {
+            maximum_paddr = current_blk->end_address;
         }
     }
     return maximum_paddr;
