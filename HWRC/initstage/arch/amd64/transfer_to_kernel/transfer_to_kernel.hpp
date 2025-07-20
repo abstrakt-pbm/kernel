@@ -10,4 +10,7 @@ void change_pml4() __attribute__((
     always_inline
 ));
 
-void amd64_transfer_to_kernel() __attribute__((section(".init.text")));
+void amd64_transfer_to_kernel() __attribute__((
+    section(".init.text"),
+    always_inline
+));

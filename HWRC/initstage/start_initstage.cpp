@@ -4,6 +4,7 @@
 #include <initstage/utility/memory_morph.hpp>
 #include <initstage/memoryblocks/mem_block.hpp>
 #include <initstage/utility/alignment.hpp>
+#include <initstage/arch/amd64/transfer_to_kernel/transfer_to_kernel.hpp>
 
 #include <HWRC/kernel_config.hpp>
 #include <HWRC/start_kernel.hpp>
@@ -52,9 +53,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
 }
 
 void transfer_to_kernel() {
-   //change stack
-   //transfer to vmem
-   
+   amd64_transfer_to_kernel();
    start_kernel();
 }
 
