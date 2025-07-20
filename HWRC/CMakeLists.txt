@@ -43,4 +43,5 @@ target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 initstage -s
 target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${CMAKE_CURRENT_SOURCE_DIR}/common/acpi
+    ${CMAKE_CURRENT_SOURCE_DIR}/virtualsystems
 )

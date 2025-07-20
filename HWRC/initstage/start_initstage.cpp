@@ -54,7 +54,7 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
 void transfer_to_kernel() {
    //change stack
    //transfer to vmem
-
+   
    start_kernel();
 }
 
@@ -77,7 +77,8 @@ extern "C" void start_initstage() {
 
    uint64_t ppage_count = calc_page_count_initstage(
       memory_blocks.get_minimal_addr(),
-      memory_blocks.get_maximum_addr()
+      memory_blocks.get_maximum_addr(),
+      MINIMAL_PAGE_SIZE
    );
 
    Address page_array = memory_blocks.allocate( //allocation to ppa page_array
@@ -97,6 +98,7 @@ extern "C" void start_initstage() {
       ppage_count
    );
 
+   initialize_virtsystems();
    initialize_vmem();
 
    memblk_to_ppa( 

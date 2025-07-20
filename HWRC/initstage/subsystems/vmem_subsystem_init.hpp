@@ -1,4 +1,5 @@
 #pragma once
+#include <HWRC/hwrctypes.hpp>
 
 
 void initialize_vmem() __attribute__((section(".init.text")));

@@ -1,6 +1,7 @@
 #include "vmemsubsystem.hpp"
 
-void  VMemSubsystem::make_mapping( Address start_vaddr, Address end_vaddr, Address start_paddr, Address end_paddr ) {
+void  AMD64VMemSystem::make_mapping( Address start_vaddr, Address end_vaddr, Address start_paddr, Address end_paddr ) {
 
 }
 
+AMD64VMemSystem vmem_subsystem;
