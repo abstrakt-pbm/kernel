@@ -1,5 +1,5 @@
 #include "main.hpp"
-
+/*
 ACPI acpi;
 /*
 KOA::KernelObjectAllocator kernel_object_allocator;
@@ -8,7 +8,8 @@ extern PhysicalPageAllocator physical_page_allocator;
 MemoryInitAllocator mem_init_allocator;
 */
 
-MultibootInfo mbi;
+//MultibootInfo mbi;
+/*
 CPU cpu;
 SerialPort qemu_port;
 
@@ -50,7 +51,7 @@ void make_direct_mapping_in_init_pml4() { // can be enabled only after init ppa
 
 }
 
-
+/*
 void handle_multiboot_mmap_entry( MultibootMMAP_Entry* entry ) {
     uint64_t ppages_in_entry = calc_page_count_in_range( 
         entry->addr,
@@ -95,6 +96,7 @@ void handle_multiboot_mmap_entry( MultibootMMAP_Entry* entry ) {
      }
 }
 
+
 void handle_multiboot_mmap_table( MultibootMMAP_Tag& mmap_tag ) {
     uint64_t mmap_entries = mmap_tag.get_entry_count();
     uint64_t max_addr = mmap_tag.get_maximum_addr();
@@ -118,8 +120,9 @@ RootSystemDescriptionPointer* find_acpi_rsdp_bios() {
     return nullptr;
 }
 
-
+*/
 extern "C" void init_hwrc() {
+    /*
     add_hypervisor_mapping_to_init_pml4();
     qemu_port.init(0x3F8);
 
@@ -185,5 +188,5 @@ extern "C" void init_hwrc() {
     uint64_t new_stack_top = paddr_to_vaddr_direct_mapping(reinterpret_cast<Address>(new_hypervisor_stack) + PAGE_SIZE::KB_4);
     cpu.change_stack( new_stack_top + 0x1000 );
     cpu.change_cr3( kernel_vpt.get_pml4_paddr_start() );
-    */    
+    */
 }

@@ -9,8 +9,8 @@ add_executable( hv.elf main.cpp main.hpp)
 
 
 add_subdirectory(HWRC)
+add_subdirectory(initstage)
 add_subdirectory(thinlibcxx)
-add_subdirectory(debug)
 
 set( LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld )
 

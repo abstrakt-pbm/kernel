@@ -9,7 +9,6 @@
 #include <HWRC/kernel_config.hpp>
 #include <HWRC/start_kernel.hpp>
 #include <HWRCMemory/HWRCMemory.hpp>
-#include <HWRC/initstage/infsrc/uefi/uefi.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk

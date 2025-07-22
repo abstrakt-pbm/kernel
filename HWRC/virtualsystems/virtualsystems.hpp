@@ -7,4 +7,4 @@ class VirtualSubsystemsControl {
     
 };
 
-export VirtualSubsystemsControl virtual_subsystems_control;
+extern VirtualSubsystemsControl virtual_subsystems_control;

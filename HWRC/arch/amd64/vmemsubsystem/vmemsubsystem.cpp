@@ -4,4 +4,4 @@ void  AMD64VMemSystem::make_mapping( Address start_vaddr, Address end_vaddr, Add
 
 }
 
-AMD64VMemSystem vmem_subsystem;
+AMD64VMemSystem amd64_vmem_subsystem;

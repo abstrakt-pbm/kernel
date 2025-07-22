@@ -9,12 +9,15 @@ set ( HWRC_HEADERS
     "hwresources/device/bus/pcie/pcie.hpp"
     "common/acpi/acpi.hpp"
     "hwrctypes.hpp"
+    "virtualsystems/virtualsystems.hpp"
     "kernel_config.hpp"
     "start_kernel.hpp"
 )
 
 set ( HWRC_SRC
     "hwresources/cpu/amd64/cpu.cpp"
+    "virtualsystems/virtualsystems.cpp"
+    "kernel_config.hpp"
     "hwresources/device/bus/pcie/pcie.cpp"
     "common/acpi/acpi.cpp"
     "start_kernel.cpp"
@@ -30,7 +33,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
 add_subdirectory(hwresources/HWRCMemory)
 
 add_subdirectory(arch/amd64)
-add_subdirectory(initstage)
 
 add_library( HWRC STATIC
     ${HWRC_HEDERS}
@@ -38,7 +40,7 @@ add_library( HWRC STATIC
 )
 
 
-target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 initstage -static )
+target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 -static )
 
 target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

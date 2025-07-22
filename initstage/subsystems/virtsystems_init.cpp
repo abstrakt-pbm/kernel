@@ -5,5 +5,5 @@
 
 void initialize_virtsystems() {
     VirtualSubsystemsControl *vsc = reinterpret_cast<VirtualSubsystemsControl*>( kernel_vaddr_to_paddr_initstage( reinterpret_cast<Address>( &virtual_subsystems_control )) );
-    vsc->vmemcontrol = &amd64_vmem_subsystem;
+    //vsc->vmemcontrol = static_cast<IVMemSubsystem*>( &amd64_vmem_subsystem );
 }

@@ -5,6 +5,7 @@ project( HWRCMemory )
 set ( HWRCMemory_HEADERS
     "physicalmem/ppa.hpp"
     "physicalmem/paging_utils.hpp"
+    "vmemcontrol/ivmemcontrol.hpp"
     "virtualmem/koa.hpp"
     "HWRCMemory.hpp"
 )

@@ -7,8 +7,6 @@
 #include <thinlibcxx/memory.hpp>
 
 #include <HWRC/hwresources/cpu/amd64/cpu.hpp>
-#include <HWRC/initstage/infsrc/multiboot2/multiboot.hpp>
-#include "debug/qemu/serial.cpp"
 
 // data
 

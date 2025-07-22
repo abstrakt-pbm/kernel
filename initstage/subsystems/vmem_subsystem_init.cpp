@@ -31,9 +31,9 @@ void make_direct_mapping( uint64_t *pml4_head ) {
     uint64_t *pdpt_for_dm = reinterpret_cast<uint64_t*>( memory_blocks.allocate( 0x1000, MINIMAL_PAGE_SIZE, 0, IDENTITY_MAPPING_SIZE, BlkPurpose::KERNEL));
 
     for ( auto i = 0 ; i < pages_to_map ; i++ ) {
-        uint64_t pd_offset = calc_pd_offset( i * 0x200000 + dm_start );
-        uint64_t pdpt_offset = calc_pdpt_offset(i * 0x200000 + dm_start );
-        uint64_t pml4_offset = calc_pml4_offset(i * 0x200000 + dm_start );
+        uint64_t pd_offset = calc_pd_offset_initstage( i * 0x200000 + dm_start );
+        uint64_t pdpt_offset = calc_pdpt_offset_initstage(i * 0x200000 + dm_start );
+        uint64_t pml4_offset = calc_pml4_offset_initstage(i * 0x200000 + dm_start );
         uint64_t pdp_table_addr = pml4_head[pml4_offset] & static_cast<uint64_t>(AMD64_MASKS::PHYS_ADDR_MASK);
         uint64_t pd_table_addr = pdp_table_addr & static_cast<uint64_t>(AMD64_MASKS::PHYS_ADDR_MASK);
 
@@ -76,7 +76,7 @@ void make_kernel_mapping( uint64_t *pml4_head ) {
         0x200000
     );
 
-    uint64_t pml4_offset = calc_pml4_offset(kernel_start_vaddr);
+    uint64_t pml4_offset = calc_pml4_offset_initstage(kernel_start_vaddr);
     for ( auto i = 0  ; i < kernel_page_count ; i++ ) {
         uint64_t pd_offset = calc_pd_offset_initstage( i * 0x200000 + kernel_start_vaddr);
         uint64_t pdpt_offset = calc_pdpt_offset_initstage(i * 0x200000 + kernel_start_vaddr);
