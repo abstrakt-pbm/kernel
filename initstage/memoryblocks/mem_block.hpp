@@ -4,9 +4,9 @@
 
 enum class MemBlkErrors {
     NONE,
-    OVERLAP,
     OUT_OF_BOUNDS,
     ALLREADY_RESERVED,
+    ALREADY_FREE,
     ALREADY_EXISTS
 };
 
@@ -28,10 +28,10 @@ class MemBlk {
 
 };
 
-class MemBlkArray {
+class BlkBubbleArray {
     private:
-    void move_right( uint64_t start_ind, uint64_t end_ind ) __attribute__((section(".init.text")));
-    void move_left( uint64_t start_ind, uint64_t end_ind ) __attribute__((section(".init.text")));
+    void move_right( uint64_t start_ind, uint64_t end_ind, uint64_t count ) __attribute__((section(".init.text")));
+    void move_left( uint64_t start_ind, uint64_t end_ind, uint64_t count ) __attribute__((section(".init.text")));
 
     public:
     MemBlk *blk_array;
@@ -43,10 +43,10 @@ class MemBlkArray {
     void init( void *listhead ) __attribute__((section(".init.text")));
 
     MemBlkErrors insert_blk( Address start_address, Address end_address, BlkPurpose purpose ) __attribute__((section(".init.text")));
-    MemBlkErrors delete_blk( uint64_t index ) __attribute__((section(".init.text")));
-    
-    bool check_overlap( Address start_address, Address end_address ) __attribute__((section(".init.text")));
+    MemBlkErrors remove_blk( Address start_address, Address end_address ) __attribute__((section(".init.text")));
 
+    MemBlkErrors delete_blks_by_ind_dia( uint64_t start_ind, uint64_t end_ind ) __attribute__((section(".init.text")));
+    
     int64_t find_blk_containing_diapasone( Address start_address, Address end_address ) __attribute__((section(".init.text")));
     int64_t find_blk_containing_start_addr( Address start_address ) __attribute__((section(".init.text")));
     int64_t find_blk_containing_end_addr( Address end_address ) __attribute__((section(".init.text")));
@@ -57,8 +57,8 @@ class MemBlkArray {
 
 class MemBlocks{
     public:
-    MemBlkArray reserved_blks;
-    MemBlkArray free_blks;
+    BlkBubbleArray reserved_blks;
+    BlkBubbleArray free_blks;
 
     void init( void* base_array, uint64_t base_array_lenght ) __attribute__((section(".init.text")));
     void add_free_blk( Address start_paddr, Address end_paddr ) __attribute__((section(".init.text")));

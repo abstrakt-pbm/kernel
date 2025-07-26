@@ -31,7 +31,7 @@ uint64_t paddr_to_vaddr_dm_initstage( Address paddr) {
 }
 
 void memblk_to_ppa( MemBlocks *memblks, PhysicalPageAllocator* ppa ) {
-    MemBlkArray *memblks_reserved = &memblks->reserved_blks;
+    BlkBubbleArray *memblks_reserved = &memblks->reserved_blks;
     PhysicalPage *page_array = reinterpret_cast<PhysicalPage*>(
         vaddr_to_paddr_dm_initstage( reinterpret_cast<Address>( ppa->page_array ) )
     );
@@ -62,7 +62,7 @@ void memblk_to_ppa( MemBlocks *memblks, PhysicalPageAllocator* ppa ) {
 }
 
 uint64_t calc_page_count_initstage( Address minimal_paddr, Address maximum_paddr, uint64_t page_size ) {
-    uint64_t page_count = ( maximum_paddr - minimal_paddr / page_size );
+    uint64_t page_count = ( maximum_paddr - minimal_paddr ) / page_size ;
     if ( maximum_paddr - minimal_paddr % page_size != 0) {
         page_count += 1;
     }
