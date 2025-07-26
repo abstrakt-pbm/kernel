@@ -1,6 +1,7 @@
 #include "vmem_subsystem_init.hpp"
 #include <initstage/memoryblocks/mem_block.hpp>
 #include <initstage/utility/memory_morph.hpp>
+#include <initstage/utility/alignment.hpp>
 #include <initstage/arch/amd64/vmemsubsystem/vmemsubsystem_init.hpp>
 
 #include <HWRC/arch/amd64/vmemsubsystem/vmemsubsystem.hpp>
@@ -23,7 +24,7 @@ enum class AMD64_MASKS : uint64_t {
 
 void make_direct_mapping( uint64_t *pml4_head ) {
     uint64_t dm_start = get_direct_mapping_base_addr_initstage();
-    uint64_t dm_end = align_up( dm_start + memory_blocks.get_maximum_addr(), 0x200000 );
+    uint64_t dm_end = align_up_initstage( dm_start + memory_blocks.get_maximum_addr(), 0x200000 );
 
     uint64_t pages_to_map = calc_page_count_initstage(dm_start, dm_end, static_cast<uint64_t>(PAGE_SIZE::MB_2));
 
@@ -59,7 +60,7 @@ void make_direct_mapping( uint64_t *pml4_head ) {
 
         uint64_t *pdp_table = reinterpret_cast<uint64_t*>(pdp_table_addr);
         uint64_t *pd_table = reinterpret_cast<uint64_t*>(pd_table_addr);
-        pd_table[ pd_offset ] = ( vaddr_to_paddr_direct_mapping(i * 0x200000 + dm_start) & 0x000FFFFFFFFFF000 ) | 0x83 ;
+        pd_table[ pd_offset ] = ( vaddr_to_paddr_initstage(i * 0x200000 + dm_start) & 0x000FFFFFFFFFF000 ) | 0x83 ;
         pdp_table[ pdpt_offset ] = (reinterpret_cast<uint64_t>(&(pd_for_dm[ pd_offset ])) & 0x000FFFFFFFFFF000) | 0x23;
     }
 }
@@ -94,13 +95,13 @@ void initialize_vmem() {
     uint64_t* pml4_head = reinterpret_cast<uint64_t*>( memory_blocks.allocate( 0x1000, MINIMAL_PAGE_SIZE, 0, IDENTITY_MAPPING_SIZE, BlkPurpose::KERNEL));
     make_kernel_mapping(pml4_head);
     make_direct_mapping(pml4_head);
-    AMD64VMemSystem *amd64_vmem_subsystem = reinterpret_cast<AMD64VMemSystem*>(
-        kernel_paddr_to_vaddr_initstage( reinterpret_cast<Address>(&amd64_vmem_subsystem))
+
+    AMD64VMemSystem *amd64_vmem = reinterpret_cast<AMD64VMemSystem*>(
+        kernel_vaddr_to_paddr_initstage( reinterpret_cast<Address>(&amd64_vmem_subsystem))
     );
 
-    amd64_vmem_subsystem->pml4_head = reinterpret_cast<uint64_t*>(
+    amd64_vmem->pml4_head = reinterpret_cast<uint64_t*>(
         kernel_paddr_to_vaddr_initstage( reinterpret_cast<Address>(&pml4_head))
     );
-
 
 }

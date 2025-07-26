@@ -3,11 +3,6 @@ cmake_minimum_required(VERSION 3.20)
 project( hwrc_amd64 )
 
 
-
-#set ( ASM_FILES
-#    "init/init.asm"
-#)
-
 set( AMD64_HDR 
     "vmemsubsystem/vmemsubsystem.hpp"
 )
