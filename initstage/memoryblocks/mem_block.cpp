@@ -104,7 +104,7 @@ int64_t BlkBubbleArray::find_blk_containing_start_addr( Address start_address ) 
     int64_t blk_ind = -1;
     for ( auto i = 0 ; i < length ; i++ ) {
         MemBlk* current_blk = operator[](i);
-        if ( current_blk->start_address >= start_address && start_address <= current_blk->end_address ) {
+        if ( start_address >= current_blk->start_address && start_address <= current_blk->end_address ) {
             blk_ind = i;
             break;
         }
@@ -233,6 +233,7 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
         MemBlk* current_blk = free_blks.operator[](i);
         if (( current_blk->start_address >= diapasone_start && current_blk->end_address <= diapasone_end ) &&
+            ( align_up_initstage(current_blk->start_address, alignment) < current_blk->end_address ) &&
             ( current_blk->end_address - current_blk->start_address >= atleast_length )) {
                 suitable_blk = current_blk;
                 break;
@@ -244,12 +245,12 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
     }
 
     reserve_blk(
-        suitable_blk->start_address,
-        suitable_blk->start_address + atleast_length,
+        align_up_initstage(suitable_blk->start_address, alignment),
+        align_up_initstage(suitable_blk->start_address, alignment) + atleast_length,
         purpose
     );
 
-    return suitable_blk->start_address;
+    return align_up_initstage(suitable_blk->start_address, alignment);
 }
 
 uint64_t MemBlocks::get_minimal_addr() 

@@ -9,7 +9,7 @@ set(CMAKE_ASM_NASM_FLAGS "-f elf64")
 
 
 set ( ASM_FILES
-    "init/init.asm"
+    "asm/init.asm"
 )
 
 set( AMD64_HDR 

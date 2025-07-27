@@ -48,6 +48,9 @@ SECTIONS {
     .rodata ALIGN(0x1000) : AT(_rodata_lma) {
         *(.rodata)
         *(.rodata.*)
+        *(.data.rel.ro)
+        *(.data.rel.ro.*)
+        *(.gnu.linkonce.d.rel.ro)
     } :rodata
 
     _rodata_lma_end = ALIGN(0x1000) - KERNEL_VMA + _text_lma;
