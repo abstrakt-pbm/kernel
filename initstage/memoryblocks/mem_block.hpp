@@ -7,7 +7,8 @@ enum class MemBlkErrors {
     OUT_OF_BOUNDS,
     ALLREADY_RESERVED,
     ALREADY_FREE,
-    ALREADY_EXISTS
+    ALREADY_EXISTS,
+    NOT_EXISTS
 };
 
 enum class BlkPurpose : uint8_t {
@@ -48,9 +49,10 @@ class BlkBubbleArray {
     MemBlkErrors delete_blks_by_ind_dia( uint64_t start_ind, uint64_t end_ind ) __attribute__((section(".init.text")));
     
     int64_t find_blk_containing_diapasone( Address start_address, Address end_address ) __attribute__((section(".init.text")));
-    int64_t find_blk_containing_start_addr( Address start_address ) __attribute__((section(".init.text")));
-    int64_t find_blk_containing_end_addr( Address end_address ) __attribute__((section(".init.text")));
 
+    int64_t find_blk_containing_addr( Address address ) __attribute__((section(".init.text")));
+    int64_t find_blk_nearest_left( Address address ) __attribute__((section(".init.text")));
+    int64_t find_blk_nearest_right( Address address ) __attribute__((section(".init.text")));
 
 };
 

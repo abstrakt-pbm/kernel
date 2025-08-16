@@ -28,8 +28,8 @@ MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_addr
         return MemBlkErrors::NONE;
     }
 
-    int64_t blk_cont_start_addr = find_blk_containing_start_addr( start_address );
-    int64_t blk_cont_end_addr = find_blk_containing_end_addr( end_address );
+    int64_t blk_cont_start_addr = find_blk_containing_addr( start_address );
+    int64_t blk_cont_end_addr = find_blk_containing_addr( end_address );
 
     if ( blk_cont_start_addr == blk_cont_end_addr && blk_cont_start_addr != -1 ) {
         return MemBlkErrors::ALREADY_EXISTS;
@@ -98,29 +98,39 @@ int64_t BlkBubbleArray::find_blk_containing_diapasone( Address start_address, Ad
     return ind;
 }
 
-int64_t BlkBubbleArray::find_blk_containing_start_addr( Address start_address ) {
-    int64_t blk_ind = -1;
+int64_t BlkBubbleArray::find_blk_nearest_left( Address address ) {
+    int64_t ind = -1;
     for ( auto i = 0 ; i < length ; i++ ) {
-        MemBlk* current_blk = operator[](i);
-        if ( start_address >= current_blk->start_address && start_address <= current_blk->end_address ) {
-            blk_ind = i;
+        MemBlk *current_blk = &blk_array[i];
+        if (current_blk->start_address > address) {
             break;
         }
+        ind = i;
     }
-
-    return blk_ind;
+    return ind;
 }
 
-int64_t BlkBubbleArray::find_blk_containing_end_addr( Address end_address ) {
+int64_t BlkBubbleArray::find_blk_nearest_right( Address address ) {
+    int64_t ind = -1;
+    for ( auto i = 0 ; i < length ; i++ ) {
+        MemBlk *current_blk = &blk_array[i];
+        if (current_blk->end_address > address) {
+            break;
+        }
+        ind = i;
+    }
+    return ind;
+}
+
+int64_t BlkBubbleArray::find_blk_containing_addr( Address address ) {
     int64_t blk_ind = -1;
     for ( auto i = 0 ; i < length ; i++ ) {
-        MemBlk* current_blk = operator[](i);
-        if ( current_blk->start_address >= end_address && end_address <= current_blk->end_address ) {
+        MemBlk *current_memblk = &blk_array[i];
+        if ( current_memblk->start_address <= address && current_memblk->end_address >= address ) {
             blk_ind = i;
             break;
         }
     }
-
     return blk_ind;
 }
 
@@ -166,16 +176,14 @@ void MemBlocks::init( void *base_array, uint64_t base_array_lenght )
         free_blks.insert_blk(
             1,
             reinterpret_cast<Address>(base_array) - 1,
-            BlkPurpose::NONE
-        );
+            BlkPurpose::NONE);
     }
     
     if ( base_array_lenght > 2 * MEMBLK_BASE_CAPACITY ) {
         free_blks.insert_blk(
             reinterpret_cast<Address>(base_array) + 2 * MEMBLK_BASE_CAPACITY * sizeof(MemBlk) + 1,
             reinterpret_cast<Address>(base_array) + base_array_lenght,
-            BlkPurpose::NONE
-        );
+            BlkPurpose::NONE);
     }
 }
 
@@ -188,11 +196,11 @@ void MemBlocks::reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose 
 
 MemBlkErrors BlkBubbleArray::remove_blk( Address start_address, Address end_address )
 {
-    uint64_t target_start_addr_ind= find_blk_containing_start_addr( start_address );
-    uint64_t target_end_addr_ind = find_blk_containing_end_addr( start_address );
+    uint64_t target_start_addr_ind= find_blk_containing_addr( start_address );
+    uint64_t target_end_addr_ind = find_blk_containing_addr( end_address );
 
     if ( target_start_addr_ind == target_end_addr_ind == -1) {
-        return MemBlkErrors::ALREADY_FREE;
+        return MemBlkErrors::NOT_EXISTS;
     }
 
     if ( target_start_addr_ind == target_end_addr_ind != -1) {
