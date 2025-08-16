@@ -114,10 +114,10 @@ int64_t BlkBubbleArray::find_blk_nearest_right( Address address ) {
     int64_t ind = -1;
     for ( auto i = 0 ; i < length ; i++ ) {
         MemBlk *current_blk = &blk_array[i];
-        if (current_blk->end_address > address) {
+        ind = i;
+        if (current_blk->start_address > address) {
             break;
         }
-        ind = i;
     }
     return ind;
 }
