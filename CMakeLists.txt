@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
-project( hyperium )
+project( kernel )
 
 set( CMAKE_CXX_STANDARD 20 )
 
 
-add_executable( hv.elf main.cpp main.hpp)
+add_executable( kernel.elf main.cpp main.hpp)
 
 
 add_subdirectory(HWRC)
@@ -23,7 +23,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
 
 
 
-target_link_options( hv.elf
+target_link_options( kernel.elf
     PRIVATE -T ${LINKER_SCRIPT}
     -nostdlib             # Не использовать стандартную библиотеку
     -nostartfiles         # Не использовать стартовые файлы (crt0, etc.)
@@ -35,4 +35,4 @@ target_link_options( hv.elf
     -m64         # Для 64-битных систем (если нужно, может быть задано через CMAKE_EXE_LINKER_FLAGS)
 )
 
-target_link_libraries( hv.elf PUBLIC thinlibcxx HWRC initstage -static )
+target_link_libraries( kernel.elf PUBLIC thinlibcxx HWRC initstage -static )

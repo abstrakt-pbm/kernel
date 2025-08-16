@@ -18,7 +18,7 @@ void BlkBubbleArray::init( void *array ) {
 }
 
 MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_address, BlkPurpose purpose ) {
-    if ( length == capacity) {
+    if ( length == capacity ) {
         return MemBlkErrors::OUT_OF_BOUNDS;
     }
 
@@ -34,16 +34,16 @@ MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_addr
     if ( blk_cont_start_addr == blk_cont_end_addr && blk_cont_start_addr != -1 ) {
         return MemBlkErrors::ALREADY_EXISTS;
     } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr == -1) {
-        MemBlk* blk = operator[](blk_cont_start_addr);
+        MemBlk* blk = &blk_array[blk_cont_start_addr];
         blk->end_address = end_address;
 
     } else if ( blk_cont_start_addr == -1 && blk_cont_end_addr != -1 ) {
-        MemBlk* blk = operator[](blk_cont_end_addr);
+        MemBlk* blk = &blk_array[blk_cont_end_addr];
         blk->start_address = start_address;
 
     } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr != -1) {
-        MemBlk* blk_start_addr = operator[](blk_cont_start_addr);
-        MemBlk* blk_end_addr = operator[](blk_cont_end_addr);
+        MemBlk* blk_start_addr = &blk_array[blk_cont_start_addr];
+        MemBlk* blk_end_addr = &blk_array[blk_cont_end_addr];
         blk_start_addr->end_address = blk_end_addr->end_address;
         delete_blks_by_ind_dia(blk_cont_start_addr, blk_cont_end_addr);
 
@@ -58,16 +58,14 @@ MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_addr
         }
 
         if ( insert_ind < length - 1) {
-        move_right( insert_ind , length - 1, end_address - start_address + 1 );
+        move_right( insert_ind , length - 1, length - insert_ind );
         }
 
         blk_array[insert_ind].init(
             start_address,
             end_address,
-            purpose
-        );
+            purpose);
         ++length;
-
     }
 
     return MemBlkErrors::NONE;
