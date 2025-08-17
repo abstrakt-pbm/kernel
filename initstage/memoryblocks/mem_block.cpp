@@ -69,8 +69,8 @@ MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_addr
             }
         }
 
-        if ( insert_ind < length - 1) {
-        move_right( insert_ind , length - 1, length - insert_ind );
+        if ( insert_ind < length ) {
+            move_right( insert_ind, length - 1, length - insert_ind );
         }
 
         blk_array[insert_ind].init(
@@ -160,8 +160,7 @@ void BlkBubbleArray::move_right( uint64_t start_ind, uint64_t end_ind, uint64_t 
     if ( end_ind > length - 1) {
         return;
     }
-
-    for ( auto i = end_ind ; i >= start_ind ; i-- ) {
+    for ( int64_t i = end_ind ; i >= (int64_t)start_ind ; i-- ) {
         blk_array[i + count] = blk_array[i];
     }
 }
