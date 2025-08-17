@@ -1,0 +1,2 @@
+TEST( MemBlocksTest, Initialize) {
+}

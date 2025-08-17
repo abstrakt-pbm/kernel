@@ -23,13 +23,6 @@ set ( HWRC_SRC
     "start_kernel.cpp"
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
-  -fno-pic -fno-pie \
-  -fno-exceptions -fno-rtti \
-  -fno-unwind-tables -fno-asynchronous-unwind-tables \
-  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O0 -mcmodel=large ")
-
 add_subdirectory(hwresources/HWRCMemory)
 
 add_subdirectory(arch/amd64)
@@ -40,7 +33,9 @@ add_library( HWRC STATIC
 )
 
 
-target_link_libraries( HWRC PUBLIC HWRCMemory thinlibcxx hwrc_amd64 -static )
+target_link_libraries( HWRC
+    PUBLIC HWRCMemory thinlibcxx hwrc_amd64
+    PRIVATE kernel_compiler_options -static )
 
 target_include_directories( HWRC PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

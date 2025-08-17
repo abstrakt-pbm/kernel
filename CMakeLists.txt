@@ -4,9 +4,23 @@ project( kernel )
 
 set( CMAKE_CXX_STANDARD 20 )
 
-
-add_executable( kernel.elf main.cpp main.hpp)
-
+add_library(kernel_compiler_options INTERFACE)
+target_compile_options( kernel_compiler_options INTERFACE
+    -ffreestanding
+    -nostdlib
+    -nostartfiles
+    -fno-pic
+    -fno-pie
+    -fno-exceptions
+    -fno-rtti
+    -fno-unwind-tables
+    -fno-asynchronous-unwind-tables
+    -fno-threadsafe-statics
+    -fno-stack-protector
+    -fno-builtin
+    -O0
+    -mcmodel=large
+)
 
 add_subdirectory(HWRC)
 add_subdirectory(initstage)
@@ -14,19 +28,12 @@ add_subdirectory(thinlibcxx)
 
 set( LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
-  -fno-pic -fno-pie \
-  -fno-exceptions -fno-rtti \
-  -fno-unwind-tables -fno-asynchronous-unwind-tables \
-  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O0 -mcmodel=large ")
-
-
+add_executable( kernel.elf)
+target_sources( kernel.elf PRIVATE
+    $<TARGET_OBJECTS:initstage>)
 
 target_link_options( kernel.elf
     PRIVATE -T ${LINKER_SCRIPT}
-    -nostdlib             # Не использовать стандартную библиотеку
-    -nostartfiles         # Не использовать стартовые файлы (crt0, etc.)
     -static               # Полная статическая линковка
     #-Wl,--gc-sections     # Удаление неиспользуемых секций
     -Wl,--no-undefined    # Запрет неразрешённых символов

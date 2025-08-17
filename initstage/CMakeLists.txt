@@ -4,8 +4,6 @@ project( initstage )
 
 set( CMAKE_CXX_STANDARD 20 )
 
-
-
 set ( INITSTAGE_HEADERS
     "infsrc/multiboot2/multiboot.hpp"
     "start_initstage.hpp"
@@ -37,18 +35,20 @@ set ( INITSTAGE_SRC
     
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
-  -fno-pic -fno-pie \
-  -fno-exceptions -fno-rtti \
-  -fno-unwind-tables -fno-asynchronous-unwind-tables \
-  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O0 -mcmodel=large ")
 
 add_subdirectory( arch/amd64 )
+add_subdirectory( memoryblocks )
+add_subdirectory( utility )
+add_subdirectory( tests )
 
-add_library( initstage STATIC ${INITSTAGE_HEADERS} ${INITSTAGE_SRC} )
+add_library( initstage OBJECT ${INITSTAGE_HEADERS} ${INITSTAGE_SRC} )
+target_sources( initstage PRIVATE
+    $<TARGET_OBJECTS:initstage-amd64>)
 
-target_link_libraries( initstage PUBLIC thinlibcxx HWRC HWRCMemory initstage-amd64 )
+target_link_libraries( initstage 
+    PUBLIC initstage-memoryblocks initstage-utility HWRC thinlibcxx HWRCMemory 
+    PRIVATE  kernel_compiler_options -static)
+
 
 target_include_directories( initstage PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

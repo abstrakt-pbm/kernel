@@ -21,7 +21,10 @@ set( AMD64_SOURCES
     "transfer_to_kernel/transfer_to_kernel.cpp"
     "vmemsubsystem/vmemsubsystem_init.cpp"
 )
+add_library(initstage-amd64-asm OBJECT ${ASM_FILES})
+add_library( initstage-amd64 OBJECT ${AMD64_HDR} ${AMD64_SOURCES} )
 
-add_library( initstage-amd64  STATIC ${ASM_FILES} ${AMD64_HDR} ${AMD64_SOURCES} )
+target_sources( initstage-amd64 PRIVATE
+    $<TARGET_OBJECTS:initstage-amd64-asm>)
 
-target_link_libraries( initstage-amd64 PUBLIC initstage thinlibcxx -static )
+target_link_libraries( initstage-amd64 PUBLIC HWRCMemory thinlibcxx -static )

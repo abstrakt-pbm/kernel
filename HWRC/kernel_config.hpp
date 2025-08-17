@@ -1,4 +1,6 @@
 #pragma once
+#include <thinlibcxx/cstdint.hpp>
+using namespace thinlibcxx;
 
 enum class ARCH {
     AMD64

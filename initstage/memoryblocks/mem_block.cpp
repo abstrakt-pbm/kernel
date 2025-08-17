@@ -1,6 +1,8 @@
 #include "mem_block.hpp"
 #include <initstage/utility/alignment.hpp>
 
+using namespace thinlibcxx;
+
 MemBlocks memory_blocks __attribute__((section(".init.data")));;
 
 ///MemBlk
@@ -35,17 +37,27 @@ MemBlkErrors BlkBubbleArray::insert_blk( Address start_address, Address end_addr
         return MemBlkErrors::ALREADY_EXISTS;
     } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr == -1) {
         MemBlk* blk = &blk_array[blk_cont_start_addr];
+        int64_t blk_nearest_to_end = find_blk_nearest_left(end_address);
+        if ( blk_cont_start_addr != blk_nearest_to_end) {
+            delete_blks_by_ind_dia(blk_cont_start_addr + 1, blk_nearest_to_end );
+        }
         blk->end_address = end_address;
 
     } else if ( blk_cont_start_addr == -1 && blk_cont_end_addr != -1 ) {
         MemBlk* blk = &blk_array[blk_cont_end_addr];
-        blk->start_address = start_address;
+        int64_t blk_nearest_to_start = find_blk_nearest_right(start_address);
+        MemBlk* blk_near_to_start = &blk_array[blk_nearest_to_start];
+
+        if ( blk_cont_end_addr != blk_nearest_to_start) {
+            delete_blks_by_ind_dia(blk_nearest_to_start, blk_cont_end_addr -1 );
+        }
+        blk_near_to_start->start_address = start_address;
 
     } else if ( blk_cont_start_addr != -1 && blk_cont_end_addr != -1) {
         MemBlk* blk_start_addr = &blk_array[blk_cont_start_addr];
         MemBlk* blk_end_addr = &blk_array[blk_cont_end_addr];
         blk_start_addr->end_address = blk_end_addr->end_address;
-        delete_blks_by_ind_dia(blk_cont_start_addr, blk_cont_end_addr);
+        delete_blks_by_ind_dia(blk_cont_start_addr + 1, blk_cont_end_addr);
 
     } else {
         int64_t insert_ind = -1;
@@ -139,7 +151,7 @@ void BlkBubbleArray::move_left( uint64_t start_ind, uint64_t end_ind, uint64_t c
         return;
     }
 
-    for ( auto i = start_ind ; i < end_ind ; i++ ) {
+    for ( auto i = start_ind ; i <= end_ind ; i++ ) {
         blk_array[i - count] = blk_array[i];
     }
 }
@@ -149,7 +161,7 @@ void BlkBubbleArray::move_right( uint64_t start_ind, uint64_t end_ind, uint64_t 
         return;
     }
 
-    for ( auto i = end_ind ; i > start_ind ; i-- ) {
+    for ( auto i = end_ind ; i >= start_ind ; i-- ) {
         blk_array[i + count] = blk_array[i];
     }
 }

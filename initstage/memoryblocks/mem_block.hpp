@@ -1,6 +1,8 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/cstdint.hpp>
 #include <HWRC/kernel_config.hpp>
+
+using Address = uint64_t;
 
 enum class MemBlkErrors {
     NONE,
