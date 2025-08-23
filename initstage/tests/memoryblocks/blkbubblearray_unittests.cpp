@@ -456,3 +456,22 @@ TEST( BlkBubbleArrayTest, DeleteAlot4Left ) {
     EXPECT_EQ( blk_array[0]->start_address, 0);
     EXPECT_EQ( blk_array[0]->end_address, 250);
 }
+
+TEST( BlkBubbleArrayTest, DeleteAlot4Full ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(4000,5000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(6000,7000, BlkPurpose::INITSTAGE);
+
+    blk_array.remove_blk(0, 7000);
+
+
+    EXPECT_EQ( blk_array.length, 0 );
+}

@@ -248,9 +248,11 @@ MemBlkErrors BlkBubbleArray::remove_blk( Address start_address, Address end_addr
         if ( target_blk_start->start_address == start_address  && target_blk_end->end_address != end_address ) {
             target_blk_end->start_address = end_address;
             delete_blks_by_ind_dia( target_start_addr_ind, target_end_addr_ind - 1 );
-        }  else if ( target_blk_start->start_address != start_address  && target_blk_end->end_address == end_address ) {
+        } else if ( target_blk_start->start_address != start_address  && target_blk_end->end_address == end_address ) {
             target_blk_start->end_address = start_address;
             delete_blks_by_ind_dia( target_start_addr_ind + 1, target_end_addr_ind );
+        } else if (target_blk_start->start_address == start_address  && target_blk_end->end_address == end_address) {
+            delete_blks_by_ind_dia( target_start_addr_ind, target_end_addr_ind );
         }
         else {
             target_blk_start->end_address = start_address;
