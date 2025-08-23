@@ -147,7 +147,7 @@ int64_t BlkBubbleArray::find_blk_containing_addr( Address address ) {
 }
 
 void BlkBubbleArray::move_left( uint64_t start_ind, uint64_t end_ind, uint64_t count) {
-    if ( start_ind <= 1) {
+    if ( start_ind == 0 ) {
         return;
     }
 
@@ -210,13 +210,24 @@ MemBlkErrors BlkBubbleArray::remove_blk( Address start_address, Address end_addr
     int64_t target_start_addr_ind= find_blk_containing_addr( start_address );
     int64_t target_end_addr_ind = find_blk_containing_addr( end_address );
 
-    if ( target_start_addr_ind == target_end_addr_ind == -1) {
+    if ( target_start_addr_ind == -1 && target_end_addr_ind == -1) {
         return MemBlkErrors::NOT_EXISTS;
     }
 
-    if ( target_start_addr_ind != -1 && target_end_addr_ind != -1 ) {
-        blk_array[target_start_addr_ind].end_address = blk_array[target_end_addr_ind].end_address;
-        delete_blks_by_ind_dia( target_end_addr_ind, target_end_addr_ind );
+
+    if ( target_start_addr_ind != -1 && target_end_addr_ind != -1 && target_start_addr_ind == target_end_addr_ind ) {
+        MemBlk* target_blk = &blk_array[target_start_addr_ind];
+        if ( target_blk->start_address == start_address && target_blk->end_address == end_address ) {
+            delete_blks_by_ind_dia( target_end_addr_ind, target_end_addr_ind );
+        } else if ( target_blk->start_address < start_address && end_address < target_blk->end_address ) {
+            int64_t prev_end = target_blk->end_address;
+            target_blk->end_address = start_address;
+            insert_blk(end_address, prev_end, target_blk->purpose);
+        } else if (target_blk->start_address == start_address) {
+            target_blk->start_address = end_address;
+        } else if (target_blk->end_address == end_address) {
+            target_blk->end_address = start_address;
+        }
     } else if ( target_start_addr_ind != -1 && target_end_addr_ind == -1) {
         MemBlk* target_blk = &blk_array[target_start_addr_ind];
         if ( target_blk->start_address == start_address) {
@@ -231,6 +242,21 @@ MemBlkErrors BlkBubbleArray::remove_blk( Address start_address, Address end_addr
             return MemBlkErrors::NONE;
         }
         target_blk->start_address = end_address;
+    } else if ( target_start_addr_ind != -1 && target_end_addr_ind != -1 && target_start_addr_ind != target_end_addr_ind ){
+        MemBlk* target_blk_start = &blk_array[target_start_addr_ind];
+        MemBlk* target_blk_end = &blk_array[target_end_addr_ind];
+        if ( target_blk_start->start_address == start_address  && target_blk_end->end_address != end_address ) {
+            target_blk_end->start_address = end_address;
+            delete_blks_by_ind_dia( target_start_addr_ind, target_end_addr_ind - 1 );
+        }  else if ( target_blk_start->start_address != start_address  && target_blk_end->end_address == end_address ) {
+            target_blk_start->end_address = start_address;
+            delete_blks_by_ind_dia( target_start_addr_ind + 1, target_end_addr_ind );
+        }
+        else {
+            target_blk_start->end_address = start_address;
+            target_blk_end->start_address = end_address;
+            delete_blks_by_ind_dia( target_start_addr_ind + 1, target_end_addr_ind - 1 );
+        }
     }
 
     return MemBlkErrors::NONE;

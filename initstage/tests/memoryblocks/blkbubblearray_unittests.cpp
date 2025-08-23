@@ -219,6 +219,7 @@ TEST ( BlkBubbleArrayTest, InsertOverlapAlotExistsSix ) {
     EXPECT_EQ( blk_array[0]->start_address, 0);
     EXPECT_EQ( blk_array[0]->end_address, 11000);
 }
+
 TEST ( BlkBubbleArrayTest, InsertOverlapAlotExistsLeft ) {
     BlkBubbleArray blk_array;
     MemBlk* memblks_array = new MemBlk[10];
@@ -273,7 +274,6 @@ TEST( BlkBubbleArrayTest, DeleteFromEmpty ) {
     EXPECT_EQ( blk_array.length, 0 );
     EXPECT_EQ( blk_array[0]->start_address, 0);
     EXPECT_EQ( blk_array[0]->end_address, 0);
-
 }
 
 TEST( BlkBubbleArrayTest, DeleteLenght1 ) {
@@ -286,4 +286,173 @@ TEST( BlkBubbleArrayTest, DeleteLenght1 ) {
     blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
     blk_array.remove_blk(0,1000);
     EXPECT_EQ( blk_array.length, 0 );
+}
+
+TEST( BlkBubbleArrayTest, DeleteTwoRight ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(2000,3000);
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 1000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteTwoLeft ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(0,1000);
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 2000);
+    EXPECT_EQ( blk_array[0]->end_address, 3000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteThreeMiddle ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(4000,5000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(2000,3000);
+
+    EXPECT_EQ( blk_array.length, 2 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 1000);
+    EXPECT_EQ( blk_array[1]->start_address, 4000);
+    EXPECT_EQ( blk_array[1]->end_address, 5000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteOverlapRight ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(500,1000);
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 500);
+}
+
+TEST( BlkBubbleArrayTest, DeleteOverlapLeft ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(0, 500);
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 500);
+    EXPECT_EQ( blk_array[0]->end_address, 1000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteOneSplit ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(250, 750);
+
+    EXPECT_EQ( blk_array.length, 2 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 250);
+    EXPECT_EQ( blk_array[1]->start_address, 750);
+    EXPECT_EQ( blk_array[1]->end_address, 1000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteAlot4Middle ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(4000,5000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(6000,7000, BlkPurpose::INITSTAGE);
+
+    blk_array.remove_blk(250, 6750);
+
+
+    EXPECT_EQ( blk_array.length, 2 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 250);
+    EXPECT_EQ( blk_array[1]->start_address, 6750);
+    EXPECT_EQ( blk_array[1]->end_address, 7000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteAlot4Right ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(4000,5000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(6000,7000, BlkPurpose::INITSTAGE);
+
+    blk_array.remove_blk(0, 6750);
+
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 6750);
+    EXPECT_EQ( blk_array[0]->end_address, 7000);
+}
+
+TEST( BlkBubbleArrayTest, DeleteAlot4Left ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(2000,3000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(4000,5000, BlkPurpose::INITSTAGE);
+    blk_array.insert_blk(6000,7000, BlkPurpose::INITSTAGE);
+
+    blk_array.remove_blk(250, 7000);
+
+
+    EXPECT_EQ( blk_array.length, 1 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 250);
 }
