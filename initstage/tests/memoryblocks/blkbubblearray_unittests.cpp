@@ -244,7 +244,6 @@ TEST ( BlkBubbleArrayTest, InsertOverlapAlotExistsRight ) {
     MemBlk* memblks_array = new MemBlk[10];
     std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
 
-
     blk_array.init(
         reinterpret_cast<void*>(memblks_array)
     );
@@ -260,9 +259,31 @@ TEST ( BlkBubbleArrayTest, InsertOverlapAlotExistsRight ) {
 }
 
 TEST( BlkBubbleArrayTest, DeleteFromEmpty ) {
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+
+    EXPECT_EQ( blk_array.length, 0 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 0);
+    MemBlkErrors resp = blk_array.remove_blk(0,0);
+    EXPECT_EQ( blk_array.length, 0 );
+    EXPECT_EQ( blk_array[0]->start_address, 0);
+    EXPECT_EQ( blk_array[0]->end_address, 0);
 
 }
 
 TEST( BlkBubbleArrayTest, DeleteLenght1 ) {
-
+    BlkBubbleArray blk_array;
+    MemBlk* memblks_array = new MemBlk[10];
+    std::fill( (char*)memblks_array, (char*)memblks_array + sizeof(MemBlk)* 10, '\0' );
+    blk_array.init(
+        reinterpret_cast<void*>(memblks_array)
+    );
+    blk_array.insert_blk(0,1000, BlkPurpose::INITSTAGE);
+    blk_array.remove_blk(0,1000);
+    EXPECT_EQ( blk_array.length, 0 );
 }
