@@ -1,7 +1,7 @@
 #include "vmem_subsystem_init.hpp"
-#include <initstage/memoryblocks/mem_block.hpp>
-#include <initstage/utility/memory_morph.hpp>
-#include <initstage/utility/alignment.hpp>
+#include <base/memoryblocks/mem_block.hpp>
+#include <base/utility/memory_morph.hpp>
+#include <base/utility/alignment.hpp>
 #include <initstage/arch/amd64/vmemsubsystem/vmemsubsystem_init.hpp>
 
 #include <HWRC/arch/amd64/vmemsubsystem/vmemsubsystem.hpp>

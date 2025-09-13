@@ -1,6 +1,6 @@
 #include "transfer_to_kernel.hpp"
 #include <HWRC/arch/amd64/vmemsubsystem/vmemsubsystem.hpp>
-#include <initstage/utility/memory_morph.hpp>
+#include <base/utility/memory_morph.hpp>
 
 void change_stack() {
     

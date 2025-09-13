@@ -42,7 +42,7 @@
             "configurePreset": "windows_gcc"
         },
         {
-            "name": "linux_gcc",
+            "name": "lin_gcc",
             "configurePreset": "linux_gcc"
         }
     ]

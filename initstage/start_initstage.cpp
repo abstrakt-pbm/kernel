@@ -1,9 +1,9 @@
 #include <initstage/start_initstage.hpp>
 #include <initstage/subsystems/subsystems_init.hpp>
 #include <initstage/infsrc/infsrc.hpp>
-#include <initstage/utility/memory_morph.hpp>
-#include <initstage/memoryblocks/mem_block.hpp>
-#include <initstage/utility/alignment.hpp>
+#include <base/utility/memory_morph.hpp>
+#include <base/memoryblocks/mem_block.hpp>
+#include <base/utility/alignment.hpp>
 #include <initstage/arch/amd64/transfer_to_kernel/transfer_to_kernel.hpp>
 
 #include <HWRC/kernel_config.hpp>

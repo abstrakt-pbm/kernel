@@ -23,5 +23,5 @@ add_executable(initstage_tests run_all_tests.cpp ${INITSTAGE_TESTS_HDR} ${INITST
 target_link_libraries(initstage_tests
     PRIVATE
     gtest_main
-    initstage-memoryblocks
+    initstage-base
 )

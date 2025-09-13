@@ -1,5 +1,5 @@
 #include "virtsystems_init.hpp"
-#include <initstage/utility/memory_morph.hpp>
+#include <base/utility/memory_morph.hpp>
 #include <HWRC/virtualsystems/virtualsystems.hpp>
 #include <HWRC/arch/amd64/vmemsubsystem/vmemsubsystem.hpp>
 

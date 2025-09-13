@@ -4,6 +4,13 @@ project( initstage-amd64 )
 
 enable_language( ASM_NASM )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
+  -fno-pic -fno-pie \
+  -fno-exceptions -fno-rtti \
+  -fno-unwind-tables -fno-asynchronous-unwind-tables \
+  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
+  -O0 -mcmodel=large ")
+
 set(CMAKE_ASM_NASM_COMPILER nasm)
 set(CMAKE_ASM_NASM_FLAGS "-f elf64")
 
@@ -22,9 +29,7 @@ set( AMD64_SOURCES
     "vmemsubsystem/vmemsubsystem_init.cpp"
 )
 add_library(initstage-amd64-asm OBJECT ${ASM_FILES})
-add_library( initstage-amd64 OBJECT ${AMD64_HDR} ${AMD64_SOURCES} )
+add_library(initstage-amd64 STATIC ${AMD64_HDR} ${AMD64_SOURCES} )
 
-target_sources( initstage-amd64 PRIVATE
-    $<TARGET_OBJECTS:initstage-amd64-asm>)
 
-target_link_libraries( initstage-amd64 PUBLIC HWRCMemory thinlibcxx -static )
+target_link_libraries( initstage-amd64 PUBLIC initstage-base initstage-amd64-asm HWRCMemory thinlibcxx -static )

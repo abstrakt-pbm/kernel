@@ -4,6 +4,13 @@ project( HWRC )
 
 set( CMAKE_CXX_STANDARD 20 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
+  -fno-pic -fno-pie \
+  -fno-exceptions -fno-rtti \
+  -fno-unwind-tables -fno-asynchronous-unwind-tables \
+  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
+  -O0 -mcmodel=large ")
+
 set ( HWRC_HEADERS
     "hwresources/cpu/amd64/cpu.hpp"
     "hwresources/device/bus/pcie/pcie.hpp"
