@@ -1,6 +1,6 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
-
+#include <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 constexpr uint64_t KERNEL_HEAP_BASE_LENGHT = 0x10000;
 

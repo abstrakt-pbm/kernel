@@ -1,4 +1,5 @@
 #pragma once
+
 namespace thinlibcxx {
 
 using uint64_t = unsigned long long int;

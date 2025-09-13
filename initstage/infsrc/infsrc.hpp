@@ -1,6 +1,7 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
 #include "multiboot2/multiboot.hpp"
+using namespace thinlibcxx;
 
 void init_infsrc();
 

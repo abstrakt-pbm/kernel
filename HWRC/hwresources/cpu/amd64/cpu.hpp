@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../hwrctypes.hpp"
-
+#include <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 
 class CPU  {

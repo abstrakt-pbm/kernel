@@ -1,5 +1,6 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 enum class PAGE_SIZE : uint64_t {
     KB_4 = 0x1000,

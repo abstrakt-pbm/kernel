@@ -1,5 +1,6 @@
 #pragma once
-#include "../../../hwrctypes.hpp" 
+#include  <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 enum MultibootTagType : uint32_t {
     END,

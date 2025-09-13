@@ -1,9 +1,10 @@
 #pragma once
 
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
 #include <HWRCMemory/HWRCMemory.hpp>
 #include <initstage/infsrc/infsrc.hpp>
 
+using namespace thinlibcxx;
 //hwrc kernel
 extern char _text_lma;
 extern char _bss_physical_end;

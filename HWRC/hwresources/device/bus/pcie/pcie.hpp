@@ -1,6 +1,7 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
 #include <HWRCMemory/virtualmem/koa.hpp>
+using namespace thinlibcxx;
 
 extern Address ECAM_BASE;
 

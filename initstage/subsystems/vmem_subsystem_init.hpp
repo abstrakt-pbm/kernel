@@ -1,6 +1,6 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
-
+#include <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 void initialize_vmem() __attribute__((section(".init.text")));
 

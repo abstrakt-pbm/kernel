@@ -1,5 +1,5 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
 #include <base/memoryblocks/mem_block.hpp>
 #include <HWRCMemory/HWRCMemory.hpp>
 

@@ -1,6 +1,7 @@
 #pragma once
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
 #include "paging_utils.hpp"
+using namespace thinlibcxx;
 
 extern uint64_t DIRECT_MAPPING_VSTART;
 

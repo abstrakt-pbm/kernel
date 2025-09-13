@@ -1,4 +1,5 @@
-#include <HWRC/hwrctypes.hpp>
+#include <thinlibcxx/hwtypes.hpp>
+using namespace thinlibcxx;
 
 uint64_t calc_pml4_offset_initstage( Address vaddr ) __attribute__((section(".init.text")));
 

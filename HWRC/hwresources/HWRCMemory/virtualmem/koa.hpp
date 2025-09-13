@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../hwrctypes.hpp"
+#include <thinlibcxx/hwtypes.hpp>
 #include <HWRCMemory/physicalmem/ppa.hpp>
 
 extern PhysicalPageAllocator physical_page_allocator;
