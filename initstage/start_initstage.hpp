@@ -1,7 +1,6 @@
 #pragma once
 
 #include <thinlibcxx/hwtypes.hpp>
-#include <HWRCMemory/HWRCMemory.hpp>
 #include <initstage/infsrc/infsrc.hpp>
 
 using namespace thinlibcxx;

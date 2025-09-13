@@ -1,8 +1,8 @@
 #pragma once
-#include <thinlibcxx/cstdint.hpp>
-#include <HWRC/kernel_config.hpp>
+#include <thinlibcxx/hwtypes.hpp>
+#include <initstage/base/initstage-config.hpp>
 
-using Address = uint64_t;
+using namespace thinlibcxx;
 
 enum class MemBlkErrors {
     NONE,

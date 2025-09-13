@@ -15,18 +15,11 @@ set ( INITSTAGE_HEADERS
     "infsrc/multiboot2/multiboot.hpp"
     "start_initstage.hpp"
 
-    "subsystems/subsystems_init.hpp"
-    "subsystems/memory_subsystem_init.hpp"
-    "subsystems/vmem_subsystem_init.hpp"
-    "subsystems/virtsystems_init.hpp"
 )
 
 set ( INITSTAGE_SRC
     "infsrc/multiboot2/multiboot.cpp"
     "start_initstage.cpp"
-    "subsystems/memory_subsystem_init.cpp"
-    "subsystems/vmem_subsystem_init.cpp"
-    "subsystems/virtsystems_init.cpp"
 )
 
 
@@ -41,7 +34,7 @@ add_library(initstage STATIC ${INITSTAGE_HEADERS} ${INITSTAGE_SRC})
 
 
 target_link_libraries( initstage 
-    PUBLIC  initstage-amd64 initstage-base HWRC thinlibcxx HWRCMemory 
+    PUBLIC  initstage-amd64 initstage-base thinlibcxx 
     PRIVATE  kernel_compiler_options -static)
 
 

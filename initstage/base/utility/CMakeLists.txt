@@ -14,7 +14,7 @@ set ( INITSTAGE-UTILITY-HDR
 
 add_library( initstage-utility SHARED ${INITSTAGE-UTILITY-SRC} ${INITSTAGE-UTILITY-HDR})
 
-target_link_libraries( initstage-utility PUBLIC HWRCMemory thinlibcxx )
+target_link_libraries( initstage-utility PUBLIC thinlibcxx )
 
 target_include_directories( initstage-utility PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..

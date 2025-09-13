@@ -1,14 +1,8 @@
 #include <initstage/start_initstage.hpp>
-#include <initstage/subsystems/subsystems_init.hpp>
 #include <initstage/infsrc/infsrc.hpp>
 #include <base/utility/memory_morph.hpp>
 #include <base/memoryblocks/mem_block.hpp>
 #include <base/utility/alignment.hpp>
-#include <initstage/arch/amd64/transfer_to_kernel/transfer_to_kernel.hpp>
-
-#include <HWRC/kernel_config.hpp>
-#include <HWRC/start_kernel.hpp>
-#include <HWRCMemory/HWRCMemory.hpp>
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -51,11 +45,6 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    }
 }
 
-void transfer_to_kernel() {
-   amd64_transfer_to_kernel();
-   start_kernel();
-}
-
 extern "C" void start_initstage() {
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
    Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
@@ -66,7 +55,6 @@ extern "C" void start_initstage() {
       reinterpret_cast<Address>(&_init_end),
       BlkPurpose::INITSTAGE
    );
-
    memory_blocks.reserve_blk( //safe kernel
       reinterpret_cast<Address>(&_text_lma),
       reinterpret_cast<Address>(&_bss_physical_end),
@@ -80,7 +68,7 @@ extern "C" void start_initstage() {
    );
 
    Address page_array = memory_blocks.allocate( //allocation to ppa page_array
-      sizeof(PhysicalPage) * ppage_count,
+      sizeof(8) * ppage_count,
       MINIMAL_PAGE_SIZE,
       0,
       IDENTITY_MAPPING_SIZE,
@@ -90,19 +78,4 @@ extern "C" void start_initstage() {
    if ( page_array == 0 ) {
       return;
    }
-
-   initialize_ppa(
-      reinterpret_cast<void*>(page_array),
-      ppage_count
-   );
-
-   initialize_virtsystems();
-   initialize_vmem();
-
-   memblk_to_ppa( 
-      &memory_blocks,
-      reinterpret_cast<PhysicalPageAllocator*>(kernel_vaddr_to_paddr_initstage(reinterpret_cast<Address>(&physical_page_allocator)))
-   );
-
-   transfer_to_kernel();
 }

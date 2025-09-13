@@ -2,7 +2,7 @@
 build
 
 hv.iso
-hv.elf
+kernel.elf
 *.exe
 
 OVMF_VARS.fd

@@ -1,10 +1,14 @@
-#include "memory_morph.hpp"
+#include <utility/memory_morph.hpp>
 #include <utility/alignment.hpp>
-#include <HWRC/kernel_config.hpp>
+#include <thinlibcxx/hwtypes.hpp>
+
+#include <initstage/base/initstage-config.hpp>
+using namespace thinlibcxx;
 
 extern char _kernel_virtual_start;
 extern char _text_lma;
 extern char _bss_virtual_end;
+
 
 uint64_t paddr_to_pfn_initstage( Address paddr )  {
     return paddr / MINIMAL_PAGE_SIZE;
