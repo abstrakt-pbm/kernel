@@ -10,7 +10,7 @@ set ( INITSTAGE_INFSRC_SRC
     "uefi/uefi.cpp"
     "multiboot2/multiboot2.cpp")
 
-add_library( initstage-infsrc OBJECT
+add_library( initstage-infsrc STATIC
 	${INITSTAGE_INFSRC_HEADERS}
 	${INITSTAGE_INFSRC_SRC})
 

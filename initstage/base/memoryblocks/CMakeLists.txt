@@ -4,9 +4,9 @@ project( initstage-memoryblocks )
 
 set( CMAKE_CXX_STANDARD 20 )
 
-add_library( initstage-memoryblocks OBJECT  
-	mem_block.cpp 
-	mem_block.hpp )
+add_library( initstage-memoryblocks STATIC 
+	memoryblocks.cpp 
+	memoryblocks.hpp )
 
 target_link_libraries( initstage-memoryblocks
 	PUBLIC initstage-utility thinlibcxx

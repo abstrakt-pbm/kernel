@@ -15,20 +15,13 @@ add_subdirectory(arch/amd64)
 add_subdirectory(base)
 #add_subdirectory(tests)
 
-
-
-add_library(initstage OBJECT 
+add_library(initstage STATIC 
 	${INITSTAGE_HEADERS} 
 	${INITSTAGE_SRC})
 
-target_sources(initstage PUBLIC
-	$<TARGET_OBJECTS:initstage-base>)
-
-
-
 target_link_libraries( initstage 
-    PUBLIC initstage-amd64 thinlibcxx 
-    PRIVATE kernel_compiler_options -static)
+    PUBLIC initstage-amd64 initstage-base thinlibcxx 
+    PRIVATE kernel_compiler_options)
 
 
 target_include_directories( initstage PUBLIC

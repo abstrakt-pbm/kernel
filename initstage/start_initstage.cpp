@@ -1,7 +1,9 @@
 #include <initstage/start_initstage.hpp>
 #include <base/utility/memory_morph.hpp>
-#include <base/memoryblocks/mem_block.hpp>
+#include <base/memoryblocks/memoryblocks.hpp>
 #include <base/utility/alignment.hpp>
+
+MultibootInfo mb2i __attribute__((section(".init.data")));
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -52,27 +54,24 @@ extern "C" void start_initstage() {
    memory_blocks.reserve_blk ( //safe initstage
       reinterpret_cast<Address>(&_init_data_lma),
       reinterpret_cast<Address>(&_init_end),
-      BlkPurpose::INITSTAGE
-   );
+      BlkPurpose::INITSTAGE);
+
    memory_blocks.reserve_blk( //safe kernel
       reinterpret_cast<Address>(&_text_lma),
       reinterpret_cast<Address>(&_bss_physical_end),
-      BlkPurpose::KERNEL
-   );
+      BlkPurpose::KERNEL);
 
    uint64_t ppage_count = calc_page_count_initstage(
       memory_blocks.get_minimal_addr(),
       memory_blocks.get_maximum_addr(),
-      MINIMAL_PAGE_SIZE
-   );
+      MINIMAL_PAGE_SIZE);
 
    Address page_array = memory_blocks.allocate( //allocation to ppa page_array
       sizeof(8) * ppage_count,
       MINIMAL_PAGE_SIZE,
       0,
       IDENTITY_MAPPING_SIZE,
-      BlkPurpose::KERNEL
-   );
+      BlkPurpose::KERNEL);
 
    if ( page_array == 0 ) {
       return;

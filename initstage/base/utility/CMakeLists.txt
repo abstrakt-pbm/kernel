@@ -10,7 +10,7 @@ set ( INITSTAGE-UTILITY-HDR
     "alignment.hpp"
     "memory_morph.hpp")
 
-add_library( initstage-utility OBJECT
+add_library( initstage-utility STATIC
 	${INITSTAGE-UTILITY-SRC}
 	${INITSTAGE-UTILITY-HDR})
 
