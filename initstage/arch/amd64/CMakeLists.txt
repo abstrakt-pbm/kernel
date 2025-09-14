@@ -4,13 +4,6 @@ project( initstage-amd64 )
 
 enable_language( ASM_NASM )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
-  -fno-pic -fno-pie \
-  -fno-exceptions -fno-rtti \
-  -fno-unwind-tables -fno-asynchronous-unwind-tables \
-  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O0 -mcmodel=large ")
-
 set(CMAKE_ASM_NASM_COMPILER nasm)
 set(CMAKE_ASM_NASM_FLAGS "-f elf64")
 
@@ -30,4 +23,6 @@ add_library(initstage-amd64-asm STATIC ${ASM_FILES})
 add_library(initstage-amd64 STATIC ${AMD64_HDR} ${AMD64_SOURCES} )
 
 
-target_link_libraries( initstage-amd64 PUBLIC initstage-base initstage-amd64-asm thinlibcxx -static )
+target_link_libraries( initstage-amd64
+	PUBLIC initstage-base initstage-amd64-asm thinlibcxx -static
+	PRIVATE kernel_compiler_options)

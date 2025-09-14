@@ -9,8 +9,10 @@ add_subdirectory(infsrc)
 set ( INITSTAGE_BASE_HEADERS
     "initstage-config.hpp")
 
-add_library(initstage-base STATIC 
-	${INITSTAGE_BASE_HEADERS}
+add_library(initstage-base OBJECT 
+	${INITSTAGE_BASE_HEADERS})
+
+target_sources(initstage-base PUBLIC
 	$<TARGET_OBJECTS:initstage-utility>
 	$<TARGET_OBJECTS:initstage-memoryblocks>
 	$<TARGET_OBJECTS:initstage-infsrc>)

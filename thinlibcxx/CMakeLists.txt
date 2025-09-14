@@ -14,15 +14,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
 set ( THINLIBCXX_HEADERS
     "cstdint.hpp"
     "hwtypes.hpp"
-    "memory.hpp"
-)
+    "memory.hpp")
 
 set ( THINLIBCXX_SRC
-    "memory.cpp"
-)
+    "memory.cpp")
 
 add_library( thinlibcxx STATIC ${THINLIBCXX_HEADERS} ${THINLIBCXX_SRC} )
 
 target_include_directories(thinlibcxx PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/..
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/..)
