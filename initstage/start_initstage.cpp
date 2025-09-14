@@ -1,5 +1,4 @@
 #include <initstage/start_initstage.hpp>
-#include <initstage/infsrc/infsrc.hpp>
 #include <base/utility/memory_morph.hpp>
 #include <base/memoryblocks/mem_block.hpp>
 #include <base/utility/alignment.hpp>

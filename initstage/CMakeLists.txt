@@ -12,15 +12,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
   -O0 -mcmodel=large ")
 
 set ( INITSTAGE_HEADERS
-    "infsrc/multiboot2/multiboot.hpp"
-    "start_initstage.hpp"
-
-)
+    "start_initstage.hpp")
 
 set ( INITSTAGE_SRC
-    "infsrc/multiboot2/multiboot.cpp"
-    "start_initstage.cpp"
-)
+    "start_initstage.cpp")
 
 
 add_subdirectory(arch/amd64)
@@ -40,5 +35,4 @@ target_link_libraries( initstage
 
 target_include_directories( initstage PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_CURRENT_SOURCE_DIR}/loaders/grub
 )

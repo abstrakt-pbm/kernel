@@ -1,7 +1,7 @@
 #pragma once
 
 #include <thinlibcxx/hwtypes.hpp>
-#include <initstage/infsrc/infsrc.hpp>
+#include <base/infsrc/multiboot2/multiboot2.hpp>
 
 using namespace thinlibcxx;
 //hwrc kernel

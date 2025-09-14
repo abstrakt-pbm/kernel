@@ -1,5 +1,4 @@
-#include "multiboot.hpp"
-//#include "../../debug/qemu/serial.hpp"
+#include <infsrc/multiboot2/multiboot2.hpp>
 
 
 void MultibootInfo::init ( void* mbi_ptr) {
