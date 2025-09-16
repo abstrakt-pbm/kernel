@@ -48,7 +48,8 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
 
 extern "C" void start_initstage() {
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
-   Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
+   Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(
+		mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
    fill_memblks_using_efi_mmap( efi_mmap_tag );
 
    memory_blocks.reserve_blk ( //safe initstage
