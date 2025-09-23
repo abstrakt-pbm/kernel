@@ -21,7 +21,7 @@ add_library(initstage STATIC
 
 target_link_libraries( initstage 
     PUBLIC initstage-amd64 initstage-base thinlibcxx 
-    PRIVATE kernel_compiler_options)
+    kernel_compiler_options)
 
 
 target_include_directories( initstage PUBLIC

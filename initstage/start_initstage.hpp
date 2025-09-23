@@ -4,14 +4,15 @@
 #include <initstage/base/infsrc/multiboot2/multiboot2.hpp>
 
 using namespace thinlibcxx;
-//hwrc kernel
+
+//kernel
 extern char _text_lma;
 extern char _bss_physical_end;
 
-//initstage kernel
+//initstage
 extern char _init_data_lma;
 extern char _init_end;
-
+extern uint8_t pml4_table;
 extern uint32_t multiboot2_info_addr __attribute__((section(".init.data")));
 
 extern MultibootInfo mb2i __attribute__((section(".init.data")));

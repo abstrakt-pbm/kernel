@@ -1,7 +1,11 @@
+#include "start_initstage.hpp"
+#include "base/arch/amd64/identitymapping.hpp"
+#include "base/initstage-config.hpp"
 #include <initstage/start_initstage.hpp>
 #include <base/utility/memory_morph.hpp>
 #include <base/memoryblocks/memoryblocks.hpp>
 #include <base/utility/alignment.hpp>
+#include <base/arch/amd64/identitymapping.hpp>
 
 MultibootInfo mb2i __attribute__((section(".init.data")));
 
@@ -40,12 +44,16 @@ void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
                mmap_desc->physical_start,
                mmap_desc->physical_start + mmap_desc->get_lenght());
             break;
-         }
+         }	
       }
    }
 }
 
 void start_initstage() {
+   identity_mapping_control.init(
+	&pml4_table,
+	IDENTITY_MAPPING_SIZE);
+
    mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
    Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(
 		mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
@@ -73,6 +81,16 @@ void start_initstage() {
       0,
       IDENTITY_MAPPING_SIZE,
       BlkPurpose::KERNEL);
+
+   while (page_array == 0){
+	identity_mapping_control.expandMapping(PageSize::Page1GB);
+	page_array = memory_blocks.allocate( //allocation to ppa page_array
+      		sizeof(8) * ppage_count,
+      		MINIMAL_PAGE_SIZE,
+      		0,
+      		IDENTITY_MAPPING_SIZE,
+      		BlkPurpose::KERNEL);
+   }
 
    if ( page_array == 0 ) {
       return;
