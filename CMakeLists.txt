@@ -36,6 +36,7 @@ target_link_options(kernel_compiler_options INTERFACE
 add_subdirectory(start)
 
 add_subdirectory(initstage)
+add_subdirectory(kernel-hlvl)
 add_subdirectory(thinlibcxx)
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld)
@@ -45,7 +46,8 @@ add_executable(kernel.elf
 	$<TARGET_OBJECTS:start>)
 
 target_link_libraries(kernel.elf 
-	PUBLIC kernel_compiler_options start initstage thinlibcxx)
+	PUBLIC start initstage thinlibcxx 
+	kernel_compiler_options)
 
 target_link_options(kernel.elf PRIVATE -T ${LINKER_SCRIPT})
 
