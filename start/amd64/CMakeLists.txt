@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(stagechain-start)
+project(start-amd64)
 
 enable_language( ASM_NASM )
 
 set(CMAKE_ASM_NASM_COMPILER nasm)
 set(CMAKE_ASM_NASM_FLAGS "-f elf64")
 
-
 set ( ASM_FILES
-    "amd64/asm/init.asm")
+    "asm/init.asm")
 
 
-add_library(stagechain-start STATIC
+add_library(start-amd64 STATIC
 	${ASM_FILES})
 
-target_link_libraries(stagechain-start)
