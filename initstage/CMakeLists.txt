@@ -20,7 +20,7 @@ add_library(initstage STATIC
 	${INITSTAGE_SRC})
 
 target_link_libraries( initstage 
-    PUBLIC initstage-amd64 initstage-base thinlibcxx 
+    PUBLIC initstage-amd64 initstage-base thinlibcxx ctxswitch 
     PRIVATE kernel_compiler_options)
 
 

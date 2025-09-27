@@ -2,6 +2,8 @@
 
 #include <thinlibcxx/hwtypes.hpp>
 #include <initstage/base/infsrc/multiboot2/multiboot2.hpp>
+#include <ctxswitch/ctxswitch.hpp>
+#include <ctxswitch/amd64/ctxswitchimpl.hpp>
 
 using namespace thinlibcxx;
 //hwrc kernel
@@ -17,6 +19,5 @@ extern uint32_t multiboot2_info_addr __attribute__((section(".init.data")));
 extern MultibootInfo mb2i __attribute__((section(".init.data")));
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) __attribute__((section(".init.text")));
-void transfer_to_kernel() __attribute__((section(".init.text")));
-
+void init_switcher() __attribute__((section(".init.text")));
 void start_initstage() __attribute__((section(".init.text")));

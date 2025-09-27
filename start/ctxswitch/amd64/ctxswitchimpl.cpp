@@ -5,4 +5,4 @@ void CTXSingleSwitcherAmd64::makeCTXSwitching(void (*func)(void))
 	func();
 }
 
-CTXSingleSwitcherAmd64 switcherAmd64;
+CTXSingleSwitcherAmd64 switcherAmd64 __attribute__((section(".init.data")));

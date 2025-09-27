@@ -1,9 +1,15 @@
+#include "start_initstage.hpp"
 #include <initstage/start_initstage.hpp>
 #include <base/utility/memory_morph.hpp>
 #include <base/memoryblocks/memoryblocks.hpp>
 #include <base/utility/alignment.hpp>
 
 MultibootInfo mb2i __attribute__((section(".init.data")));
+
+void init_switcher()
+{
+	switcher->p_impl = &switcherAmd64;
+}
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) {
    //finding suitable blk
@@ -77,5 +83,6 @@ void start_initstage() {
    if ( page_array == 0 ) {
       return;
    }
+	init_switcher();
 }
 

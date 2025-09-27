@@ -1,9 +1,11 @@
 #pragma once
+#include <ctxswitch/amd64/ctxswitchimpl.hpp>
 
 class CTXSingleSwitcher
 {
 public:
-	virtual void makeCTXSwitching(void (*func)(void)) = 0;
+	CTXSingleSwitcherAmd64 *p_impl;
+	void makeCTXSwitching(void (*func)(void)) __attribute__((section(".init.text")));
 };
 
-extern CTXSingleSwitcher* switcher;
+extern CTXSingleSwitcher* switcher __attribute__((section(".init.data")));
