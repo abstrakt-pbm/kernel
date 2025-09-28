@@ -2,7 +2,6 @@
 #include <utility/alignment.hpp>
 #include <thinlibcxx/hwtypes.hpp>
 
-#include <initstage/base/initstage-config.hpp>
 using namespace thinlibcxx;
 
 extern char _kernel_virtual_start;

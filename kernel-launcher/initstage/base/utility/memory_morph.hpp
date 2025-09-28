@@ -1,6 +1,6 @@
 #pragma once
 #include <thinlibcxx/hwtypes.hpp>
-#include <initstage/base/initstage-config.hpp>
+#include <kernelconfig.hpp>
 
 using namespace thinlibcxx;
 

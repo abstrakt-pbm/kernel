@@ -33,21 +33,28 @@ target_link_options(kernel_compiler_options INTERFACE
     -m64)
 
 
-add_subdirectory(lowlvl-start)
 
-add_subdirectory(initstage)
+add_subdirectory(kernel-launcher)
 add_subdirectory(kernel-hlvl)
 add_subdirectory(thinlibcxx)
+
+add_library(kernelconfig INTERFACE
+	kernelconfig.hpp)
+
+target_link_libraries(kernelconfig INTERFACE thinlibcxx)
+
+target_include_directories(kernelconfig INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/link.ld)
 
 # Основной ELF
-add_executable(kernel.elf
-	$<TARGET_OBJECTS:start>)
+add_executable(${PROJECT_NAME}.elf
+	$<TARGET_OBJECTS:kernel-launcher>)
 
-target_link_libraries(kernel.elf 
-	PUBLIC start initstage thinlibcxx 
-	kernel_compiler_options)
+target_link_libraries(${PROJECT_NAME}.elf 
+	PUBLIC kernel-launcher kernel-hlvl thinlibcxx 
+	kernelconfig kernel_compiler_options)
 
 target_link_options(kernel.elf PRIVATE -T ${LINKER_SCRIPT})
 

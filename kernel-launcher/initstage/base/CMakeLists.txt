@@ -6,14 +6,10 @@ add_subdirectory(memoryblocks)
 add_subdirectory(utility)
 add_subdirectory(infsrc)
 
-set (INITSTAGE_BASE_HEADERS
-    "initstage-config.hpp")
+add_library(initstage-base INTERFACE)
 
-add_library(initstage-base STATIC
-	${INITSTAGE_BASE_HEADERS})
-
-target_link_libraries( initstage-base PUBLIC
+target_link_libraries( initstage-base INTERFACE
 	initstage-utility initstage-memoryblocks initstage-infsrc)
 
-target_include_directories( initstage-base PUBLIC
+target_include_directories( initstage-base INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/..)
