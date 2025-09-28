@@ -33,7 +33,7 @@ target_link_options(kernel_compiler_options INTERFACE
     -m64)
 
 
-add_subdirectory(start)
+add_subdirectory(lowlvl-start)
 
 add_subdirectory(initstage)
 add_subdirectory(kernel-hlvl)
