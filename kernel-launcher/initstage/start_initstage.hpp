@@ -1,0 +1,39 @@
+#pragma once
+
+#include <thinlibcxx/hwtypes.hpp>
+#include <initstage/base/infsrc/multiboot2/multiboot2.hpp>
+#include <kl-launch/ctxswitch.hpp>
+#include <kl-launch/amd64/ctxswitchimpl.hpp>
+
+using namespace thinlibcxx;
+<<<<<<< HEAD:initstage/start_initstage.hpp
+
+=======
+>>>>>>> dev:kernel-launcher/initstage/start_initstage.hpp
+//kernel
+extern char _text_lma;
+extern uint64_t _bss_physical_end;
+extern char _kernel_virtual_start;
+extern char _bss_virtual_end;
+
+//initstage
+extern char _init_data_lma;
+extern char _init_end;
+<<<<<<< HEAD:initstage/start_initstage.hpp
+extern uint8_t pml4_table;
+=======
+
+
+extern uint64_t **pml4_table;
+
+>>>>>>> dev:kernel-launcher/initstage/start_initstage.hpp
+extern uint32_t multiboot2_info_addr __attribute__((section(".init.data")));
+
+extern MultibootInfo mb2i __attribute__((section(".init.data")));
+
+void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) __attribute__((section(".init.text")));
+void init_switcher() __attribute__((section(".init.text")));
+void map_switcher_trampline() __attribute__((section(".init.text")));
+void start_initstage() __attribute__((section(".init.text")));
+
+void init_klruntime() __attribute__((section(".init.text")));
