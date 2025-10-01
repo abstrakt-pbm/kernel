@@ -1,5 +1,6 @@
 #include <memoryblocks/memoryblocks.hpp>
 #include <utility/alignment.hpp>
+#include <arch/amd64/identitymapping/identitymapping.hpp>
 
 using namespace thinlibcxx;
 
@@ -272,7 +273,11 @@ void MemBlocks::add_free_blk( Address start_paddr, Address end_paddr )
     }
 }
 
-Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose )
+void* MemBlocks::allocate(uint64_t atleast_length,
+							uint64_t alignment,
+							uint64_t diapasone_start,
+							uint64_t diapasone_end,
+							BlkPurpose purpose )
 {
     MemBlk* suitable_blk = nullptr;
     for ( auto i = 0 ; i < free_blks.length ; i++ ) {
@@ -286,7 +291,7 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
     }
 
     if ( suitable_blk == nullptr ) {
-        return 0;
+        return nullptr;
     }
 
     reserve_blk(
@@ -295,7 +300,45 @@ Address MemBlocks::allocate( uint64_t atleast_length, uint64_t alignment, uint64
         purpose
     );
 
-    return align_up_initstage(suitable_blk->start_address, alignment);
+    return reinterpret_cast<void*>(
+		align_up_initstage(suitable_blk->start_address, alignment));
+}
+
+void *MemBlocks::allocate(uint64_t atleast_length,
+				uint64_t alignment,
+				BlkPurpose purpose) {
+	MemBlk* suitable_blk = nullptr;
+	for ( auto i = 0 ; i < free_blks.length ; i++ ) {
+		MemBlk* current_blk = free_blks.operator[](i);
+        if (current_blk->end_address - current_blk->start_address >= atleast_length) {
+			suitable_blk = current_blk;
+			while(suitable_blk->end_address > identitymappingamd64.direct_mapping_length){
+				identitymappingamd64.extend_1gb();
+			}
+            break;
+        }
+    }
+	if ( suitable_blk == nullptr ) {
+    	return nullptr;
+	}
+
+	uint64_t allocated_blk_start = align_down_initstage(suitable_blk->start_address, alignment);
+	uint64_t allocated_blk_end = align_up_initstage(
+		suitable_blk->start_address  + atleast_length,
+		alignment);
+
+	reserve_blk(
+        allocated_blk_start,
+        allocated_blk_end,
+        purpose
+    );
+
+	for (auto i = allocated_blk_start ; i < allocated_blk_end ; i++)
+	{
+		reinterpret_cast<char*>(i)[0] = 0;
+	}
+
+    return reinterpret_cast<void*>(allocated_blk_start);
 }
 
 uint64_t MemBlocks::get_minimal_addr() 
@@ -317,6 +360,8 @@ uint64_t MemBlocks::get_minimal_addr()
     }
     return minimal_paddr;
 }
+
+
 
 uint64_t MemBlocks::get_maximum_addr() 
 {

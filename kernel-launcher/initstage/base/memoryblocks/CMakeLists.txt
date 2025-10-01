@@ -9,7 +9,7 @@ add_library( initstage-memoryblocks STATIC
 	memoryblocks.hpp )
 
 target_link_libraries( initstage-memoryblocks
-	PUBLIC initstage-utility thinlibcxx
+	PUBLIC initstage-utility kl-runtime-arch thinlibcxx
 	PRIVATE kernel_compiler_options)
 
 target_include_directories( initstage-memoryblocks PUBLIC

@@ -31,7 +31,6 @@ class MemBlk {
     void init( Address start_address, Address end_address, BlkPurpose purpose ) __attribute__((section(".init.text")));
 
 };
-
 class BlkBubbleArray {
     private:
     void move_right( uint64_t start_ind, uint64_t end_ind, uint64_t count ) __attribute__((section(".init.text")));
@@ -65,11 +64,20 @@ class MemBlocks{
     BlkBubbleArray reserved_blks;
     BlkBubbleArray free_blks;
 
-    void init( void* base_array, uint64_t base_array_lenght ) __attribute__((section(".init.text")));
-    void add_free_blk( Address start_paddr, Address end_paddr ) __attribute__((section(".init.text")));
-    void reserve_blk( Address start_paddr, Address end_paddr, BlkPurpose purpose ) __attribute__((section(".init.text")));
+    void init(void* base_array, uint64_t base_array_lenght) __attribute__((section(".init.text")));
+    void add_free_blk(Address start_paddr, Address end_paddr) __attribute__((section(".init.text")));
+    void reserve_blk(Address start_paddr, Address end_paddr, BlkPurpose purpose) __attribute__((section(".init.text")));
 
-    Address allocate( uint64_t atleast_length, uint64_t alignment, uint64_t diapasone_start, uint64_t diapasone_end, BlkPurpose purpose ) __attribute__((section(".init.text")));
+    void *allocate(uint64_t atleast_length,
+					uint64_t alignment,
+					uint64_t diapasone_start,
+					uint64_t diapasone_end,
+					BlkPurpose purpose ) __attribute__((section(".init.text")));
+
+	void *allocate(uint64_t atleast_length,
+				uint64_t alignment,
+				BlkPurpose purpose) __attribute__((section(".init.text")));
+
     uint64_t get_minimal_addr() __attribute__((section(".init.text")));
     uint64_t get_maximum_addr() __attribute__((section(".init.text")));
 
