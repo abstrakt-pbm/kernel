@@ -6,39 +6,19 @@
 #include <kl-launch/amd64/ctxswitchimpl.hpp>
 
 using namespace thinlibcxx;
-<<<<<<< HEAD
-<<<<<<< HEAD:initstage/start_initstage.hpp
 
-=======
->>>>>>> dev:kernel-launcher/initstage/start_initstage.hpp
-=======
->>>>>>> dev
 //kernel
 extern char _text_lma;
 extern uint64_t _bss_physical_end;
 extern char _kernel_virtual_start;
 extern char _bss_virtual_end;
 
-<<<<<<< HEAD
 //initstage
 extern char _init_data_lma;
 extern char _init_end;
-<<<<<<< HEAD:initstage/start_initstage.hpp
-extern uint8_t pml4_table;
-=======
-=======
-//initstage kernel
-extern char _init_data_lma;
-extern char _init_end;
->>>>>>> dev
-
 
 extern uint64_t **pml4_table;
 
-<<<<<<< HEAD
->>>>>>> dev:kernel-launcher/initstage/start_initstage.hpp
-=======
->>>>>>> dev
 extern uint32_t multiboot2_info_addr __attribute__((section(".init.data")));
 
 extern MultibootInfo mb2i __attribute__((section(".init.data")));

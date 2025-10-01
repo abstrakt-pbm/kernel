@@ -20,16 +20,8 @@ add_library(initstage STATIC
 	${INITSTAGE_SRC})
 
 target_link_libraries( initstage 
-<<<<<<< HEAD
-<<<<<<< HEAD:initstage/CMakeLists.txt
-    PUBLIC initstage-amd64 initstage-base thinlibcxx 
-    kernel_compiler_options)
-=======
-=======
->>>>>>> dev
     PUBLIC initstage-base thinlibcxx  kl-launch
     PRIVATE kernel_compiler_options)
->>>>>>> dev:kernel-launcher/initstage/CMakeLists.txt
 
 
 target_include_directories( initstage PUBLIC
