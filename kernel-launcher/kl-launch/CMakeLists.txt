@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.20)
 
 project(kl-launch)
 
-set (CTXSWITCH_HEADERS
-    "ctxswitch.hpp"
-    "amd64/ctxswitchimpl.hpp")
+set (KLLAUNC_HEADERS
+    "sacrifice.hpp"
+    "amd64/sacrificeamd64.hpp")
 
-set (CTXSWITCH_SRC
-    "ctxswitch.cpp"
-    "amd64/ctxswitchimpl.cpp")
+set (KLLAUNC_SRC
+    "sacrifice.cpp"
+    "amd64/sacrificeamd64.cpp")
 
 
 add_library(${PROJECT_NAME} STATIC
-	${CTXSWITCH_HEADERS}
-	${CTXSWITCH_SRC})
+	${KLLAUNC_HEADERS}
+	${KLLAUNC_SRC})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC thinlibcxx
 	kernel_compiler_options)
