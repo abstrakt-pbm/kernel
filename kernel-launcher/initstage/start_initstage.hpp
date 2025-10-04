@@ -24,8 +24,5 @@ extern uint32_t multiboot2_info_addr __attribute__((section(".init.data")));
 extern MultibootInfo mb2i __attribute__((section(".init.data")));
 
 void fill_memblks_using_efi_mmap( Multiboot_EFI_MMAP_Tag* efi_mmap_tagg ) __attribute__((section(".init.text")));
-void init_switcher() __attribute__((section(".init.text")));
-void map_switcher_trampline() __attribute__((section(".init.text")));
 void start_initstage() __attribute__((section(".init.text")));
-
 void init_klruntime() __attribute__((section(".init.text")));

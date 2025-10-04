@@ -4,6 +4,7 @@ project(kernel-launcher)
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(kl-launch)
+add_subdirectory(kl-transformation)
 add_subdirectory(initstage)
 add_subdirectory(lowlvl-start)
 
@@ -18,7 +19,7 @@ add_library(${PROJECT_NAME} STATIC
 	${START_SRC})
 
 target_link_libraries(${PROJECT_NAME} 
-    PUBLIC lowlvl-start initstage kl-launch thinlibcxx 
+    PUBLIC lowlvl-start initstage kl-launch kl-transformation thinlibcxx 
     PUBLIC kernel_compiler_options)
 
 

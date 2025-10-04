@@ -11,7 +11,6 @@ set ( INITSTAGE_SRC
     "start_initstage.cpp")
 
 
-add_subdirectory(arch/amd64)
 add_subdirectory(base)
 #add_subdirectory(tests)
 
