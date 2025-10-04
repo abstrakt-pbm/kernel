@@ -125,5 +125,25 @@ void init_ppa(){
    	if (page_array == nullptr) {
       	return;
    	}
+	init_memoryblock_to_ppa();
 }
+
+void init_memoryblock_to_ppa() {
+	BlkBubbleArray reservedBlks = memory_blocks.reserved_blks;
+
+	for (auto i = 0 ; i < reservedBlks.length ; i++) {
+		MemBlk *currentblk = reservedBlks[i];
+		if (currentblk->purpose != BlkPurpose::KERNEL){
+			continue;
+		}
+
+		uint64_t start_pfn = ppa.paddr_to_pfn(currentblk->start_address);
+		uint64_t end_pfn = ppa.paddr_to_pfn(currentblk->end_address);
+
+		for (uint64_t i = start_pfn ; i < end_pfn ; i++) {
+			ppa.page_array_[i].setFlag(PPFlag::is_in_use, true);
+		}
+	}
+}
+
 

@@ -27,12 +27,12 @@ public:
 	void *get_free_page();
 	void free_page(void *ptr);
 	
+	uint64_t pfn_to_paddr(uint64_t pfn);
+	uint64_t paddr_to_pfn(Address paddr);
+
 	uint64_t page_size_;
 	uint64_t page_count_;
 	PhysicalPage *page_array_;
-private:
-	uint64_t pfn_to_paddr(uint64_t pfn);
-	uint64_t paddr_to_pfn(Address paddr);
 };
 
 extern PhysicalPageAllocator ppa;

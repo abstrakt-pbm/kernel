@@ -4,11 +4,12 @@ project(kernel-memorycontrol)
 
 add_subdirectory(layout)
 add_subdirectory(ppa)
+add_subdirectory(koa)
 
 add_library(${PROJECT_NAME} INTERFACE
 	"memory.hpp")
 
-target_link_libraries(${PROJECT_NAME} INTERFACE memorylayout PhysicalPageAllocator initstage
+target_link_libraries(${PROJECT_NAME} INTERFACE memorylayout PhysicalPageAllocator KernelObjectAllocator initstage
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} INTERFACE
