@@ -5,6 +5,7 @@
 #include <base/memoryblocks/memoryblocks.hpp>
 #include <base/utility/alignment.hpp>
 
+#include <memorycontrol/memory.hpp>
 
 void start_transformation(){
 	init_switcher();
@@ -52,7 +53,7 @@ void init_switcher() {
 	switcherAmd64.ctx_pml4 = reinterpret_cast<Address>(kernel_page_table_head);
 	switcherAmd64.stack_addr = reinterpret_cast<Address>(kernel_vend) + 0x16000;
 	create_direct_mapping();
-	
+
 	switcher->p_impl = &switcherAmd64;
 }
 
@@ -104,4 +105,5 @@ void create_direct_mapping(){
 		current_vaddr += 0x40000000;
 		current_paddr += 0x40000000;
 	}
+	new (&directmapping) DirectMapping(dm_addr_start);	
 }

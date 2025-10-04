@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
   -O0 -mcmodel=large ")
 
 set ( THINLIBCXX_HEADERS
+	"cppruntime/placementnew.hpp"
     "cstdint.hpp"
     "hwtypes.hpp"
     "memory.hpp")

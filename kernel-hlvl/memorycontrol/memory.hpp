@@ -1,3 +1,3 @@
 #pragma once
-#include <memorycontrol/ppa/ppa.hpp>
-
+#include <ppa/ppa.hpp>
+#include <layout/directmapping/dm.hpp>
