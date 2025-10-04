@@ -3,6 +3,7 @@
 #include <arch/amd64/identitymapping/identitymapping.hpp>
 #include <arch/amd64/vmem/vmem.hpp>
 #include <base/memoryblocks/memoryblocks.hpp>
+#include <base/utility/alignment.hpp>
 
 
 void start_transformation(){
@@ -50,10 +51,9 @@ void init_switcher() {
 	}
 	switcherAmd64.ctx_pml4 = reinterpret_cast<Address>(kernel_page_table_head);
 	switcherAmd64.stack_addr = reinterpret_cast<Address>(kernel_vend) + 0x16000;
-	
+	create_direct_mapping();
 	
 	switcher->p_impl = &switcherAmd64;
-	//map_switcher_trampline();
 }
 
 void map_switcher_trampline(){
@@ -74,3 +74,34 @@ void map_switcher_trampline(){
 	pdpt_table[pdpt_ind] = (switcher_trampline & 0x000FFFFFC0000000) | 0x083;
 }
 
+void create_direct_mapping(){
+	uint64_t kernel_vend = reinterpret_cast<uint64_t>(&_bss_virtual_end);
+
+	uint64_t dm_addr_start = align_up_initstage(kernel_vend, 0x40000000);
+	uint64_t dm_addr_end = align_up_initstage(
+		dm_addr_start + memory_blocks.get_maximum_addr(),
+		0x40000000);
+
+	uint64_t current_vaddr = dm_addr_start;
+	uint64_t current_paddr = 0;
+	uint64_t **kernel_page_table_head = reinterpret_cast<uint64_t**>(switcherAmd64.ctx_pml4);
+	while(current_vaddr < dm_addr_end) {
+		uint64_t pml4_ind = calc_pml4_offset(current_vaddr);
+		uint64_t pdpt_ind = calc_pdpt_offset(current_vaddr);
+
+		uint64_t *pdpt_table = reinterpret_cast<uint64_t*>(
+			reinterpret_cast<uint64_t>(kernel_page_table_head[pml4_ind]) & 0x000FFFFFFFFFF000ULL);
+
+		if (pdpt_table == nullptr) {
+			pdpt_table = static_cast<uint64_t*>(memory_blocks.allocate(
+				0x1000,
+				0x1000,
+				BlkPurpose::KERNEL));
+			uint64_t pdpt_table_paddr = reinterpret_cast<uint64_t>(pdpt_table);
+			kernel_page_table_head[pml4_ind] = reinterpret_cast<uint64_t*>((pdpt_table_paddr & 0x000FFFFFFFFFF000) | 0x3);
+		}
+		pdpt_table[pdpt_ind] = (current_paddr & 0x000FFFFFC0000000) | 0x83;
+		current_vaddr += 0x40000000;
+		current_paddr += 0x40000000;
+	}
+}
