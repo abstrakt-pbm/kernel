@@ -17,5 +17,8 @@ extern uint64_t **pml4_table;
 
 void map_switcher_trampline() __attribute__((section(".init.text")));
 void init_switcher() __attribute__((section(".init.text")));
+void init_ppa() __attribute__((section(".init.text")));
+
 void start_transformation() __attribute__((section(".init.text")));
 void create_direct_mapping() __attribute__((section(".init.text")));
+

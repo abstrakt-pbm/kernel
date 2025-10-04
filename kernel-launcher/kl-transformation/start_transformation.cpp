@@ -9,6 +9,7 @@
 
 void start_transformation(){
 	init_switcher();
+	init_ppa();
 }
 
 void init_switcher() {
@@ -107,3 +108,22 @@ void create_direct_mapping(){
 	}
 	new (&directmapping) DirectMapping(dm_addr_start);	
 }
+void init_ppa(){
+	uint64_t ppage_count = (memory_blocks.get_maximum_addr() - memory_blocks.get_minimal_addr()) / MINIMAL_PAGE_SIZE;
+
+	void *raw_page_array = memory_blocks.allocate(
+    		sizeof(PhysicalPage) * ppage_count,
+    		MINIMAL_PAGE_SIZE,
+    		BlkPurpose::KERNEL);
+
+	PhysicalPage *page_array = reinterpret_cast<PhysicalPage*>(
+		directmapping.paddr_to_dmaddr(
+		reinterpret_cast<Address>(raw_page_array)));
+
+	new (&ppa) PhysicalPageAllocator(page_array, ppage_count, MINIMAL_PAGE_SIZE);
+
+   	if (page_array == nullptr) {
+      	return;
+   	}
+}
+

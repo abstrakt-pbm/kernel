@@ -33,20 +33,7 @@ void init_klruntime() {
       	reinterpret_cast<Address>(&_text_lma),
       	reinterpret_cast<Address>(&_bss_physical_end),
       	BlkPurpose::KERNEL);
-	
-   uint64_t ppage_count = calc_page_count_initstage(
-      	memory_blocks.get_minimal_addr(),
-      	memory_blocks.get_maximum_addr(),
-      	MINIMAL_PAGE_SIZE);
 
-   void *page_array = memory_blocks.allocate( //allocation to ppa page_array
-      	sizeof(8) * ppage_count,
-      	MINIMAL_PAGE_SIZE,
-      	BlkPurpose::KERNEL);
-
-   	if (page_array == nullptr) {
-      	return;
-   	}
 }
 
 

@@ -2,15 +2,14 @@
 #include <ppa/ppa.hpp>
 #include <utils/utils.hpp>
 
-void PhysicalPageAllocator::init(
+PhysicalPageAllocator::PhysicalPageAllocator(
 	PhysicalPage *page_array, 
 	uint64_t page_count,
 	uint64_t page_size)
-{
-	this->page_array_ = page_array;
-	this->page_count_ = page_count;
-	this->page_size_ = page_size;
-}
+:	page_array_(page_array),
+	page_count_(page_count),
+	page_size_(page_size)
+{}
 
 
 void *PhysicalPageAllocator::get_free_page() {

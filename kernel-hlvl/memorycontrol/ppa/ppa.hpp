@@ -1,6 +1,6 @@
 #pragma once
 #include <thinlibcxx/hwtypes.hpp>
-
+#include <thinlibcxx/cppruntime/placementnew.hpp>
 using namespace thinlibcxx;
 
 enum class PPFlag : uint8_t {
@@ -21,7 +21,8 @@ public:
 
 class PhysicalPageAllocator {
 public:	
-	void init(PhysicalPage *page_array, uint64_t page_count, uint64_t page_size);
+	PhysicalPageAllocator() = default;
+	PhysicalPageAllocator(PhysicalPage *page_array, uint64_t page_count, uint64_t page_size);
 
 	void *get_free_page();
 	void free_page(void *ptr);
