@@ -3,5 +3,5 @@
 #include <memorycontrol/memory.hpp>
 
 void start_kernel() {
-	ppa.get_free_page();
+
 }

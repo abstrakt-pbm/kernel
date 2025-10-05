@@ -125,10 +125,10 @@ void init_ppa(){
    	if (page_array == nullptr) {
       	return;
    	}
-	init_memoryblock_to_ppa();
+	from_memoryblock_to_ppa();
 }
 
-void init_memoryblock_to_ppa() {
+void from_memoryblock_to_ppa() {
 	BlkBubbleArray reservedBlks = memory_blocks.reserved_blks;
 
 	for (auto i = 0 ; i < reservedBlks.length ; i++) {
@@ -145,5 +145,4 @@ void init_memoryblock_to_ppa() {
 		}
 	}
 }
-
 
