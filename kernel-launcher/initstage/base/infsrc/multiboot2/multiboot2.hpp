@@ -120,12 +120,18 @@ class __attribute__((packed)) Multiboot_EFI_MMAP_Tag {
 
 };
 
+class __attribute__((packed)) Multiboot_EFI64_Tag {
+	public:
+    MultibootHeader header;
+	uint64_t system_table;
+};
+
 class MultibootInfo {
     void* multiboot_info_ptr;
     uint32_t total_size;
 
     public:
-    void init( void* start_addr ) __attribute__((section(".init.text")));
-    uint32_t get_tag_type_entry_count( MultibootTagType tag_type)  __attribute__((section(".init.text")));
-    void* get_particular_tag( MultibootTagType tag_type, uint32_t index )  __attribute__((section(".init.text")));
+    void init(void* start_addr) __attribute__((section(".init.text")));
+    uint32_t get_tag_type_entry_count(MultibootTagType tag_type)  __attribute__((section(".init.text")));
+    void* get_particular_tag(MultibootTagType tag_type, uint32_t index)  __attribute__((section(".init.text")));
 };

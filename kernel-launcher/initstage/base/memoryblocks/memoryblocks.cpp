@@ -4,7 +4,7 @@
 
 using namespace thinlibcxx;
 
-MemBlocks memory_blocks __attribute__((section(".init.data")));;
+MemBlocks memory_blocks __attribute__((section(".init.data")));
 
 ///MemBlk
 void MemBlk::init( Address start_address, Address end_address, BlkPurpose purpose ) {

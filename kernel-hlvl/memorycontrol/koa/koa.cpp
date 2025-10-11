@@ -192,6 +192,14 @@ bool KOAPage::page_containing_address( Address addr ) {
     return addr >= koa_page_start_addr && addr < koa_page_end_addr;
 }
 
+void* Allocatable::operator new( size_t size ) {
+    return koa.allocate(size);
+}
+
+void Allocatable::operator delete(void* ptr, size_t size ) noexcept {
+	koa.free(ptr, size);
+}
 
 
 } // KOA namespace
+//

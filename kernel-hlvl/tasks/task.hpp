@@ -1,30 +1,24 @@
 #pragma once
+#include <koa/koa.hpp>
+#include <tasks/space/space.hpp>
 
-class RegistersX64 {
-	public:
-	uint64_t rax;
-	uint64_j rbx;
-	uint64_t rcx;
-	uint64_t rdx;
-	uint64_t rsi;
-	uint64_t rdi;
-	uint64_t rbp;
-	uint64_t rsp;
-	uint64_t r8;
-	uint64_t r9;
-	uint64_t r10;
-	uint64_t r11;
-	uint64_t r12;
-	uint64_t r13;
-	uint64_t r14;
-	uint64_t r15;
-	uint64_t rip;
-	uint64_t eflags;
-};
+class WorkerContext;
+class AddressSpace;
 
-class Task {
+class Task : public KOA::Allocatable {
 public:
-	Task *next_task;
-	RegistersX64 regs;
+	Task(Address start_address,
+	  AddressSpace *addressSpace);
+	~Task();
+
+	void updateWorkerContext(WorkerContext *);
+	AddressSpace *getAddressSpace();
+
+	Task *nextTask_;
+private:
+
+	Address start_address_;
+	WorkerContext *lastWorkerContext_;
+	AddressSpace *addressSpace_;
 };
 

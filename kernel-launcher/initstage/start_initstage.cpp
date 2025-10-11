@@ -6,6 +6,7 @@
 #include <base/utility/alignment.hpp>
 #include <arch/amd64/identitymapping/identitymapping.hpp>
 #include <arch/amd64/vmem/vmem.hpp>
+#include <infsrc/uefi/uefi.hpp>
 
 MultibootInfo mb2i __attribute__((section(".init.data")));
 
@@ -15,11 +16,16 @@ void start_initstage() {
 
 void init_klruntime() {
 	mb2i.init(reinterpret_cast<void*>( multiboot2_info_addr ));
-	
 	Multiboot_EFI_MMAP_Tag* efi_mmap_tag = reinterpret_cast<Multiboot_EFI_MMAP_Tag*>(
 		mb2i.get_particular_tag(MultibootTagType::EFI_MMAP, 0));
-	fill_memblks_using_efi_mmap( efi_mmap_tag );
 
+	Multiboot_EFI64_Tag *efi64_tag = reinterpret_cast<Multiboot_EFI64_Tag*>(
+		mb2i.get_particular_tag(MultibootTagType::EFI64, 0));
+	
+	uefi.init(reinterpret_cast<EfiSystemTable*>(efi64_tag->system_table));
+
+	fill_memblks_using_efi_mmap( efi_mmap_tag );
+	
 	identitymappingamd64.init(
 		pml4_table, 
 		IDENTITY_MAPPING_SIZE);

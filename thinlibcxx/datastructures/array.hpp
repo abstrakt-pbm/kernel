@@ -1,14 +1,15 @@
 #pragma once 
-#include "../cstdint.hpp"
+#include <thinlibcxx/cstdint.hpp>
 
 template<typename T>
 class Array {
     private:
     T* rawSpace;
-    uint64_t size;
     uint64_t capacity;
 
     public:
-    Array( uint64_t capacity );
-    
+    Array(uint64_t capacity);
+	T& operator[](size_t i);
 };
+
+
