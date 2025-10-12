@@ -1,5 +1,4 @@
 #pragma once
-#include <kernel-hlvl/devices/apic/apic.hpp>
 #include <koa/koa.hpp>
 
 class Task;

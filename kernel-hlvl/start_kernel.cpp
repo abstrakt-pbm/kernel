@@ -6,9 +6,6 @@
 
 void start_kernel() {
 	Worker bsp;
-	bsp.pushTask(new Task(
-		0,
-		0
-	));
-
+	while (true) {
+	}
 }

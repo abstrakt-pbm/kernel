@@ -6,10 +6,13 @@
 #include <base/utility/alignment.hpp>
 
 #include <memorycontrol/memory.hpp>
+#include <cpu/cpu.hpp>
+#include <uefi/uefi.hpp>
 
 void start_transformation(){
 	init_switcher();
 	init_ppa();
+	init_bsp();
 }
 
 void init_switcher() {
@@ -144,5 +147,52 @@ void from_memoryblock_to_ppa() {
 			ppa.page_array_[i].setFlag(PPFlag::is_in_use, true);
 		}
 	}
+}
+
+void init_bsp() {
+	EfiSystemTable *efi_sys_table = reinterpret_cast<EfiSystemTable*>(directmapping.pptr_to_dmptr(uefi.efi_system_table_));
+	RSDP *rsdp = reinterpret_cast<RSDP*>(
+		directmapping.pptr_to_dmptr(efi_sys_table->GetTableByGUID(ACPI_20_TABLE_GUID)));
+
+	if (!rsdp) {
+		return;
+	}
+
+	XSDT *xsdt_p = nullptr;
+
+	XSDT *xsdt = reinterpret_cast<XSDT*>(
+		directmapping.pptr_to_dmptr(rsdp->xsdt_address));
+
+	if (!xsdt) {
+		return;
+	}
+
+	MADT *madt = reinterpret_cast<MADT*>(
+		directmapping.pptr_to_dmptr(xsdt->find_table_by_signature("APIC")));
+	
+	if (!madt) {
+		return;
+	}
+
+	bsp.lapic.lapic_base_ = reinterpret_cast<volatile uint32_t*>(directmapping.paddr_to_dmaddr(madt->local_apic_address));
+	init_idt();
+	init_apic();
+}
+
+void init_idt() {
+	
+}
+
+void init_apic() {
+	bsp.lapic.setSVR(0xFF);
+	bsp.lapic.setEnabled(true);
+	bsp.lapic.setTimerDivideConfiguration(0x3); // делитель 16
+	bsp.lapic.setupTimerLVT(
+    	0x20,                // вектор IDT
+    	0x0,                 // delivery mode: Fixed
+    	0,                   // mask: не маскировать
+    	LAPIC_TIMER_MODE::Periodic // режим таймера
+	);
+	bsp.lapic.setInitialTimerCount(100000);
 }
 

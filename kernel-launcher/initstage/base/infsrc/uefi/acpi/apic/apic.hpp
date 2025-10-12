@@ -1,5 +1,7 @@
 #pragma once
 #include <thinlibcxx/cstdint.hpp>
+#include <uefi/acpi/acpiheader.hpp>
+
 using namespace thinlibcxx;
 
 enum class MADT_TYPE : uint8_t{
@@ -12,7 +14,7 @@ public:
 	uint8_t length;
 };
 
-class __attribute__((packed)) MADT_LocalApic {
+class __attribute__((packed)) MADTLocalApic {
 public:
 	MADTEntryHeader header;
 	uint8_t apic_cpuid;
@@ -26,4 +28,6 @@ public:
 	uint32_t local_apic_address;
 	uint32_t flags;
 	uint8_t entries[];
+
+	void *find_apic_table(MADT_TYPE type);
 };

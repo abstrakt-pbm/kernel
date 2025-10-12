@@ -135,3 +135,5 @@ class MultibootInfo {
     uint32_t get_tag_type_entry_count(MultibootTagType tag_type)  __attribute__((section(".init.text")));
     void* get_particular_tag(MultibootTagType tag_type, uint32_t index)  __attribute__((section(".init.text")));
 };
+
+extern MultibootInfo mb2i;

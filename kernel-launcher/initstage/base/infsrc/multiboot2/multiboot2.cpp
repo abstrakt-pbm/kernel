@@ -104,3 +104,5 @@ uint64_t Multiboot_EFI_MMAP_Tag::get_entry_count() {
 uint64_t Multiboot_EFI_MMAP_Descriptor::get_lenght() {
      return this->num_pages * 0x1000;
 }
+
+MultibootInfo mb2i __attribute__((section(".init.data")));

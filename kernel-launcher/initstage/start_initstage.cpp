@@ -7,8 +7,7 @@
 #include <arch/amd64/identitymapping/identitymapping.hpp>
 #include <arch/amd64/vmem/vmem.hpp>
 #include <infsrc/uefi/uefi.hpp>
-
-MultibootInfo mb2i __attribute__((section(".init.data")));
+#include <infsrc/multiboot2/multiboot2.hpp>
 
 void start_initstage() {
    	init_klruntime();

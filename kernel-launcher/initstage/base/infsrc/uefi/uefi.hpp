@@ -1,6 +1,11 @@
 #pragma once
+
 #include <thinlibcxx/hwtypes.hpp> 
 #include <thinlibcxx/cppruntime/placementnew.hpp>
+
+#include <uefi/acpi/acpi.hpp>
+#include <uefi/efiguid.hpp>
+
 using namespace thinlibcxx;
 
 enum EFI_MEMORY_TYPE : uint32_t{
@@ -22,15 +27,6 @@ enum EFI_MEMORY_TYPE : uint32_t{
     EfiMaxMemoryType
 };
 
-class __attribute__((packed)) EfiTableHeader {
-public:
-	uint64_t signature;
-	uint32_t revision;
-	uint32_t headerSize;
-	uint32_t CRC32;
-	uint32_t reserved;
-};
-
 class __attribute__((packed)) EfiMemoryDescriptor {
     public:
     EFI_MEMORY_TYPE type;
@@ -40,12 +36,13 @@ class __attribute__((packed)) EfiMemoryDescriptor {
     uint64_t attributes;
 };
 
-class __attribute__((packed)) EFIGuid {
+class __attribute__((packed)) EfiTableHeader {
 public:
-	uint32_t  Data1;
-    uint16_t  Data2;
-    uint16_t  Data3;
-    uint8_t   Data4[8];
+	uint64_t signature;
+	uint32_t revision;
+	uint32_t headerSize;
+	uint32_t CRC32;
+	uint32_t reserved;
 };
 
 class __attribute__((packed)) EfiConfigurationTable {
@@ -54,24 +51,24 @@ public:
 	void *vendorTable;
 };
 
-class __attribute__((packed)) EfiSystemTable {
+class EfiSystemTable {
 public:
+	void *GetTableByGUID(const EFIGuid& efiguid);
+
 	EfiTableHeader header;
-	uint16_t *firmwareVendor;
-	uint32_t firmwareRevision;
-	void *consoleInHandle;
-	void *consoleIn;
-	void *consoleOutHandle;
-	void *consoleOut;
-	void *standardErrorHandle;
-	void *stdErr;
-	void *runtimeServices;
-	void *bootServices;
-	uint64_t numberOfTableEntries;
+	uint64_t firmwareVendor;      // CHAR16* (широкая строка)
+    uint32_t firmwareRevision;    // версия прошивки
+    uint64_t consoleInHandle;     // EFI_HANDLE
+    uint64_t conIn;               // EFI_SIMPLE_TEXT_INPUT_PROTOCOL*
+    uint64_t consoleOutHandle;    // EFI_HANDLE
+    uint64_t conOut;              // EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*
+    uint64_t standardErrorHandle; // EFI_HANDLE
+    uint64_t stdErr;              // EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*
+    uint64_t runtimeServices;     // EFI_RUNTIME_SERVICES*
+    uint64_t bootServices;        // EFI_BOOT_SERVICES*
+    uint64_t numberOfTableEntries;// UINTN (64-бит на x64)
 	EfiConfigurationTable *configurationTable;
 };
-
-
 
 class UEFI {
     public:

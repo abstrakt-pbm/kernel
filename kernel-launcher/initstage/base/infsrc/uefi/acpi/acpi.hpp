@@ -1,29 +1,25 @@
 #pragma once
-#include <thinlibcxx/hwtypes.hpp>
+#include <thinlibcxx/cstdint.hpp>
+
+#include <uefi/acpi/xsdt.hpp>
+#include <uefi/acpi/apic/apic.hpp>
+
 using namespace thinlibcxx;
 
-
-
-class __attribute__((packed)) APICEntryHeader {
+class __attribute__((packed)) RSDP {
 public:
-	APIC_TYPE type;
-	uint8_t lenght;	
+	int8_t signature[8];
+	uint8_t checksum;
+	int8_t oemid[6];
+	uint8_t revision;
+	uint32_t rsdt_address;
+
+	// ACPI 2.0 extension
+	int32_t length;
+	XSDT *xsdt_address;
+	uint8_t extended_checksum;
+	uint8_t reserved[3];
 };
 
-class __attribute__((packed)) LocalAPIC {
-public:
-	APICEntryHeader header;
-	uint8_t cpuid;
-	uint8_t apicid;
-	uint32_t flags;
-};
-
-class __attribute__((packed)) APICMadt {
-public:
-	APICHeader header;
-	uint32_t localApicAddress;
-	uint32_t flags;
-	uint8_t entries[];
-};
 
 

@@ -1,4 +1,4 @@
-#include <apic/apic.hpp>
+#include <cpu/apic/apic.hpp>
 
 enum class LAPIC_OFFSETS {
 	APIC_ID = 0,
@@ -25,17 +25,11 @@ enum class LAPIC_OFFSETS {
 	TIMER_DIVIDE_CONFIGURATION_REGISTER = 0x3E0
 };
 
-enum class LAPIC_TIMER_MODE : uint8_t {
-	OneShot = 0,
-	Periodic = 0x01,
-	TSC_DEADLINE = 0x02
-};
-
 void LocalAPIC::setInitialTimerCount(uint32_t timerCount) {
 	if (lapic_base_ == nullptr) {
 		return;
 	}
-	uint32_t ind = reinterpret_cast<uint32_t>(LAPIC_OFFSETS::TIMER_INITIAL_COUNT_REGISTER) / 4;
+	uint32_t ind = static_cast<uint32_t>(LAPIC_OFFSETS::TIMER_INITIAL_COUNT_REGISTER) / 4;
 	lapic_base_[ind] = timerCount;
 }
 
@@ -43,27 +37,36 @@ void LocalAPIC::setTimerDivideConfiguration(uint32_t timerDivide) {
 	if (lapic_base_ == nullptr) {
 		return;
 	}
-	uint32_t ind = reinterpret_cast<uint32_t>(LAPIC_OFFSETS::TIMER_DIVIDE_CONFIGURATION_REGISTER) / 4;
-	lapic_base_[ind] = timerCount;
+	uint32_t ind = static_cast<uint32_t>(LAPIC_OFFSETS::TIMER_DIVIDE_CONFIGURATION_REGISTER) / 4;
+	lapic_base_[ind] = timerDivide;
 }
 
-void setupTimerLVT(uint8_t idt_vector, 
+void LocalAPIC::setupTimerLVT(uint8_t idt_vector, 
 				   uint8_t delivery_mode, 
 				   uint8_t mask,
 				   LAPIC_TIMER_MODE timer_mode) {
 	uint32_t lvt_timer_value = idt_vector 
 		| (delivery_mode << 8) 
 		| (mask << 16) 
-		| (reinterpret_cast<uint8_t>(timer_mode) << 17);
+		| (static_cast<uint8_t>(timer_mode) << 17);
 
-	uint32_t ind = reinterpret_cast<uint32_t>(LAPIC_OFFSETS::LVT_TIMER) / 4;
+	uint32_t ind = static_cast<uint32_t>(LAPIC_OFFSETS::LVT_TIMER) / 4;
+	lapic_base_[ind] = lvt_timer_value;
+}
+
+void LocalAPIC::setEnabled(bool isEnabled) {
+	lapic_base_[0xF0 / 4] |= (static_cast<uint8_t>(isEnabled) << 8);
+}
+
+void LocalAPIC::setSVR(uint8_t vec) {
+	lapic_base_[0xF0 / 4] = (lapic_base_[0xF0 / 4] & 0x100) | vec;
 }
 
 void LocalAPIC::sendEOI() {
 	if (lapic_base_ == nullptr) {
 		return;
 	}
-	uint32_t ind = reinterpret_cast<uint32_t>(LAPIC_OFFSETS::EOI) / 4;
+	uint32_t ind = static_cast<uint32_t>(LAPIC_OFFSETS::EOI) / 4;
 	lapic_base_[ind] = 0;
 }
 
