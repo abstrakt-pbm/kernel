@@ -55,11 +55,11 @@ void LocalAPIC::setupTimerLVT(uint8_t idt_vector,
 }
 
 void LocalAPIC::setEnabled(bool isEnabled) {
-	lapic_base_[0xF0 / 4] |= (static_cast<uint8_t>(isEnabled) << 8);
+	lapic_base_[0xF0 / 4] |= (static_cast<uint32_t>(isEnabled) << 8);
 }
 
 void LocalAPIC::setSVR(uint8_t vec) {
-	lapic_base_[0xF0 / 4] = (lapic_base_[0xF0 / 4] & 0x100) | vec;
+	lapic_base_[0xF0 / 4] = (lapic_base_[0xF0 / 4] & 0x100) | (vec & 0xFF);
 }
 
 void LocalAPIC::sendEOI() {

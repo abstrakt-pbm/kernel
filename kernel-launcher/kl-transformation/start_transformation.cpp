@@ -8,6 +8,7 @@
 #include <memorycontrol/memory.hpp>
 #include <cpu/cpu.hpp>
 #include <uefi/uefi.hpp>
+#include <interrupts/interrupts.hpp>
 
 void start_transformation(){
 	init_switcher();
@@ -175,24 +176,27 @@ void init_bsp() {
 	}
 
 	bsp.lapic.lapic_base_ = reinterpret_cast<volatile uint32_t*>(directmapping.paddr_to_dmaddr(madt->local_apic_address));
-	init_idt();
+	init_interrupts();
 	init_apic();
 }
 
-void init_idt() {
-	
+void init_interrupts() {
+	uint64_t isr_time_addr =  reinterpret_cast<Address>(&timer_interrupt_entry);
+	bsp.setIdt(0x20, isr_time_addr);
+	bsp.loadIdt();
 }
 
 void init_apic() {
 	bsp.lapic.setSVR(0xFF);
-	bsp.lapic.setEnabled(true);
 	bsp.lapic.setTimerDivideConfiguration(0x3); // делитель 16
 	bsp.lapic.setupTimerLVT(
-    	0x20,                // вектор IDT
-    	0x0,                 // delivery mode: Fixed
-    	0,                   // mask: не маскировать
-    	LAPIC_TIMER_MODE::Periodic // режим таймера
-	);
-	bsp.lapic.setInitialTimerCount(100000);
+    	0x20,
+    	0x0,
+    	0,
+    	LAPIC_TIMER_MODE::Periodic);
+	bsp.lapic.setInitialTimerCount(10000000);
+	bsp.lapic.setEnabled(true);
+	asm volatile("sti");
+
 }
 

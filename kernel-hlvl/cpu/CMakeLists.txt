@@ -16,7 +16,7 @@ add_library(${PROJECT_NAME} STATIC
 	${CPU_HEADERS}
 	${CPU_SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC thinlibcxx
+target_link_libraries(${PROJECT_NAME} PUBLIC kernel-interrupts thinlibcxx
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
