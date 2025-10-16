@@ -41,7 +41,7 @@ void* KOAPage::allocate() {
         return nullptr;
     }
 
-    void *allocated_object = reinterpret_cast<void*>(&free_object_);
+    void *allocated_object =  free_object_;
 
     Address next_free_obj = *reinterpret_cast<size_p*>(free_object_);
     free_object_ = reinterpret_cast<void*>(next_free_obj);

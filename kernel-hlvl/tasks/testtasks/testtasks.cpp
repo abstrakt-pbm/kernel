@@ -5,3 +5,9 @@ int main_prog1() {
 		asm volatile("hlt");
 	}
 }
+
+int main_prog2() {
+	while (true) {
+		asm volatile("hlt");
+	}
+}

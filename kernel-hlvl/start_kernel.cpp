@@ -9,7 +9,10 @@ void start_kernel() {
 	Worker bspWorker;
 	bspWorker.pushTask(new Task(
 		reinterpret_cast<Address>(&main_prog1)));
+	bspWorker.pushTask(new Task(
+		reinterpret_cast<Address>(&main_prog2)));
 	bspWorker.startNextTask();
+
 	while (true) {
 		asm volatile("hlt");
 	}
