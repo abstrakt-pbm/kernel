@@ -15,6 +15,7 @@ target_compile_options(kernel_compiler_options INTERFACE
     -fno-asynchronous-unwind-tables
     -fno-threadsafe-statics
     -fno-stack-protector
+	-fno-use-cxa-atexit
     -fno-builtin
     -g
     -O0

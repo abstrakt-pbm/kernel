@@ -5,11 +5,13 @@ project(kernel-tasks)
 set(CMAKE_CXX_STANDARD 20)
 
 set(TASKS_HEADERS
-	"worker/worker.hpp"
+	"testtasks/testtasks.hpp"
+	"worker.hpp"
     "task.hpp")
 
 set(TASKS_SRC
-	"worker/worker.cpp"
+	"testtasks/testtasks.cpp"
+	"worker.cpp"
     "task.cpp")
 
 add_library(${PROJECT_NAME} STATIC

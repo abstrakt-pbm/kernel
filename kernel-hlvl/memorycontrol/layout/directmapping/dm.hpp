@@ -12,6 +12,8 @@ class DirectMapping {
 	Address dmaddr_to_paddr(Address address);
 	Address paddr_to_dmaddr(Address address);
 	void* pptr_to_dmptr(void* pptr);
+	void* dmptr_to_pptr(void* dmptr);
+
 	Address dm_start_;
 };
 

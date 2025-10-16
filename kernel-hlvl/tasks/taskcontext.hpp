@@ -1,7 +1,7 @@
 #pragma once
 #include <koa/koa.hpp>
 
-class WorkerContext : public KOA::Allocatable {
+class TaskContext : public KOA::Allocatable {
 	public:
 	uint64_t rax;
 	uint64_t rbx;
@@ -22,5 +22,4 @@ class WorkerContext : public KOA::Allocatable {
 	uint64_t rip;
 	uint64_t eflags;
 };
-
 

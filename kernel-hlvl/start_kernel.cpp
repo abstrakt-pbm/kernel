@@ -1,11 +1,15 @@
 #include <kernel-hlvl/start_kernel.hpp>
 #include <memorycontrol/memory.hpp>
 
-#include <tasks/worker/worker.hpp>
 #include <tasks/task.hpp>
+#include <tasks/worker.hpp>
+#include <tasks/testtasks/testtasks.hpp>
 
 void start_kernel() {
-	Worker bsp;
+	Worker bspWorker;
+	bspWorker.pushTask(new Task(
+		reinterpret_cast<Address>(&main_prog1)));
+	bspWorker.startNextTask();
 	while (true) {
 		asm volatile("hlt");
 	}

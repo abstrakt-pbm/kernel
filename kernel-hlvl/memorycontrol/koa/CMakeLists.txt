@@ -5,9 +5,15 @@ project(KernelObjectAllocator)
 set(CMAKE_CXX_STANDARD 20)
 
 set(KOA_HEADERS
+	"allocatable.hpp"
+	"koapagepool.hpp"
+	"koapage.hpp"
     "koa.hpp")
 
 set(KOA_SRC
+	"allocatable.cpp"
+	"koapagepool.cpp"
+	"koapage.cpp"
     "koa.cpp")
 
 add_library(${PROJECT_NAME} STATIC

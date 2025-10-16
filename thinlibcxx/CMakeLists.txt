@@ -1,26 +1,26 @@
 cmake_minimum_required(VERSION 3.20)
 
-project( thinlibcxx )
+project(thinlibcxx)
 
-set( CMAKE_CXX_STANDARD 20 )
+set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -nostdlib -nostartfiles \
-  -fno-pic -fno-pie \
-  -fno-exceptions -fno-rtti \
-  -fno-unwind-tables -fno-asynchronous-unwind-tables \
-  -fno-threadsafe-statics -fno-stack-protector -fno-builtin \
-  -O0 -mcmodel=large ")
-
-set ( THINLIBCXX_HEADERS
-	"cppruntime/placementnew.hpp"
+set (THINLIBCXX_HEADERS
     "cstdint.hpp"
-    "hwtypes.hpp"
-    "memory.hpp")
+	"hwtypes.hpp"
+	"hwtypes.hpp"
+	"cppruntime/stubs.hpp"
+	"cppruntime/placementnew.hpp")
 
-set ( THINLIBCXX_SRC
-    "memory.cpp")
+set (THINLIBCXX_SRC
+    "cppruntime/stubs.cpp")
 
-add_library( thinlibcxx STATIC ${THINLIBCXX_HEADERS} ${THINLIBCXX_SRC} )
+add_library(${PROJECT_NAME} STATIC 
+	${THINLIBCXX_HEADERS} 
+	${THINLIBCXX_SRC})
 
-target_include_directories(thinlibcxx PUBLIC
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE kernel_compiler_options)
+
+
+target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/..)

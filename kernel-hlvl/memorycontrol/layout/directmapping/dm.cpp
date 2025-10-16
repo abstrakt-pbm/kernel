@@ -19,4 +19,14 @@ void* DirectMapping::pptr_to_dmptr(void* pptr) {
 			reinterpret_cast<Address>(pptr)));
 }
 
+void* DirectMapping::dmptr_to_pptr(void* dmptr) {
+	if (!dmptr) {
+		return nullptr;
+	}
+
+	return reinterpret_cast<void*>(
+		directmapping.dmaddr_to_paddr(
+			reinterpret_cast<Address>(dmptr)));
+}
+
 DirectMapping directmapping;

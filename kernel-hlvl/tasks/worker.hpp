@@ -2,19 +2,18 @@
 #include <koa/koa.hpp>
 
 class Task;
-class WorkerContext;
+
 class Worker : public KOA::Allocatable {
 public:
 	Worker();
 
 	void startNextTask();
-	void pushTask(Task *newTask);
-
-	WorkerContext *fetchActuafContext();
-	void enterWorkingContext(WorkerContext *);
+	void pushTask(Task *new_task);
 
 
 	Task *task_in_work_;
-	Task *taskQueue_;
+	Task *task_queue_;
+private:
+	void enterTask(Task *task);
 };
 

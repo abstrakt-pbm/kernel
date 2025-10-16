@@ -12,7 +12,7 @@
 
 void start_transformation(){
 	init_switcher();
-	init_ppa();
+	init_memory();
 	init_bsp();
 }
 
@@ -112,7 +112,7 @@ void create_direct_mapping(){
 	}
 	new (&directmapping) DirectMapping(dm_addr_start);	
 }
-void init_ppa(){
+void init_memory(){
 	uint64_t ppage_count = (memory_blocks.get_maximum_addr() - memory_blocks.get_minimal_addr()) / MINIMAL_PAGE_SIZE;
 
 	void *raw_page_array = memory_blocks.allocate(
@@ -130,6 +130,7 @@ void init_ppa(){
       	return;
    	}
 	from_memoryblock_to_ppa();
+	koa.init();
 }
 
 void from_memoryblock_to_ppa() {

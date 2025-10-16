@@ -1,26 +1,18 @@
-#include <tasks/task.hpp>
-#include <tasks/worker/worker.hpp>
-#include <tasks/worker/workercontext.hpp>
+#include <tasks/taskcontext.hpp>
 #include <tasks/task.hpp>
 
-Task::Task(Address start_address, AddressSpace *addressSpace)
-	: addressSpace_(addressSpace)
+Task::Task(Address start_address)
 {
 	start_address_ = start_address;
-	nextTask_ = nullptr;
+	next_task_ = nullptr;
 }
 
 Task::~Task() {
-	delete lastWorkerContext_;
-	delete addressSpace_;
+	delete task_context_;
 }
 
-void Task::updateWorkerContext(WorkerContext *updatedWorkerContext) {
-	delete lastWorkerContext_;
-	this->lastWorkerContext_ = updatedWorkerContext;
+void Task::updateTaskContext(TaskContext *updated_task_context) {
+	delete task_context_;
+	this->task_context_ = updated_task_context;
 }
 
-AddressSpace *Task::getAddressSpace() {
-	return this->addressSpace_;
-}
-	

@@ -1,24 +1,18 @@
 #pragma once
 #include <koa/koa.hpp>
-#include <tasks/space/space.hpp>
 
-class WorkerContext;
-class AddressSpace;
+class TaskContext;
 
 class Task : public KOA::Allocatable {
 public:
-	Task(Address start_address,
-	  AddressSpace *addressSpace);
+	Task(Address start_address);
 	~Task();
 
-	void updateWorkerContext(WorkerContext *);
-	AddressSpace *getAddressSpace();
+	void updateTaskContext(TaskContext *updated_task_context);
 
-	Task *nextTask_;
-private:
+	Task *next_task_;
 
 	Address start_address_;
-	WorkerContext *lastWorkerContext_;
-	AddressSpace *addressSpace_;
+	TaskContext *task_context_;
 };
 

@@ -3,49 +3,49 @@
 #include <layout/directmapping/dm.hpp>
 #include <thinlibcxx/hwtypes.hpp>
 
+
 KOA::KernelObjectAllocator koa;
 
 namespace KOA {
 
-void* KernelObjectAllocator::allocate(size_t object_size) {
+void KernelObjectAllocator::init( ) {
+	root_page_pool_.object_size_ = sizeof(KOAPagePool);
+    root_page_pool_.root_page_ = new KOAPage(
+        nullptr, 
+        sizeof(KOAPagePool));
+}
 
-    if ( object_size == 0) {
+void* KernelObjectAllocator::allocate(size_t object_size) {
+    if (object_size == 0) {
         return nullptr;
 	}
 
     void* alloc_obj = nullptr;
 
-    if ( object_size < sizeof(size_p)) {
+    if (object_size < sizeof(size_p)) {
         object_size = sizeof(size_p);
     }
     
-    KOAPagePool* allocation_pool = &this->root_page_pool;
-    while (allocation_pool != nullptr) {
-        if (allocation_pool->object_size == object_size) {
+    KOAPagePool* allocation_pool = &root_page_pool_;
+    while (allocation_pool) {
+        if (allocation_pool->object_size_ == object_size) {
             break;
         }
-        allocation_pool = allocation_pool->next_page_pool;
+        allocation_pool = allocation_pool->next_page_pool_;
     }
 
-    if ( allocation_pool == nullptr ) { // if suitable pool don't exists
-        KOAPage* root_page_for_new_pool = new KOAPage(
-            nullptr, 
-            object_size, 
-            0, 
-            (0x1000 - sizeof(KOAPage)) / object_size
-        );
-
+ 	// if suitable pool don't exists
+    if (!allocation_pool) {
         allocation_pool = new KOAPagePool( 
-            this->root_page_pool.next_page_pool, 
-            object_size,
-            root_page_for_new_pool 
-        );
-        this->root_page_pool.next_page_pool = allocation_pool;
-        
+            root_page_pool_.next_page_pool_, 
+            object_size);
+
+        root_page_pool_.next_page_pool_ = allocation_pool;
     }
-    
-    if ( allocation_pool == nullptr) { // if pool allocation finished with error 
-        return alloc_obj;
+
+     // if pool allocation finished with error
+    if (!allocation_pool) { 
+        return nullptr;
     }
     
     alloc_obj = allocation_pool->allocate();
@@ -55,151 +55,25 @@ void* KernelObjectAllocator::allocate(size_t object_size) {
 }
 
 void KernelObjectAllocator::free( void* ptr, size_t obj_size ) {
-    if ( ptr == nullptr) {
+    if (!ptr || obj_size == 0) {
         return;
     }
 
-    if ( obj_size == 0 ) {
-        return;
-    }
-
-    KOAPagePool* pool_where_page = &this->root_page_pool;
-    while ( pool_where_page != nullptr ) {
-        if ( pool_where_page->object_size == obj_size ) {
+    KOAPagePool *pool_where_page = &root_page_pool_;
+    while (pool_where_page) {
+        if (pool_where_page->object_size_ == obj_size) {
             break;
         }
-        pool_where_page = pool_where_page->next_page_pool;
+        pool_where_page = pool_where_page->next_page_pool_;
     }
 
-    if ( pool_where_page == nullptr ) {
+    if (!pool_where_page) {
         return;
     }
 
     pool_where_page->free(ptr);
-
 }
-
-
-void* KOAPagePool::allocate() {
-    KOAPage* page_allocate_from = this->root_page;
-    while ( page_allocate_from != nullptr) {
-        if ( page_allocate_from->length < page_allocate_from->capacity) {
-            break;
-        } 
-        page_allocate_from = page_allocate_from->next_koa_page;
-    }
-
-    if ( page_allocate_from == nullptr ) { // all koa_page in pool are full
-        page_allocate_from = new KOAPage(
-            this->root_page,
-            this->object_size,
-            0,
-            this->root_page->capacity
-        );
-        this->root_page = page_allocate_from;
-    }
-
-    if ( page_allocate_from == nullptr ) { // error while allocation koa_page
-        return nullptr;
-    }
-
-    return page_allocate_from->allocate();
-}
-
-void KOAPagePool::free( void* ptr ) {
-    KOAPage* page_where_ptr = this->root_page;
-    while ( page_where_ptr != nullptr ) {
-        if ( page_where_ptr->page_containing_address( reinterpret_cast<Address>(page_where_ptr)) ) {
-        }
-        page_where_ptr = page_where_ptr->next_koa_page;
-    }
-
-    if ( page_where_ptr == nullptr ) {
-        return;
-    }
-
-    page_where_ptr->free( ptr );
-}
-
-KOAPagePool::KOAPagePool( KOAPagePool* next_page_pool, uint64_t object_size, KOAPage* root_page ) : next_page_pool(next_page_pool), object_size(object_size), root_page(root_page) {
-    this->root_page = new KOAPage(
-        nullptr,
-        object_size,
-        0,
-        (0x1000 - sizeof(KOAPage)) / object_size
-    );
-}
-
-//KOA_PAGE/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-KOAPage::KOAPage(KOAPage* next_koa_page, uint64_t object_size, uint64_t length, uint64_t capacity) : next_koa_page(next_koa_page), object_size(object_size), length(length), capacity(capacity) {
-    Address free_object_area_start = reinterpret_cast<Address>(this) + sizeof(KOAPage);
-    this->free_object = reinterpret_cast<void*>(free_object_area_start);
-
-    for ( auto i = 0 ; i < (this->capacity ); i++ ) {
-        *reinterpret_cast<size_p*>(free_object_area_start + i * this->object_size) = free_object_area_start + (i + 1) * this->object_size;
-    }
-    *reinterpret_cast<size_p*>(free_object_area_start + (this->capacity ) * this->object_size) = 0;
-
-}
-
-void* KOAPage::operator new(size_t size) {
-    Address allocated_paddr = reinterpret_cast<Address>(ppa.get_free_page());
-    Address dm_vaddr = directmapping.paddr_to_dmaddr(allocated_paddr);
-
-    KOAPage* allocated_koa_page = reinterpret_cast<KOAPage*>(dm_vaddr);
-
-    return reinterpret_cast<void*>(allocated_koa_page);
-}
-
-
-void* KOAPage::allocate() {
-    if ( this->length == this->capacity ) {
-        return nullptr;
-    }
-
-    if ( this->free_object == nullptr ) {
-        return nullptr;
-    }
-
-    void* allocated_object = this->free_object;
-
-    Address next_free_obj = *reinterpret_cast<Address*>(this->free_object);
-    this->free_object = reinterpret_cast<void*>(next_free_obj);
-    this->length++;
-
-    return allocated_object;
-}
-
-void KOAPage::free(void* ptr) {
-    if ( length == 0) {
-        return;
-    }
-
-    Address ptr_addr = reinterpret_cast<Address>(ptr);
-    if ( !page_containing_address(ptr_addr) ) {
-        return;
-    }
-
-    *reinterpret_cast<Address*>(ptr) = reinterpret_cast<Address>(free_object);
-    free_object = ptr;
-    length--;
-}
-
-bool KOAPage::page_containing_address( Address addr ) {
-    Address koa_page_start_addr = reinterpret_cast<Address>(this);
-    Address koa_page_end_addr = reinterpret_cast<Address>(this) + 0x1000 ;
-    return addr >= koa_page_start_addr && addr < koa_page_end_addr;
-}
-
-void* Allocatable::operator new( size_t size ) {
-    return koa.allocate(size);
-}
-
-void Allocatable::operator delete(void* ptr, size_t size ) noexcept {
-	koa.free(ptr, size);
-}
-
 
 } // KOA namespace
-//
+
+

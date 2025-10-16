@@ -13,7 +13,7 @@ PhysicalPageAllocator::PhysicalPageAllocator(
 
 
 void *PhysicalPageAllocator::get_free_page() {
-	for (uint64_t i ; i < page_count_ ; i++){
+	for (uint64_t i = 0x40000 ; i < page_count_ ; i++){
 		PhysicalPage *current_page = &page_array_[i];
 		if (!current_page->isInUse()&& 
 			!current_page->isBroken()) {
