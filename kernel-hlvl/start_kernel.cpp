@@ -6,12 +6,13 @@
 #include <tasks/testtasks/testtasks.hpp>
 
 void start_kernel() {
-	Worker bspWorker;
+	bspWorker.task_in_work_ = nullptr;
+	bspWorker.task_queue_ = nullptr;
+
 	bspWorker.pushTask(new Task(
 		reinterpret_cast<Address>(&main_prog1)));
 	bspWorker.pushTask(new Task(
 		reinterpret_cast<Address>(&main_prog2)));
-	bspWorker.startNextTask();
 
 	while (true) {
 		asm volatile("hlt");

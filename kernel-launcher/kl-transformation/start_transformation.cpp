@@ -189,7 +189,7 @@ void init_interrupts() {
 
 void init_apic() {
 	bsp.lapic.setSVR(0xFF);
-	bsp.lapic.setTimerDivideConfiguration(0x3); // делитель 16
+	bsp.lapic.setTimerDivideConfiguration(0x2); // делитель 16
 	bsp.lapic.setupTimerLVT(
     	0x20,
     	0x0,

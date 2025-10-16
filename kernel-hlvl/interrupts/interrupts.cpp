@@ -1,11 +1,14 @@
 #include <interrupts/interrupts.hpp>
 #include <thinlibcxx/cstdint.hpp>
+#include <tasks/worker.hpp>
+
 using namespace thinlibcxx;
 
 void timer_interrupt_handler()
 {
 	volatile uint32_t* eoi_reg = reinterpret_cast<volatile uint32_t*>(0xffff90013ee00000 + 0xB0);
     *eoi_reg = 0;
+	bspWorker.startNextTask();
 }
 
 extern "C" void timer_interrupt_entry() {

@@ -5,7 +5,6 @@ class Task;
 
 class Worker : public KOA::Allocatable {
 public:
-	Worker();
 
 	void startNextTask();
 	void pushTask(Task *new_task);
@@ -17,3 +16,4 @@ private:
 	void enterTask(Task *task);
 };
 
+extern Worker bspWorker;

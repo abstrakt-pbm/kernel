@@ -1,12 +1,13 @@
 #include <tasks/worker.hpp>
 #include <tasks/task.hpp>
 #include <tasks/taskcontext.hpp>
-
+/*
 Worker::Worker()
 : 
 task_in_work_(nullptr),
 task_queue_(nullptr)
 {}
+*/
 
 void Worker::startNextTask() {
 	if (task_queue_ == nullptr) {
@@ -20,6 +21,7 @@ void Worker::startNextTask() {
 	task_in_work_ = task_queue_;
 	task_queue_ = task_queue_->next_task_;
 	task_in_work_->next_task_ = nullptr;
+	asm volatile("sti");
 	enterTask(task_in_work_);
 }
 
@@ -44,3 +46,5 @@ void Worker::enterTask(Task *task) {
     );
 
 }
+
+Worker bspWorker;
