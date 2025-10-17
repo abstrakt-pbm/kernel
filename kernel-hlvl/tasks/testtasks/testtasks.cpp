@@ -11,3 +11,10 @@ int main_prog2() {
 		asm volatile("hlt");
 	}
 }
+
+int main_prog3() {
+	while (true) {
+		asm volatile("hlt");
+	}
+}
+

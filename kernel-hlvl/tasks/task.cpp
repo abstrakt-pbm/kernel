@@ -1,10 +1,11 @@
 #include <tasks/taskcontext.hpp>
 #include <tasks/task.hpp>
 
-Task::Task(Address start_address)
+Task::Task(uint64_t tid, Address start_address)
 {
 	start_address_ = start_address;
 	next_task_ = nullptr;
+	tid_ = tid;
 }
 
 Task::~Task() {

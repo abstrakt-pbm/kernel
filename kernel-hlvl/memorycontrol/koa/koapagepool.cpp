@@ -22,7 +22,7 @@ void* KOAPagePool::allocate() {
     }
 
     if (!page_allocate_from) { // all koa_page in pool are full
-        root_page_ = new KOAPage(
+        page_allocate_from = new KOAPage(
 			root_page_,
             object_size_);
     }

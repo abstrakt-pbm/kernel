@@ -17,6 +17,7 @@ void *PhysicalPageAllocator::get_free_page() {
 		PhysicalPage *current_page = &page_array_[i];
 		if (!current_page->isInUse()&& 
 			!current_page->isBroken()) {
+			current_page->setFlag(PPFlag::is_in_use, true);
 			return reinterpret_cast<void*>(pfn_to_paddr(i));
 		}
 	}
@@ -31,7 +32,7 @@ void PhysicalPageAllocator::free_page(void *ptr) {
 
 	PhysicalPage *physical_page = &page_array_[pfn];
 
-	physical_page->setFlag(PPFlag::is_reserved, false);
+	physical_page->setFlag(PPFlag::is_in_use, false);
 }
 
 uint64_t PhysicalPageAllocator::pfn_to_paddr(uint64_t pfn) {
