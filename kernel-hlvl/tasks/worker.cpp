@@ -1,13 +1,7 @@
+#include "task.hpp"
 #include <tasks/worker.hpp>
 #include <tasks/task.hpp>
 #include <tasks/taskcontext.hpp>
-/*
-Worker::Worker()
-: 
-task_in_work_(nullptr),
-task_queue_(nullptr)
-{}
-*/
 
 void Worker::startNextTask() {
 	if (task_queue_ == nullptr) {
@@ -21,7 +15,6 @@ void Worker::startNextTask() {
 	task_in_work_ = task_queue_;
 	task_queue_ = task_queue_->next_task_;
 	task_in_work_->next_task_ = nullptr;
-	asm volatile("sti");
 	enterTask(task_in_work_);
 }
 
@@ -38,13 +31,46 @@ void Worker::pushTask(Task *new_task) {
 }
 
 void Worker::enterTask(Task *task) {
-	Address task_address = task->start_address_;
-	asm volatile (
-        "jmp *%0"
-        :
-        : "r"(task_address)
-    );
+	TaskContext* ctx = &task->task_context_;
+	switch (task->status) {
+		case TASK_STATUS::NEW: {
+			task->status = TASK_STATUS::SLEEP;
+			asm volatile (
+				"sti\n\t"
+        		"jmp *%0"
+        		:
+        		: "r"(task->start_address_)
+    		);
+			break;
+		}
+		case TASK_STATUS::SLEEP: {
+			asm volatile(
+        		"movq %0, %%rsp\n\t"  // rsp = ctx->rsp
+        		"popq %%rax\n\t"
+        		"popq %%rbx\n\t"
+        		"popq %%rcx\n\t"
+        		"popq %%rdx\n\t"
+        		"popq %%rbp\n\t"
+        		"popq %%rsi\n\t"
+        		"popq %%rdi\n\t"
+        		"popq %%r8\n\t"
+        		"popq %%r9\n\t"
+        		"popq %%r10\n\t"
+        		"popq %%r11\n\t"
+        		"popq %%r12\n\t"
+        		"popq %%r13\n\t"
+        		"popq %%r14\n\t"
+        		"popq %%r15\n\t"
+        		"sti\n\t"
+        		"iretq\n\t"
+        		:
+        		: "r"(ctx)
+        		: "memory"
+    		);
+			break;
+		}
+	}
 
-}
+    }
 
 Worker bspWorker;

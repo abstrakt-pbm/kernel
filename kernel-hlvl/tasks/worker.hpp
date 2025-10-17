@@ -13,7 +13,8 @@ public:
 	Task *task_in_work_;
 	Task *task_queue_;
 private:
-	void enterTask(Task *task);
+	void __attribute__((naked)) enterTask(Task *task);
 };
 
 extern Worker bspWorker;
+

@@ -1,44 +1,67 @@
 #include <interrupts/interrupts.hpp>
 #include <thinlibcxx/cstdint.hpp>
 #include <tasks/worker.hpp>
+#include <tasks/task.hpp>
 
 using namespace thinlibcxx;
 
-void timer_interrupt_handler()
+void timer_interrupt_handler(TaskContext *taskcontext)
 {
 	volatile uint32_t* eoi_reg = reinterpret_cast<volatile uint32_t*>(0xffff90013ee00000 + 0xB0);
     *eoi_reg = 0;
+
+	if (bspWorker.task_in_work_) {
+		bspWorker.task_in_work_->updateContext(*taskcontext);
+	}
+
 	bspWorker.startNextTask();
 }
 
-extern "C" void timer_interrupt_entry() {
+
+extern "C" __attribute__((naked)) void timer_interrupt_entry() {
     asm volatile(
-        // сохраняем регистры, которые могут быть изменены
-        "pushq %rax\n\t"
-        "pushq %rcx\n\t"
-        "pushq %rdx\n\t"
+        "cli\n\t"                   // запрет прерываний
+        // --- сохраняем регистры ---
+        "pushq %r15\n\t"
+        "pushq %r14\n\t"
+        "pushq %r13\n\t"
+        "pushq %r12\n\t"
+        "pushq %r11\n\t"
+        "pushq %r10\n\t"
+        "pushq %r9\n\t"
+        "pushq %r8\n\t"
         "pushq %rsi\n\t"
         "pushq %rdi\n\t"
-        "pushq %r8\n\t"
-        "pushq %r9\n\t"
-        "pushq %r10\n\t"
-        "pushq %r11\n\t"
+        "pushq %rbp\n\t"
+        "pushq %rdx\n\t"
+        "pushq %rcx\n\t"
+        "pushq %rbx\n\t"
+        "pushq %rax\n\t"
 
-        // вызов обычной C-функции
+        // --- передаём указатель на TrapFrame ---
+        "movq %rsp, %rdi\n\t"       // arg0 = &TrapFrame
         "call timer_interrupt_handler\n\t"
 
-        // восстанавливаем регистры
-        "popq %r11\n\t"
-        "popq %r10\n\t"
-        "popq %r9\n\t"
-        "popq %r8\n\t"
+        // --- восстанавливаем регистры ---
+        "popq %rax\n\t"
+        "popq %rbx\n\t"
+        "popq %rcx\n\t"
+        "popq %rdx\n\t"
+        "popq %rbp\n\t"
         "popq %rdi\n\t"
         "popq %rsi\n\t"
-        "popq %rdx\n\t"
-        "popq %rcx\n\t"
-        "popq %rax\n\t"
+        "popq %r8\n\t"
+        "popq %r9\n\t"
+        "popq %r10\n\t"
+        "popq %r11\n\t"
+        "popq %r12\n\t"
+        "popq %r13\n\t"
+        "popq %r14\n\t"
+        "popq %r15\n\t"
 
-        // возврат из прерывания
+        "sti\n\t"                   // разрешаем прерывания обратно
         "iretq\n\t"
     );
 }
+
+

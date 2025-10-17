@@ -5,7 +5,6 @@ project(kernel-interrupts)
 set(CMAKE_CXX_STANDARD 20)
 
 set(INTERRUPTS_HEADERS
-	"trapframe.hpp"
 	"interrupts.hpp"
 	"idt/idt.hpp")
 
