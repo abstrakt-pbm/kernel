@@ -18,6 +18,28 @@ ViewmakerFB::ViewmakerFB(
 		this->bpp = bpp;
 }
 
+void ViewmakerFB::put_string(
+	const char* str, 
+	size_t len, 
+	uint32_t x, 
+	uint32_t y, 
+	uint32_t fg_pixel, 
+	uint32_t bg_pixel)
+{
+	
+	for (size_t i = 0 ; i < len ; ++i) {
+		put_char(
+			str[i],
+			0,
+			x + i,
+			y,
+			fg_pixel,
+			bg_pixel
+		);
+
+	}
+}
+
 void ViewmakerFB::put_char(
 	char c,
 	uint8_t color, 

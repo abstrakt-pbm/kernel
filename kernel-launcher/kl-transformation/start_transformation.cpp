@@ -229,6 +229,13 @@ void init_terminal() {
             term1.viewmaker->put_pixel(x, y, 0xFFFFFF);
         }
     }
-
+	uint32_t fg = 0x000000; // черный
+	uint32_t bg = 0xFFFFFF; // белый
+	uint32_t x = 100;       // координата X в пикселях
+	uint32_t y = 50;        // координата Y в пикселях
+	
+	const char* msg = "Chii OS ver 0.00?";
+	term1.viewmaker->put_string(
+		msg, 17, 1, 1, fg, bg);
 }
 
