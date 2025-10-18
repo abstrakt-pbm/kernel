@@ -224,11 +224,23 @@ void init_terminal() {
 		framebufer_tag->framebuffer_pitch,
 		framebufer_tag->framebuffer_bpp
 	);
+
+	term1.viewmaker->fill_rect(
+    	0,
+    	0,
+    	term1.viewmaker->width,
+    	term1.viewmaker->height,
+    	0x00FFFFFF
+	);
+
+	/*
 	for (uint32_t y = 0; y < term1.viewmaker->height; ++y) {
         for (uint32_t x = 0; x < term1.viewmaker->width; ++x) {
             term1.viewmaker->put_pixel(x, y, 0xFFFFFF);
         }
     }
+	*/
+
 	uint32_t fg = 0x000000; // черный
 	uint32_t bg = 0xFFFFFF; // белый
 	uint32_t x = 100;       // координата X в пикселях
