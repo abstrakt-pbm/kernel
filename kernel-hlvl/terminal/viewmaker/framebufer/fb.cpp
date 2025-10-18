@@ -68,9 +68,24 @@ void ViewmakerFB::print_glyph(char ch, uint8_t color, uint32_t x, uint32_t y, ui
 void ViewmakerFB::put_pixel(uint32_t x, uint32_t y, uint32_t color) {
 	if (x >= width || y >= height) return;
 
-	volatile uint8_t *pixel = fb_base + y * pitch + x * (bpp / 8);
 	if (bpp == 32) {
+		volatile uint8_t *pixel = fb_base + y * pitch + x * (bpp / 8);
 		*reinterpret_cast<volatile uint32_t*>(pixel) = color;
 	}
+}
+
+void ViewmakerFB::fill_rect(
+    uint32_t left_up_x, 
+    uint32_t left_up_y, 
+    uint32_t right_down_x, 
+    uint32_t right_down_y, 
+    uint32_t color)
+{
+    for (uint32_t y = left_up_y; y <= right_down_y; ++y) {
+        for (uint32_t x = left_up_x; x < right_down_x; ++x) {
+			volatile uint8_t *pixel = fb_base + y * pitch + x * (bpp / 8);
+			*reinterpret_cast<volatile uint32_t*>(pixel) = color;
+        }
+    }
 }
 
