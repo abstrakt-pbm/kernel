@@ -91,7 +91,7 @@ class __attribute__((packed)) Multiboot_ACPI_NEW_Tag {
     public:
     uint32_t type;
     uint32_t size;
-    void* rsdp_addr; // & to get addr;
+    void* rsdp_addr;
 };
 
 class __attribute__((packed)) Multiboot_EFI_MMAP_Descriptor { 
@@ -124,6 +124,18 @@ class __attribute__((packed)) Multiboot_EFI64_Tag {
 	public:
     MultibootHeader header;
 	uint64_t system_table;
+};
+
+class __attribute__((packed)) Multiboot_Framebuffer_Tag {
+public:
+    MultibootHeader header;
+    uint64_t framebuffer_addr;    // физический адрес начала framebuffer
+    uint32_t framebuffer_pitch;   // байт на строку
+    uint32_t framebuffer_width;   // ширина в пикселях
+    uint32_t framebuffer_height;  // высота в пикселях
+    uint8_t  framebuffer_bpp;    // бит на пиксель
+    uint8_t  framebuffer_type;   // тип framebuffer (0 = indexed, 1 = RGB, 2 = EGA text)
+    uint16_t reserved;           // выравнивание / резерв
 };
 
 class MultibootInfo {

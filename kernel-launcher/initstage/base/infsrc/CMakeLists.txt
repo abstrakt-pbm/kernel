@@ -3,21 +3,14 @@ cmake_minimum_required(VERSION 3.20)
 project(initstage-infsrc)
 
 add_subdirectory(uefi)
+add_subdirectory(multiboot2)
 
-set (INITSTAGE_INFSRC_HEADERS
-    "multiboot2/multiboot2.hpp")
+add_library(${PROJECT_NAME} INTERFACE)
 
-set (INITSTAGE_INFSRC_SRC	
-    "multiboot2/multiboot2.cpp")
+target_link_libraries(${PROJECT_NAME} INTERFACE	
+	uefi multiboot2 thinlibcxx
+	kernel_compiler_options)
 
-add_library(initstage-infsrc STATIC
-	${INITSTAGE_INFSRC_HEADERS}
-	${INITSTAGE_INFSRC_SRC})
-
-target_link_libraries(initstage-infsrc
-	PUBLIC uefi thinlibcxx
-	PRIVATE kernel_compiler_options)
-
-target_include_directories(initstage-infsrc PUBLIC
+target_include_directories(${PROJECT_NAME} INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/..)
 

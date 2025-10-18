@@ -1,4 +1,4 @@
-#include <infsrc/multiboot2/multiboot2.hpp>
+#include <multiboot2/multiboot2.hpp>
 
 
 void MultibootInfo::init ( void* mbi_ptr) {

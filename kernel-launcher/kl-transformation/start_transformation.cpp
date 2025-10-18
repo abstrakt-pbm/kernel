@@ -8,12 +8,15 @@
 #include <memorycontrol/memory.hpp>
 #include <cpu/cpu.hpp>
 #include <uefi/uefi.hpp>
+#include <multiboot2/multiboot2.hpp>
 #include <interrupts/interrupts.hpp>
+#include <terminal/terminal.hpp>
 
 void start_transformation(){
 	init_switcher();
 	init_memory();
 	init_bsp();
+	init_terminal();
 }
 
 void init_switcher() {
@@ -198,6 +201,34 @@ void init_apic() {
 	bsp.lapic.setInitialTimerCount(10000000);
 	bsp.lapic.setEnabled(true);
 	asm volatile("sti");
+
+}
+
+void init_terminal() {
+	Multiboot_Framebuffer_Tag* framebufer_tag =
+		reinterpret_cast<Multiboot_Framebuffer_Tag*>(
+			mb2i.get_particular_tag(
+				MultibootTagType::FRAMEBUFFER, 0));
+
+	if(!framebufer_tag) {
+		return;
+	}
+
+	volatile uint8_t *fb_base = reinterpret_cast<volatile uint8_t*>(
+		directmapping.paddr_to_dmaddr(framebufer_tag->framebuffer_addr));
+
+	term1.viewmaker = new ViewmakerFB(
+		fb_base,
+		framebufer_tag->framebuffer_width,
+		framebufer_tag->framebuffer_height,
+		framebufer_tag->framebuffer_pitch,
+		framebufer_tag->framebuffer_bpp
+	);
+	for (uint32_t y = 0; y < term1.viewmaker->height; ++y) {
+        for (uint32_t x = 0; x < term1.viewmaker->width; ++x) {
+            term1.viewmaker->put_pixel(x, y, 0xFFFFFF);
+        }
+    }
 
 }
 

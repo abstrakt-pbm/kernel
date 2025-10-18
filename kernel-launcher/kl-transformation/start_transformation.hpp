@@ -27,3 +27,4 @@ void from_memoryblock_to_ppa() __attribute__((section(".init.text")));
 void init_bsp() __attribute__((section(".init.text")));
 void init_interrupts() __attribute__((section(".init.text")));
 void init_apic() __attribute__((section(".init.text")));
+void init_terminal()__attribute__((section(".init.text")));
