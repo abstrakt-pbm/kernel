@@ -20,6 +20,8 @@ public:
 			   uint32_t fg_pixel,
 			   uint32_t bg_pixel);
 
+	void put_string(const char* str, size_t len, uint32_t x, uint32_t y, uint32_t fg_pixel, uint32_t bg_pixel);
+
 	void print_glyph(char c, uint8_t color, uint32_t x, uint32_t y, uint32_t fg_pixel, uint32_t bg_pixel);
 	void put_pixel(uint32_t x, uint32_t y, uint32_t color);
 
