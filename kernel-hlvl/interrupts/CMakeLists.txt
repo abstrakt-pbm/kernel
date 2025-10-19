@@ -20,7 +20,7 @@ add_library(${PROJECT_NAME} STATIC
 	${INTERRUPTS_HEADERS}
 	${INTERRUPTS_SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC kernel-tasks thinlibcxx
+target_link_libraries(${PROJECT_NAME} PUBLIC kernel-devices kernel-terminal kernel-tasks thinlibcxx
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC

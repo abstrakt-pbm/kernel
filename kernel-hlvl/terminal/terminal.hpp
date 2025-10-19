@@ -3,6 +3,13 @@
 
 class Terminal {
 public:
+	void in(char c);
+	void clear();
+	
+
+	uint32_t line_lenght_;
+	uint32_t lines_count;
+
 	ViewmakerFB *viewmaker;
 };
 

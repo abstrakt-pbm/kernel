@@ -2,6 +2,8 @@
 #include <thinlibcxx/cstdint.hpp>
 #include <tasks/worker.hpp>
 #include <tasks/task.hpp>
+#include <terminal/terminal.hpp>
+#include <device/keyboard/kb.hpp>
 
 using namespace thinlibcxx;
 
@@ -50,7 +52,7 @@ extern "C" __attribute__((naked)) void timer_interrupt_entry() {
         "popq %rbp\n\t"
         "popq %rdi\n\t"
         "popq %rsi\n\t"
-        "popq %r8\n\t"
+        "popq %r8\n\t"	
         "popq %r9\n\t"
         "popq %r10\n\t"
         "popq %r11\n\t"
@@ -74,6 +76,11 @@ extern "C" void ps2keyboard_interrupt_handler(TaskContext *taskcontext) {
     :
     :
 	);
+
+	Scancode scode = scancode_table[sc - 1];
+	if (!(sc & 0x80)) {
+		term1.in(scode.display);
+	}
 }
 
 extern "C" void __attribute__((naked)) ps2keyboard_interrupt_entry() {
