@@ -180,13 +180,34 @@ void init_bsp() {
 	}
 
 	bsp.lapic.lapic_base_ = reinterpret_cast<volatile uint32_t*>(directmapping.paddr_to_dmaddr(madt->local_apic_address));
+	MADTIoApic *ioapicmadt = reinterpret_cast<MADTIoApic*>(madt->find_apic_table(MADT_TYPE::IOAPIC));
+
+	ioapic.ioapic_base_ = reinterpret_cast<volatile uint32_t*>(
+		directmapping.paddr_to_dmaddr(ioapicmadt->ioapic_address));
+
+	ioapic.ioapic_ioregsel_ = ioapic.ioapic_base_;
+	ioapic.ioapic_iowin_ = ioapic.ioapic_base_ + 0x10/4;
+		
+
 	init_interrupts();
 	init_apic();
 }
 
 void init_interrupts() {
+	RedirectionEntry keyboardEntry = {};
+	keyboardEntry.set_vector(0x21);
+	keyboardEntry.set_delivery_mode(0);
+	keyboardEntry.set_dest_mode(0);
+	keyboardEntry.set_trigger_mode(0);
+	keyboardEntry.set_mask(false);
+	keyboardEntry.set_destination(0);
+
+	ioapic.write_redirection_entry(1, keyboardEntry);
+
 	uint64_t isr_time_addr =  reinterpret_cast<Address>(&timer_interrupt_entry);
+	uint64_t isr_ps2keyboar_addr =  reinterpret_cast<Address>(&ps2keyboard_interrupt_entry);
 	bsp.setIdt(0x20, isr_time_addr);
+	bsp.setIdt(0x21, isr_ps2keyboar_addr);
 	bsp.loadIdt();
 }
 
@@ -232,14 +253,6 @@ void init_terminal() {
     	term1.viewmaker->height,
     	0x00FFFFFF
 	);
-
-	/*
-	for (uint32_t y = 0; y < term1.viewmaker->height; ++y) {
-        for (uint32_t x = 0; x < term1.viewmaker->width; ++x) {
-            term1.viewmaker->put_pixel(x, y, 0xFFFFFF);
-        }
-    }
-	*/
 
 	uint32_t fg = 0x000000; // черный
 	uint32_t bg = 0xFFFFFF; // белый

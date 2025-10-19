@@ -5,7 +5,8 @@
 using namespace thinlibcxx;
 
 enum class MADT_TYPE : uint8_t{
-	CPU_LOCAL_APIC = 0
+	CPU_LOCAL_APIC = 0,
+	IOAPIC = 1
 };
 
 class __attribute__((packed)) MADTEntryHeader {
@@ -20,6 +21,15 @@ public:
 	uint8_t apic_cpuid;
 	uint8_t apicid;
 	uint32_t flags;
+};
+
+class __attribute__((packed)) MADTIoApic {
+public:
+    MADTEntryHeader header;
+    uint8_t ioapic_id;
+    uint8_t reserved;
+    uint32_t ioapic_address;
+    uint32_t gsi_base;
 };
 
 class __attribute__((packed)) MADT {

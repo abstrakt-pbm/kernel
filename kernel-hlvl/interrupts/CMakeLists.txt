@@ -6,10 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(INTERRUPTS_HEADERS
 	"interrupts.hpp"
+	"pic/ioapic/ioapic.hpp"
+	"pic/ioapic/redirectiontable.hpp"
 	"idt/idt.hpp")
 
 set(INTERRUPTS_SRC
 	"interrupts.cpp"
+	"pic/ioapic/ioapic.cpp"
+	"pic/ioapic/redirectiontable.cpp"
 	"idt/idt.cpp")
 
 add_library(${PROJECT_NAME} STATIC
