@@ -67,6 +67,13 @@ extern "C" __attribute__((naked)) void timer_interrupt_entry() {
 extern "C" void ps2keyboard_interrupt_handler(TaskContext *taskcontext) {
 	volatile uint32_t* eoi_reg = reinterpret_cast<volatile uint32_t*>(0xffff90013ee00000 + 0xB0);
     *eoi_reg = 0;
+	uint8_t sc;
+	asm volatile (
+    	"inb $0x60, %0"
+    : "=a"(sc)
+    :
+    :
+	);
 }
 
 extern "C" void __attribute__((naked)) ps2keyboard_interrupt_entry() {
