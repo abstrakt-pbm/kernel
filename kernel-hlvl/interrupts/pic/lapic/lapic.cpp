@@ -1,4 +1,4 @@
-#include <cpu/apic/apic.hpp>
+#include <interrupts/pic/lapic/lapic.hpp>
 
 enum class LAPIC_OFFSETS {
 	APIC_ID = 0,

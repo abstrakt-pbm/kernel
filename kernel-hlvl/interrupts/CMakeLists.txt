@@ -6,12 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(INTERRUPTS_HEADERS
 	"interrupts.hpp"
+	"pic/lapic/lapic.hpp"
 	"pic/ioapic/ioapic.hpp"
 	"pic/ioapic/redirectiontable.hpp"
 	"idt/idt.hpp")
 
 set(INTERRUPTS_SRC
 	"interrupts.cpp"
+	"pic/lapic/lapic.cpp"
 	"pic/ioapic/ioapic.cpp"
 	"pic/ioapic/redirectiontable.cpp"
 	"idt/idt.cpp")

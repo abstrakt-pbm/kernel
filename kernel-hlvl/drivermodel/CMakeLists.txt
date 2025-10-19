@@ -1,20 +1,19 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(kernel-cpu)
+project(kernel-drivermodel)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CPU_HEADERS
-	"apic/apic.hpp"
-	"cpu.hpp")
+set(DRIVERMODEL_HEADERS
+	"drivermoder.hpp")
 
-set(CPU_SRC
-	"apic/apic.cpp"
-	"cpu.cpp")
+set(DRIVERMODEL_SRC
+	"drivermoder.cpp")
+
 
 add_library(${PROJECT_NAME} STATIC
-	${CPU_HEADERS}
-	${CPU_SRC})
+	${DRIVERMODEL_HEADERS}
+	${DRIVERMODEL_SRC})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC kernel-interrupts thinlibcxx
 	kernel_compiler_options)
