@@ -1,21 +1,16 @@
 #include <terminal/viewmaker/framebufer/fb.hpp>
 #include <terminal/viewmaker/framebufer/font.hpp>
 
+#include <device/framebuffer/framebuffer.hpp>
+
 #include <thinlibcxx/hwtypes.hpp>
+
+
 using namespace thinlibcxx;
 
-ViewmakerFB::ViewmakerFB(
-		volatile uint8_t *fb_base,
-		uint32_t width,
-		uint32_t height,
-		uint32_t pitch,
-		uint32_t bpp)
+ViewmakerFB::ViewmakerFB(FrameBufferDevice *fbdev)
 {
-		this->fb_base = fb_base;
-		this->width = width;
-		this->height = height;
-		this->pitch = pitch;
-		this->bpp = bpp;
+		this->fbdev_ = fbdev;
 }
 
 void ViewmakerFB::put_string(
@@ -64,10 +59,10 @@ void ViewmakerFB::print_glyph(char ch, uint32_t x, uint32_t y, uint32_t fg_pixel
 }
 
 void ViewmakerFB::put_pixel(uint32_t x, uint32_t y, uint32_t color) {
-	if (x >= width || y >= height) return;
+	if (x >= fbdev_->width || y >= fbdev_->height) return;
 
-	if (bpp == 32) {
-		volatile uint8_t *pixel = fb_base + y * pitch + x * (bpp / 8);
+	if (fbdev_->bpp == 32) {
+		volatile uint8_t *pixel = fbdev_->fb_base + y * fbdev_->pitch + x * (fbdev_->bpp / 8);
 		*reinterpret_cast<volatile uint32_t*>(pixel) = color;
 	}
 }
@@ -81,7 +76,7 @@ void ViewmakerFB::fill_rect(
 {
     for (uint32_t y = left_up_y; y <= right_down_y; ++y) {
         for (uint32_t x = left_up_x; x < right_down_x; ++x) {
-			volatile uint8_t *pixel = fb_base + y * pitch + x * (bpp / 8);
+			volatile uint8_t *pixel = fbdev_->fb_base + y * fbdev_->pitch + x * (fbdev_->bpp / 8);
 			*reinterpret_cast<volatile uint32_t*>(pixel) = color;
         }
     }

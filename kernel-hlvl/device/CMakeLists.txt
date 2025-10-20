@@ -5,10 +5,11 @@ project(kernel-devices)
 set(CMAKE_CXX_STANDARD 20)
 
 set(DEVICES_HEADERS
-	"i8042/i8042.hpp")
+	"devices.hpp"
+	"framebuffer/framebuffer.hpp")
 
 set(DEVICES_SRC
-	"i8042/i8042.cpp")
+	"framebuffer/framebuffer.cpp")
 
 
 add_library(${PROJECT_NAME} STATIC

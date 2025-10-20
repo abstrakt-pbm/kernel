@@ -11,11 +11,13 @@
 #include <interrupts/interrupts.hpp>
 #include <terminal/terminal.hpp>
 #include <drivermodel/drivermodel.hpp>
+#include <device/devices.hpp>
+
 
 void start_transformation(){
 	init_switcher();
 	init_memory();
-	init_bsp();
+	init_interrupts();
 	init_drivers();
 	init_terminal();
 }
@@ -155,7 +157,7 @@ void from_memoryblock_to_ppa() {
 	}
 }
 
-void init_bsp() {
+void init_interrupts() {
 	EfiSystemTable *efi_sys_table = reinterpret_cast<EfiSystemTable*>(
 		directmapping.pptr_to_dmptr(uefi.efi_system_table_));
 	RSDP *rsdp = reinterpret_cast<RSDP*>(
@@ -185,27 +187,12 @@ void init_bsp() {
 		directmapping.paddr_to_dmaddr(madt->local_apic_address));
 	MADTIoApic *ioapicmadt = reinterpret_cast<MADTIoApic*>(madt->find_apic_table(MADT_TYPE::IOAPIC));
 
-	ioapic.ioapic_base_ = reinterpret_cast<volatile uint32_t*>(
+	interrupts.ioapic.ioapic_base_ = reinterpret_cast<volatile uint32_t*>(
 		directmapping.paddr_to_dmaddr(ioapicmadt->ioapic_address));
 
-	ioapic.ioapic_ioregsel_ = ioapic.ioapic_base_;
-	ioapic.ioapic_iowin_ = ioapic.ioapic_base_ + 0x10/4;
+	interrupts.ioapic.ioapic_ioregsel_ = interrupts.ioapic.ioapic_base_;
+	interrupts.ioapic.ioapic_iowin_ = interrupts.ioapic.ioapic_base_ + 0x10/4;
 		
-
-	init_interrupts();
-}
-
-void init_interrupts() {
-	RedirectionEntry keyboardEntry = {};
-	keyboardEntry.set_vector(0x21);
-	keyboardEntry.set_delivery_mode(0);
-	keyboardEntry.set_dest_mode(0);
-	keyboardEntry.set_trigger_mode(0);
-	keyboardEntry.set_mask(false);
-	keyboardEntry.set_destination(0);
-
-	ioapic.write_redirection_entry(1, keyboardEntry);
-
 	uint64_t isr_time_addr =  reinterpret_cast<Address>(&timer_interrupt_entry);
 	interrupts.setIdt(0x20, isr_time_addr);
 	interrupts.loadIdt();
@@ -238,20 +225,21 @@ void init_terminal() {
 
 	volatile uint8_t *fb_base = reinterpret_cast<volatile uint8_t*>(
 		directmapping.paddr_to_dmaddr(framebufer_tag->framebuffer_addr));
+
+	fbdevice.fb_base = fb_base;
+	fbdevice.width = framebufer_tag->framebuffer_width;
+	fbdevice.height = framebufer_tag->framebuffer_height;
+	fbdevice.pitch = framebufer_tag->framebuffer_pitch;
+	fbdevice.bpp = framebufer_tag->framebuffer_bpp;
+
 	term1 = new Terminal();
-	term1->viewmaker_ = new ViewmakerFB(
-		fb_base,
-		framebufer_tag->framebuffer_width,
-		framebufer_tag->framebuffer_height,
-		framebufer_tag->framebuffer_pitch,
-		framebufer_tag->framebuffer_bpp
-	);
+	term1->viewmaker_ = new ViewmakerFB(&fbdevice);
 
 	term1->viewmaker_->fill_rect(
     	0,
     	0,
-    	term1->viewmaker_->width,
-    	term1->viewmaker_->height,
+    	fbdevice.width,
+    	fbdevice.height,
     	0x00FFFFFF
 	);
 

@@ -2,8 +2,8 @@
 #include <terminal/viewmaker/framebufer/font.hpp>
 
 Terminal::Terminal() {
-	line_lenght_ = viewmaker_->width / CHAR_W;
-	lines_count_ = viewmaker_->width / CHAR_H;
+	line_lenght_ = viewmaker_->fbdev_->width / CHAR_W;
+	lines_count_ = viewmaker_->fbdev_->height / CHAR_H;
 
 	cursor_.limit_x_ = line_lenght_;
 	cursor_.limit_y_ = lines_count_;
@@ -24,6 +24,7 @@ void Terminal::out(char c) {
 
 	if (c == '\n') {
 		cursor_.move_down();
+		return;
 	}
 
 	viewmaker_->put_char(c,

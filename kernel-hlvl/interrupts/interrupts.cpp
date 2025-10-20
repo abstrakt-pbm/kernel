@@ -72,6 +72,17 @@ void Interrupts::CaptureIRQ(uint16_t irq,
 {
 	interrupts.setIdt(0x20 + irq,
 				   reinterpret_cast<Address>(handler_ptr));
+
+	RedirectionEntry redirectionEntry = {};
+	redirectionEntry.set_vector(0x20 + irq);
+	redirectionEntry.set_delivery_mode(0);
+	redirectionEntry.set_dest_mode(0);
+	redirectionEntry.set_trigger_mode(0);
+	redirectionEntry.set_mask(false);
+	redirectionEntry.set_destination(0);
+
+	ioapic.write_redirection_entry(irq, redirectionEntry);
+
 }
 
 void Interrupts::setIdt(uint16_t vec,

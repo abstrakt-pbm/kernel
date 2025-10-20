@@ -19,7 +19,7 @@ add_library(${PROJECT_NAME} STATIC
 	${TERMINAL_HEADERS}
 	${TERMINAL_SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC thinlibcxx KernelObjectAllocator
+target_link_libraries(${PROJECT_NAME} PUBLIC thinlibcxx kernel-devices KernelObjectAllocator
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
