@@ -10,11 +10,13 @@
 #include <multiboot2/multiboot2.hpp>
 #include <interrupts/interrupts.hpp>
 #include <terminal/terminal.hpp>
+#include <drivermodel/drivermodel.hpp>
 
 void start_transformation(){
 	init_switcher();
 	init_memory();
 	init_bsp();
+	init_drivers();
 	init_terminal();
 }
 
@@ -40,8 +42,7 @@ void init_switcher() {
 				0x1000,
 				BlkPurpose::KERNEL));
 			uint64_t pdpt_table_paddr = reinterpret_cast<uint64_t>(pdpt_table);
-			kernel_page_table_head[pml4_ind] = reinterpret_cast<uint64_t**>(
-				(pdpt_table_paddr & 0x000FFFFFFFFFF000) | 0x3);
+			kernel_page_table_head[pml4_ind] = reinterpret_cast<uint64_t**>((pdpt_table_paddr & 0x000FFFFFFFFFF000) | 0x3);
 		}
 		uint64_t *pd_table = pdpt_table[pdpt_ind];
 		if (pd_table == nullptr) {
@@ -206,9 +207,7 @@ void init_interrupts() {
 	ioapic.write_redirection_entry(1, keyboardEntry);
 
 	uint64_t isr_time_addr =  reinterpret_cast<Address>(&timer_interrupt_entry);
-	uint64_t isr_ps2keyboar_addr =  reinterpret_cast<Address>(&ps2keyboard_interrupt_entry);
 	interrupts.setIdt(0x20, isr_time_addr);
-	interrupts.setIdt(0x21, isr_ps2keyboar_addr);
 	interrupts.loadIdt();
 	init_apic();
 }
@@ -245,22 +244,28 @@ void init_terminal() {
 		framebufer_tag->framebuffer_width,
 		framebufer_tag->framebuffer_height,
 		framebufer_tag->framebuffer_pitch,
-		framebufer_tag->framebuffer_bpp);
+		framebufer_tag->framebuffer_bpp
+	);
 
 	term1.viewmaker->fill_rect(
     	0,
     	0,
     	term1.viewmaker->width,
     	term1.viewmaker->height,
-    	0x00FFFFFF);
+    	0x00FFFFFF
+	);
 
 	uint32_t fg = 0x000000; // черный
 	uint32_t bg = 0xffffff; // белый
 	uint32_t x = 100;       // координата X в пикселях
 	uint32_t y = 50;        // координата Y в пикселях
 	
-	const char* msg = "Kernel ver 0.00?";
+	const char* msg = "Chii OS ver 0.00?";
 	term1.viewmaker->put_string(
-		msg, 16, 1, 1, fg, bg);
+		msg, 17, 1, 1, fg, bg);
+}
+
+void init_drivers() {
+	kbdriver = new KBDriver();
 }
 
