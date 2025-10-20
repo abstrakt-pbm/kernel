@@ -40,7 +40,7 @@ extern "C" void ps2keyboard_interrupt_handler(TaskContext *taskcontext) {
 
 	Scancode scode = scancode_table[sc - 1];
 	if (!(sc & 0x80)) {
-		term1.in(scode.display);
+		term1->out(scode.display);
 	}
 }
 

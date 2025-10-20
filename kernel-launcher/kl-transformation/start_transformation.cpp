@@ -238,8 +238,8 @@ void init_terminal() {
 
 	volatile uint8_t *fb_base = reinterpret_cast<volatile uint8_t*>(
 		directmapping.paddr_to_dmaddr(framebufer_tag->framebuffer_addr));
-
-	term1.viewmaker = new ViewmakerFB(
+	term1 = new Terminal();
+	term1->viewmaker_ = new ViewmakerFB(
 		fb_base,
 		framebufer_tag->framebuffer_width,
 		framebufer_tag->framebuffer_height,
@@ -247,11 +247,11 @@ void init_terminal() {
 		framebufer_tag->framebuffer_bpp
 	);
 
-	term1.viewmaker->fill_rect(
+	term1->viewmaker_->fill_rect(
     	0,
     	0,
-    	term1.viewmaker->width,
-    	term1.viewmaker->height,
+    	term1->viewmaker_->width,
+    	term1->viewmaker_->height,
     	0x00FFFFFF
 	);
 
@@ -261,7 +261,7 @@ void init_terminal() {
 	uint32_t y = 50;        // координата Y в пикселях
 	
 	const char* msg = "Chii OS ver 0.00?";
-	term1.viewmaker->put_string(
+	term1->viewmaker_->put_string(
 		msg, 17, 1, 1, fg, bg);
 }
 

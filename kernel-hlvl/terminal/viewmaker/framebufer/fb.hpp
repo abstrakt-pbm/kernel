@@ -13,7 +13,6 @@ public:
 		uint32_t bpp);
 
 	void put_char(char c, 
-			   uint8_t color, 
 			   uint32_t x, 
 			   uint32_t y,
 			   uint32_t fg_pixel,
@@ -27,7 +26,6 @@ public:
 				 uint32_t bg_pixel);
 
 	void print_glyph(char c,
-				  uint8_t color,
 				  uint32_t x,
 				  uint32_t y,
 				  uint32_t fg_pixel,

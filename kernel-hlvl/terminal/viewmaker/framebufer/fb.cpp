@@ -30,7 +30,6 @@ void ViewmakerFB::put_string(
 	for (size_t i = 0 ; i < len ; ++i) {
 		put_char(
 			str[i],
-			0,
 			x + i,
 			y,
 			fg_pixel,
@@ -42,7 +41,6 @@ void ViewmakerFB::put_string(
 
 void ViewmakerFB::put_char(
 	char c,
-	uint8_t color, 
 	uint32_t x, 
 	uint32_t y,
 	uint32_t fg_pixel,
@@ -51,11 +49,11 @@ void ViewmakerFB::put_char(
 	uint32_t px = x * CHAR_W;
 	uint32_t py = y * CHAR_H;
 	
-	print_glyph(c, color, px, py, fg_pixel, bg_pixel);
+	print_glyph(c, px, py, fg_pixel, bg_pixel);
 }	
 
 
-void ViewmakerFB::print_glyph(char ch, uint8_t color, uint32_t x, uint32_t y, uint32_t fg_pixel, uint32_t bg_pixel) {
+void ViewmakerFB::print_glyph(char ch, uint32_t x, uint32_t y, uint32_t fg_pixel, uint32_t bg_pixel) {
 	for (uint32_t i = 0 ; i < CHAR_H ; ++i) {
 		uint8_t row_bits = font8x16[(uint8_t)ch][i];
 		for (uint32_t j = 0 ; j < CHAR_W ; ++j) {

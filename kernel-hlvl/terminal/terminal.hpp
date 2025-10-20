@@ -1,17 +1,26 @@
 #pragma once
 #include <terminal/viewmaker/framebufer/fb.hpp>
+#include <koa/koa.hpp>
 
-class Terminal {
+class Cursor {
 public:
-	void in(char c);
-	void clear();
-	
-
-	uint32_t line_lenght_;
-	uint32_t lines_count;
-
-	ViewmakerFB *viewmaker;
+	uint16_t pos_x;
+	uint16_t pos_y;
 };
 
-extern Terminal term1;
+class Terminal : public KOA::Allocatable {
+public:
+	Terminal();
+	void out(char c);
+	void clear();
+	
+	Cursor cursor_;
+
+	uint32_t line_lenght_;
+	uint32_t lines_count_;
+
+	ViewmakerFB *viewmaker_;
+};
+
+extern Terminal *term1;
 
