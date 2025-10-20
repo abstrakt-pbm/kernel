@@ -5,26 +5,34 @@ Terminal::Terminal() {
 	line_lenght_ = viewmaker_->width / CHAR_W;
 	lines_count_ = viewmaker_->width / CHAR_H;
 
-	cursor_.pos_x = 0;
-	cursor_.pos_y = 0;
+	cursor_.limit_x_ = line_lenght_;
+	cursor_.limit_y_ = lines_count_;
+	cursor_.pos_x_ = 0;
+	cursor_.pos_y_ = 0;
 }
 
 void Terminal::out(char c) {
-	viewmaker_->put_char(c,
-					 cursor_.pos_x,
-					 cursor_.pos_y,
+	if (c == '\b') {
+		cursor_.move_left();
+		viewmaker_->put_char(0x0,
+					 cursor_.pos_x_,
+					 cursor_.pos_y_,
 					 0,
 					 0x00FFFFFF);
-	if (cursor_.pos_x + 1 >= line_lenght_) {
-		cursor_.pos_x = 0;
-		if (cursor_.pos_y + 1 >= lines_count_) {
-			cursor_.pos_y = 0;
-		} else {
-			cursor_.pos_y += 1;
-		}
-	} else {
-		cursor_.pos_x += 1;
+		return;
 	}
+
+	if (c == '\n') {
+		cursor_.move_down();
+	}
+
+	viewmaker_->put_char(c,
+					 cursor_.pos_x_,
+					 cursor_.pos_y_,
+					 0,
+					 0x00FFFFFF);
+
+	cursor_.move_right();
 }
 
 Terminal* term1;

@@ -2,11 +2,8 @@
 #include <terminal/viewmaker/framebufer/fb.hpp>
 #include <koa/koa.hpp>
 
-class Cursor {
-public:
-	uint16_t pos_x;
-	uint16_t pos_y;
-};
+#include <terminal/cursor.hpp>
+
 
 class Terminal : public KOA::Allocatable {
 public:

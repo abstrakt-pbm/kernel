@@ -7,10 +7,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(TERMINAL_HEADERS
 	"viewmaker/framebufer/fb.hpp"
 	"viewmaker/framebufer/font.hpp"
+	"cursor.hpp"
 	"terminal.hpp")
 
 set(TERMINAL_SRC
 	"viewmaker/framebufer/fb.cpp"
+	"cursor.cpp"
 	"terminal.cpp")
 
 add_library(${PROJECT_NAME} STATIC
