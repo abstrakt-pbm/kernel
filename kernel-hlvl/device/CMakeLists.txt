@@ -5,8 +5,7 @@ project(kernel-devices)
 set(CMAKE_CXX_STANDARD 20)
 
 set(DEVICES_HEADERS
-	"i8042/i8042.hpp"
-	"keyboard/kb.hpp")
+	"i8042/i8042.hpp")
 
 set(DEVICES_SRC
 	"i8042/i8042.cpp")
