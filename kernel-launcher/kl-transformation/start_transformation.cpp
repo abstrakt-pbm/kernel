@@ -250,7 +250,7 @@ void init_terminal() {
 	
 	const char* msg = "Chii OS ver 0.00?";
 	term1->viewmaker_->put_string(
-		msg, 17, 1, 1, fg, bg);
+		msg, 17, 0, 0, fg, bg);
 }
 
 void init_drivers() {
