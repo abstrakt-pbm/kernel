@@ -17,7 +17,7 @@ public:
 	uint32_t line_lenght_;
 	uint32_t lines_count_;
 
-	ViewmakerFB *viewmaker_;
+	ViewmakerFB viewmaker_;
 };
 
 extern Terminal *term1;

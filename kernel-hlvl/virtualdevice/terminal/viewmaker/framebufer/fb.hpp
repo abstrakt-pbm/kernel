@@ -6,7 +6,7 @@
 
 using namespace thinlibcxx;
 
-class ViewmakerFB : public KOA::Allocatable {
+class ViewmakerFB{
 public:
 
 	void put_char(char c,

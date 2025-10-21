@@ -8,7 +8,6 @@ add_subdirectory(utils)
 add_subdirectory(memorycontrol)
 add_subdirectory(tasks)
 add_subdirectory(interrupts)
-add_subdirectory(terminal)
 add_subdirectory(device)
 add_subdirectory(virtualdevice)
 
@@ -20,7 +19,6 @@ target_link_libraries(kernel-hlvl
 	kernel-virtualdevice 
 	kernel-interrupts 
 	kernel-tasks 
-	kernel-terminal 
 	kernel-memorycontrol 
 	kernel-utility 
 	thinlibcxx

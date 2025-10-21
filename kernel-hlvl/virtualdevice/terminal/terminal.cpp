@@ -18,7 +18,7 @@ Terminal::Terminal() {
 void Terminal::out(char c) {
 	if (c == '\b') {
 		cursor_.move_left();
-		viewmaker_->put_char(0x0,
+		viewmaker_.put_char(0x0,
 					 cursor_.pos_x_,
 					 cursor_.pos_y_,
 					 0,
@@ -31,7 +31,7 @@ void Terminal::out(char c) {
 		return;
 	}
 
-	viewmaker_->put_char(c,
+	viewmaker_.put_char(c,
 					 cursor_.pos_x_,
 					 cursor_.pos_y_,
 					 0,

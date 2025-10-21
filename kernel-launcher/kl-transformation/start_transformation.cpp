@@ -234,7 +234,6 @@ void init_terminal() {
 
 	term1 = new Terminal();
 	framebuffer = new FrameBuffer(&fbdevice);
-	term1->viewmaker_ = new ViewmakerFB();
 
 	framebuffer->fill_rect(
     	0,
@@ -249,7 +248,7 @@ void init_terminal() {
 	uint32_t y = 50;
 	
 	const char* msg = "Loading Chii OS ver 0.00?";
-	term1->viewmaker_->put_string(
+	term1->viewmaker_.put_string(
 		msg, 25, 0, 0, fg, bg);
 }
 
