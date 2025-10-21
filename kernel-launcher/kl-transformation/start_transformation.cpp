@@ -10,7 +10,7 @@
 #include <multiboot2/multiboot2.hpp>
 #include <interrupts/interrupts.hpp>
 #include <terminal/terminal.hpp>
-#include <drivermodel/drivermodel.hpp>
+#include <virtualdevice/virtualdevice.hpp>
 #include <device/devices.hpp>
 
 
@@ -233,24 +233,24 @@ void init_terminal() {
 	fbdevice.bpp = framebufer_tag->framebuffer_bpp;
 
 	term1 = new Terminal();
-	term1->viewmaker_ = new ViewmakerFB(&fbdevice);
+	framebuffer = new FrameBuffer(&fbdevice);
+	term1->viewmaker_ = new ViewmakerFB();
 
-	term1->viewmaker_->fill_rect(
+	framebuffer->fill_rect(
     	0,
     	0,
     	fbdevice.width,
     	fbdevice.height,
-    	0x00FFFFFF
-	);
+    	0x00FFFFFF);
 
-	uint32_t fg = 0x000000; // черный
-	uint32_t bg = 0xffffff; // белый
-	uint32_t x = 100;       // координата X в пикселях
-	uint32_t y = 50;        // координата Y в пикселях
+	uint32_t fg = 0x000000;
+	uint32_t bg = 0xffffff;
+	uint32_t x = 100;
+	uint32_t y = 50;
 	
-	const char* msg = "Chii OS ver 0.00?";
+	const char* msg = "Loading Chii OS ver 0.00?";
 	term1->viewmaker_->put_string(
-		msg, 17, 0, 0, fg, bg);
+		msg, 25, 0, 0, fg, bg);
 }
 
 void init_drivers() {

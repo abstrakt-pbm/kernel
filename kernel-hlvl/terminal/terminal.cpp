@@ -1,9 +1,13 @@
 #include <terminal/terminal.hpp>
 #include <terminal/viewmaker/framebufer/font.hpp>
 
+#include <video/video.hpp>
+#include <thinlibcxx/cstdint.hpp>
+using namespace thinlibcxx;
+
 Terminal::Terminal() {
-	line_lenght_ = viewmaker_->fbdev_->width / CHAR_W;
-	lines_count_ = viewmaker_->fbdev_->height / CHAR_H;
+	line_lenght_ = framebuffer->fbdev_->width / CHAR_W;
+	lines_count_ = framebuffer->fbdev_->height / CHAR_H;
 
 	cursor_.limit_x_ = line_lenght_;
 	cursor_.limit_y_ = lines_count_;
@@ -34,6 +38,12 @@ void Terminal::out(char c) {
 					 0x00FFFFFF);
 
 	cursor_.move_right();
+}
+
+void Terminal::out(const char *str, uint64_t lenght) {
+	for (size_t i = 0 ; i < lenght ; i++) {
+		out(str[i]);
+	}
 }
 
 Terminal* term1;

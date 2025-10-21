@@ -37,6 +37,7 @@ target_link_options(kernel_compiler_options INTERFACE
 
 add_subdirectory(kernel-launcher)
 add_subdirectory(kernel-hlvl)
+add_subdirectory(applications)
 add_subdirectory(thinlibcxx)
 
 add_library(kernelconfig INTERFACE

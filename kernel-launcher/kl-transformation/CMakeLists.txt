@@ -17,7 +17,7 @@ add_library(${PROJECT_NAME} STATIC
 	${TRANSFORMATION_SRC})
 
 target_link_libraries(${PROJECT_NAME} 
-    PUBLIC kernel-memorycontrol kernel-drivermodel kernel-devices kernel-interrupts kernel-terminal
+    PUBLIC kernel-memorycontrol kernel-virtualdevice kernel-devices kernel-interrupts kernel-terminal
 	initstage-base thinlibcxx
     PRIVATE kernel_compiler_options)
 
