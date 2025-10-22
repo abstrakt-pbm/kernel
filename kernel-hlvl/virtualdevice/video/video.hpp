@@ -1,1 +1,1 @@
-#include <video/framebuffer/framebuffer.hpp>
+#include <framebuffer/framebuffer.hpp>

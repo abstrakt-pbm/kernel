@@ -9,7 +9,11 @@ class Terminal : public KOA::Allocatable {
 public:
 	Terminal();
 	void out(char c);
+
+	void in(const char *str, uint64_t lenght);
 	void out(const char *str, uint64_t lenght);
+	void err(const char *str, uint64_t lenght);
+
 	void clear();
 	
 	Cursor cursor_;

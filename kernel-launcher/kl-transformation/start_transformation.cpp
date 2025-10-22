@@ -233,14 +233,17 @@ void init_terminal() {
 	fbdevice.bpp = framebufer_tag->framebuffer_bpp;
 
 	term1 = new Terminal();
-	framebuffer = new FrameBuffer(&fbdevice);
+	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
 
-	framebuffer->fill_rect(
-    	0,
-    	0,
-    	fbdevice.width,
-    	fbdevice.height,
-    	0x00FFFFFF);
+	Framebuffer::FBRect terminal_initial_color;
+	terminal_initial_color.left_up_x_ = 0;
+	terminal_initial_color.left_up_y_ = 0;
+	terminal_initial_color.right_down_x_ = fbdevice.width;
+	terminal_initial_color.right_down_y_ = fbdevice.height;
+	terminal_initial_color.color_ = 0x00FFFFFF;
+
+	//Fill display with white color
+	framebuffer->fill_rect(terminal_initial_color);
 
 	uint32_t fg = 0x000000;
 	uint32_t bg = 0xffffff;
