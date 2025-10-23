@@ -11,12 +11,11 @@ void start_kernel() {
 	bspWorker.task_in_work_ = nullptr;
 	bspWorker.task_queue_ = nullptr;
 
-	/*
 	bspWorker.pushTask(new Task(
 		0,
 		reinterpret_cast<Address>(
 			&SHELL::main)));
-	*/
+
 	while (true) {
 		asm volatile("hlt");
 	}

@@ -14,5 +14,7 @@ public:
 	void move_left();
 	void move_up();
 	void move_down();
+
+	void move_position(uint16_t pos_x, uint16_t pos_y);
 };
 

@@ -10,13 +10,18 @@ public:
 	Terminal();
 	void out(char c);
 
-	void in(const char *str, uint64_t lenght);
+	bool in(char *str);
 	void out(const char *str, uint64_t lenght);
 	void err(const char *str, uint64_t lenght);
 
-	
-	Cursor cursor_;
+	void input_char(char ch);
 
+	char buffer_[100];
+	uint32_t buffer_capacity_;
+	uint32_t buffer_cursor_;
+	bool has_unread_chars_;
+
+	Cursor cursor_;
 	uint32_t line_lenght_;
 	uint32_t lines_count_;
 

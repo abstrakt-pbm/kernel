@@ -37,3 +37,9 @@ void Cursor::move_down() {
 		pos_y_ += 1;
 	}
 }
+
+void Cursor::move_position(uint16_t pos_x, uint16_t pos_y) {
+	pos_x_ = pos_x;
+	pos_y_ = pos_y;
+}
+
