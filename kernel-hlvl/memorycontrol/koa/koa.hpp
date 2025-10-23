@@ -7,7 +7,7 @@ using namespace thinlibcxx;
 
 namespace KOA {
 
-// Allocator for small objects created by new
+// Allocator for small objects created by operator new()
 // Allocator operates with a range of addresses equivalent to DirectMapping
 class KernelObjectAllocator {
 public:	

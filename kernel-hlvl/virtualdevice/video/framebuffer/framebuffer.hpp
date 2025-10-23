@@ -48,6 +48,10 @@ class FrameBuffer : public KOA::Allocatable {
 				uint32_t y,
 				uint32_t color);
 	
+
+	uint32_t width() const;
+	uint32_t height() const;
+
 	FrameBufferDevice *fbdev_;
 };
 

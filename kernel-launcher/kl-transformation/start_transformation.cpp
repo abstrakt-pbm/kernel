@@ -18,8 +18,10 @@ void start_transformation(){
 	init_switcher();
 	init_memory();
 	init_interrupts();
-	init_drivers();
-	init_terminal();
+
+	init_devices();
+	init_subsystems();
+
 }
 
 void init_switcher() {
@@ -210,52 +212,44 @@ void init_apic() {
 	interrupts.lapic.setInitialTimerCount(10000000);
 	interrupts.lapic.setEnabled(true);
 	asm volatile("sti");
-
 }
 
 void init_terminal() {
+	term1 = new Terminal();
+	Framebuffer::FBRect terminal_initial_color;
+	terminal_initial_color.left_up_x_ = 0;
+	terminal_initial_color.left_up_y_ = 0;
+	terminal_initial_color.right_down_x_ = framebuffer->width();
+	terminal_initial_color.right_down_y_ = framebuffer->height();
+	terminal_initial_color.color_ = 0x00FFFFFF;
+
+	//Fill display with white color
+	framebuffer->fill_rect(terminal_initial_color);
+	
+	const char* msg = "Loading Chii OS ver 0.00?\n";
+	term1->out(msg, 26);
+}
+
+void init_devices() {
 	Multiboot_Framebuffer_Tag* framebufer_tag =
 		reinterpret_cast<Multiboot_Framebuffer_Tag*>(
 			mb2i.get_particular_tag(
 				MultibootTagType::FRAMEBUFFER, 0));
 
-	if(!framebufer_tag) {
-		return;
-	}
-
-	volatile uint8_t *fb_base = reinterpret_cast<volatile uint8_t*>(
+	if(framebufer_tag) {
+		volatile uint8_t *fb_base = reinterpret_cast<volatile uint8_t*>(
 		directmapping.paddr_to_dmaddr(framebufer_tag->framebuffer_addr));
-
-	fbdevice.fb_base = fb_base;
-	fbdevice.width = framebufer_tag->framebuffer_width;
-	fbdevice.height = framebufer_tag->framebuffer_height;
-	fbdevice.pitch = framebufer_tag->framebuffer_pitch;
-	fbdevice.bpp = framebufer_tag->framebuffer_bpp;
-
-	term1 = new Terminal();
-	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
-
-	Framebuffer::FBRect terminal_initial_color;
-	terminal_initial_color.left_up_x_ = 0;
-	terminal_initial_color.left_up_y_ = 0;
-	terminal_initial_color.right_down_x_ = fbdevice.width;
-	terminal_initial_color.right_down_y_ = fbdevice.height;
-	terminal_initial_color.color_ = 0x00FFFFFF;
-
-	//Fill display with white color
-	framebuffer->fill_rect(terminal_initial_color);
-
-	uint32_t fg = 0x000000;
-	uint32_t bg = 0xffffff;
-	uint32_t x = 100;
-	uint32_t y = 50;
-	
-	const char* msg = "Loading Chii OS ver 0.00?";
-	term1->viewmaker_.put_string(
-		msg, 25, 0, 0, fg, bg);
+		fbdevice.fb_base = fb_base;
+		fbdevice.width = framebufer_tag->framebuffer_width;
+		fbdevice.height = framebufer_tag->framebuffer_height;
+		fbdevice.pitch = framebufer_tag->framebuffer_pitch;
+		fbdevice.bpp = framebufer_tag->framebuffer_bpp;
+	}
 }
 
-void init_drivers() {
-	kbdriver = new KBDriver();
+void init_subsystems() {
+	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
+	init_terminal();
+	new (&input) Input(true);
 }
 

@@ -19,6 +19,7 @@ add_library(${PROJECT_NAME} STATIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC thinlibcxx
 	kernel-interrupts
+	kernel-devices
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC

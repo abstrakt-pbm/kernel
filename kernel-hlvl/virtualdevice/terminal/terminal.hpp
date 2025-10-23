@@ -14,7 +14,6 @@ public:
 	void out(const char *str, uint64_t lenght);
 	void err(const char *str, uint64_t lenght);
 
-	void clear();
 	
 	Cursor cursor_;
 

@@ -6,8 +6,8 @@
 using namespace thinlibcxx;
 
 Terminal::Terminal() {
-	line_lenght_ = framebuffer->fbdev_->width / CHAR_W;
-	lines_count_ = framebuffer->fbdev_->height / CHAR_H;
+	line_lenght_ = framebuffer->width() / CHAR_W;
+	lines_count_ = framebuffer->height() / CHAR_H;
 
 	cursor_.limit_x_ = line_lenght_;
 	cursor_.limit_y_ = lines_count_;

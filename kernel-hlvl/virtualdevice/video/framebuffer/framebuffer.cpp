@@ -44,6 +44,20 @@ void FrameBuffer::put_pixel(uint32_t x, uint32_t y, uint32_t color)
 	}
 }
 
+uint32_t FrameBuffer::width() const {
+	if (fbdev_) {
+		return fbdev_->width;
+	}
+	return 0;
+}
+
+uint32_t FrameBuffer::height() const {
+	if (fbdev_) {
+		return fbdev_->height;
+	}
+	return 0;
+}
+
 } // namespace Framebuffer
 
 Framebuffer::FrameBuffer *framebuffer;
