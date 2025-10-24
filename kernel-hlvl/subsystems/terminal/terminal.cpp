@@ -48,8 +48,12 @@ void Terminal::out(char c) {
 	cursor_.move_right();
 }
 
-void Terminal::out(const char *str, uint64_t lenght) {
-	for (size_t i = 0 ; i < lenght ; i++) {
+void Terminal::out(const char *str, uint64_t length) {
+	if (!str) {
+		return;
+	}
+
+	for (size_t i = 0 ; i < length ; i++) {
 		out(str[i]);
 	}
 }
@@ -80,6 +84,11 @@ void Terminal::input_char(char ch) {
 	}
 
 	buffer_[buffer_cursor_] = ch;
+}
+
+void Terminal::execute_escape_sequence(const char *sequence,
+							  uint32_t length){
+
 }
 
 Terminal* term1;

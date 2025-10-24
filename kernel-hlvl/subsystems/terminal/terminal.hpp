@@ -11,10 +11,12 @@ public:
 	void out(char c);
 
 	bool in(char *str);
-	void out(const char *str, uint64_t lenght);
-	void err(const char *str, uint64_t lenght);
+	void out(const char *str, uint64_t length);
+	void err(const char *str, uint64_t length);
 
 	void input_char(char ch);
+	void execute_escape_sequence(const char *sequence,
+							  uint32_t length);
 
 	char buffer_[100];
 	uint32_t buffer_capacity_;

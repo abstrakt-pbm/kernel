@@ -9,18 +9,18 @@ add_subdirectory(memorycontrol)
 add_subdirectory(tasks)
 add_subdirectory(interrupts)
 add_subdirectory(device)
-add_subdirectory(virtualdevice)
+add_subdirectory(subsystems)
 
 add_library(kernel-hlvl "start_kernel.hpp" "start_kernel.cpp")
 
 target_link_libraries(kernel-hlvl 
-	PUBLIC applications 
-	kernel-devices 
-	kernel-virtualdevice 
-	kernel-interrupts 
-	kernel-tasks 
-	kernel-memorycontrol 
-	kernel-utility 
+	PUBLIC applications
+	kernel-devices
+	kernel-subsystems
+	kernel-interrupts
+	kernel-tasks
+	kernel-memorycontrol
+	kernel-utility
 	thinlibcxx
 	kernel_compiler_options)
 

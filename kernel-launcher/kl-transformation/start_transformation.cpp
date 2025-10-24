@@ -10,7 +10,7 @@
 #include <multiboot2/multiboot2.hpp>
 #include <interrupts/interrupts.hpp>
 #include <terminal/terminal.hpp>
-#include <virtualdevice/virtualdevice.hpp>
+#include <subsystems/subsystems.hpp>
 #include <device/devices.hpp>
 
 
