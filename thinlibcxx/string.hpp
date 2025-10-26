@@ -7,6 +7,9 @@ namespace thinlibcxx {
 class String {
 public:
 	String(const char* cstr);
+	String(String&& str) noexcept;
+
+	~String();
 
 	const char& operator[](size_t pos) const;	
 
@@ -16,7 +19,7 @@ public:
 	char* data();
 
 private:
-	char *buffer = nullptr;
+	char *buffer_ = nullptr;
 	uint32_t capacity_ = 64;
 	uint32_t size_ = 0;
 };

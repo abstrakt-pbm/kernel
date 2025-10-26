@@ -5,10 +5,10 @@ project(kernel-filesystem)
 set(CMAKE_CXX_STANDARD 20)
 
 set(FILESYSTEM_HEADERS
-	"filesystem.hpp")
+	"fs.hpp")
 
 set(FILESYSTEM_SRC
-	"filesystem.cpp")
+	"fs.cpp")
 
 
 add_library(${PROJECT_NAME} STATIC

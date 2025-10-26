@@ -9,6 +9,7 @@ set (THINLIBCXX_HEADERS
 	"string.hpp"
 	"hwtypes.hpp"
 	"hwtypes.hpp"
+	"memory.hpp"
 	"cppruntime/stubs.hpp"
 	"cppruntime/placementnew.hpp")
 
