@@ -11,7 +11,6 @@ namespace KOA {
 // Allocator operates with a range of addresses equivalent to DirectMapping
 class KernelObjectAllocator {
 public:	
-
 	void init();
 
 	void* allocate(size_t object_size);
@@ -21,7 +20,6 @@ public:
 private:
 	KOAPagePool root_page_pool_;
 };
-
 }
 
 extern KOA::KernelObjectAllocator koa;

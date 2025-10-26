@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(video)
 add_subdirectory(input)
 add_subdirectory(terminal)
+add_subdirectory(fs)
 
 set(SUBSYSTEMS_HEADERS
 	"subsystems.hpp")
@@ -19,7 +20,11 @@ add_library(${PROJECT_NAME} STATIC
 	${SUBSYSTEMS_HEADERS}
 	${SUBSYSTEMS_SRC})
 
-target_link_libraries(${PROJECT_NAME} INTERFACE kernel-terminal kernel-video  kernel-input
+target_link_libraries(${PROJECT_NAME} INTERFACE
+	kernel-terminal
+	kernel-video
+	kernel-input
+	kernel-filesystem
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC

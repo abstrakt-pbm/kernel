@@ -58,6 +58,12 @@ void Terminal::out(const char *str, uint64_t length) {
 	}
 }
 
+void Terminal::out(const String& str) {
+	for (size_t i = 0 ; i < str.length() ; i++) {
+		out(str[i]);
+	}
+}
+
 bool Terminal::in(char *str) {
 	if (!str || !has_unread_chars_) {
 		return false;

@@ -226,8 +226,9 @@ void init_terminal() {
 	//Fill display with white color
 	framebuffer->fill_rect(terminal_initial_color);
 	
-	const char* msg = "Loading Chii OS ver 0.00?\n";
-	term1->out(msg, 26);
+	//const char* msg = "Loading Chii OS ver 0.00?\n";
+	term1->out(
+		String("Loading Chii OS ver 0.00?"));
 }
 
 void init_devices() {

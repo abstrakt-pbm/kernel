@@ -54,6 +54,7 @@ void* KernelObjectAllocator::allocate(size_t object_size) {
 
 }
 
+
 void KernelObjectAllocator::free( void* ptr, size_t obj_size ) {
     if (!ptr || obj_size == 0) {
         return;
