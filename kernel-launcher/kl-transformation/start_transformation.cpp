@@ -228,7 +228,7 @@ void init_terminal() {
 	
 	//const char* msg = "Loading Chii OS ver 0.00?\n";
 	term1->out(
-		String("Loading Chii OS ver 0.00?"));
+		String("Loading Kernel ver 0.00?"));
 }
 
 void init_devices() {
@@ -252,5 +252,8 @@ void init_subsystems() {
 	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
 	init_terminal();
 	new (&input) Input(true);
+	kernelfs = new FS::FSNode(unique_ptr<FS::FSNode>(nullptr),
+		unique_ptr<FS::FSNode>(nullptr),
+		String("/"));
 }
 

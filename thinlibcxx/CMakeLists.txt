@@ -10,6 +10,7 @@ set (THINLIBCXX_HEADERS
 	"hwtypes.hpp"
 	"hwtypes.hpp"
 	"memory.hpp"
+	"datastructures/vector.hpp"
 	"cppruntime/stubs.hpp"
 	"cppruntime/placementnew.hpp")
 

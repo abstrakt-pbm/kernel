@@ -1,17 +1,20 @@
 #include <fs/fs.hpp>
 #include <thinlibcxx/memory.hpp>
+using namespace thinlibcxx;
 
 namespace FS {
 
-FSNode::FSNode(FSNode *prev_node,
-		FSNode *next_node,
+FSNode::FSNode(unique_ptr<FSNode> parent__,
+		unique_ptr<FSNode>next_node__,
 		String &&name) 
-: prev_node_(prev_node),
-next_node_(next_node),
-name_(thinlibcxx::move(name)) {
-	
-}
+: parent_(move(parent__)),
+next_node_(move(next_node__)),
+name_(move(name)) {}
 
+void FSNode::link_node(unique_ptr<FSNode> node) {
+	next_node_ = move(node);
+}
 } // namespace FS
 
 FS::FSNode *kernelfs;
+
