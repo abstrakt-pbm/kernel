@@ -2,6 +2,8 @@
 #include <thinlibcxx/hwtypes.hpp>
 using namespace thinlibcxx;
 
+// Allocator for array of small objects or primitive types
+// Allocator operates with a range of addresses equivalent to DirectMapping
 class KernelBufferAllocator {
 public:
 	void *allocate(uint64_t length);

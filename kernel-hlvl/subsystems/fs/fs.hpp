@@ -27,5 +27,3 @@ private:
 };
 } // namespace FS
 
-extern FS::FSNode *kernelfs;
-

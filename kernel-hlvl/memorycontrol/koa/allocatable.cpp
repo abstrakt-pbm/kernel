@@ -3,7 +3,7 @@
 namespace KOA {
 
 void* Allocatable::operator new( size_t size ) {
-    return koa.allocate(size);
+    return koa.calloc(size);
 }
 
 void Allocatable::operator delete(void* ptr, size_t size ) noexcept {

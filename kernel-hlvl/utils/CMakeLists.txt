@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 
 project(kernel-utility)
 
-add_subdirectory(logger)
-
 set(CMAKE_CXX_STANDARD 20)
 
 set(UTILITY_HEADERS
@@ -17,7 +15,6 @@ add_library(${PROJECT_NAME} STATIC
 	${UTILITY_SRC})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-	kernel-logs	
 	thinlibcxx
 	kernel_compiler_options)
 

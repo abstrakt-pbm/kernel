@@ -1,5 +1,5 @@
-#include "ppa.hpp"
 #include <ppa/ppa.hpp>
+
 #include <utils/utils.hpp>
 
 PhysicalPageAllocator::PhysicalPageAllocator(
@@ -8,8 +8,7 @@ PhysicalPageAllocator::PhysicalPageAllocator(
 	uint64_t page_size)
 :	page_array_(page_array),
 	page_count_(page_count),
-	page_size_(page_size)
-{}
+	page_size_(page_size) {}
 
 
 void *PhysicalPageAllocator::get_free_page() {
@@ -31,11 +30,14 @@ void PhysicalPageAllocator::free_page(void *ptr) {
 	}
 
 	PhysicalPage *physical_page = &page_array_[pfn];
-
-	physical_page->setFlag(PPFlag::is_in_use, false);
+	physical_page->setFlag(PPFlag::is_in_use,
+						false);
 }
 
 uint64_t PhysicalPageAllocator::pfn_to_paddr(uint64_t pfn) {
+	if (pfn > page_count_) {
+		return 0;
+	}
 	return pfn * page_size_;
 }
 

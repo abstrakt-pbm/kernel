@@ -54,6 +54,13 @@ void* KernelObjectAllocator::allocate(size_t object_size) {
 
 }
 
+void* KernelObjectAllocator::calloc(size_t object_size) {
+	void *allocated_obj = allocate(object_size);
+	if (allocated_obj) {
+		reinterpret_cast<uint8_t*>(allocated_obj)[0] = 0;
+	}
+	return allocated_obj;
+}
 
 void KernelObjectAllocator::free( void* ptr, size_t obj_size ) {
     if (!ptr || obj_size == 0) {

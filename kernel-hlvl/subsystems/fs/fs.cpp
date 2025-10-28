@@ -16,5 +16,4 @@ void FSNode::link_node(unique_ptr<FSNode> node) {
 }
 } // namespace FS
 
-FS::FSNode *kernelfs;
 

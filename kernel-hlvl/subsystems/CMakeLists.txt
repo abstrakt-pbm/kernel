@@ -8,6 +8,7 @@ add_subdirectory(video)
 add_subdirectory(input)
 add_subdirectory(terminal)
 add_subdirectory(fs)
+add_subdirectory(logger)
 
 set(SUBSYSTEMS_HEADERS
 	"subsystems.hpp")
@@ -25,6 +26,7 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
 	kernel-video
 	kernel-input
 	kernel-filesystem
+	kernel-logs
 	kernel_compiler_options)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
