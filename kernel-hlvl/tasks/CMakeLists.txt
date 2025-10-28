@@ -5,13 +5,11 @@ project(kernel-tasks)
 set(CMAKE_CXX_STANDARD 20)
 
 set(TASKS_HEADERS
-	"testtasks/testtasks.hpp"
 	"worker.hpp"
 	"taskcontext.hpp"
     "task.hpp")
 
 set(TASKS_SRC
-	"testtasks/testtasks.cpp"
 	"worker.cpp"
 	"taskcontext.cpp"
     "task.cpp")

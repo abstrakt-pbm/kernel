@@ -253,8 +253,5 @@ void init_subsystems() {
 	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
 	init_terminal();
 	new (&input) Input(true);
-	kernelfs = new FS::FSNode(unique_ptr<FS::FSNode>(nullptr),
-		unique_ptr<FS::FSNode>(nullptr),
-		String("/"));
 }
 
