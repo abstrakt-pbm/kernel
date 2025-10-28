@@ -15,6 +15,11 @@ public:
 	void move_up();
 	void move_down();
 
+	bool can_move_right();
+	bool can_move_left();
+	bool can_move_up();
+	bool can_move_down();
+
 	void move_position(uint16_t pos_x, uint16_t pos_y);
 };
 

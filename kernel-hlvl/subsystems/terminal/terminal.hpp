@@ -14,8 +14,9 @@ public:
 	bool in(char *str);
 
 	void out(const char *str, uint64_t length);
-
+	void out(const char *str);
 	void out(const String& str);
+
 	void err(const String& str);
 
 	void input_char(char ch);

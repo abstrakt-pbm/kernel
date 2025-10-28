@@ -12,6 +12,5 @@ void log(const char *log) {
 			thinlibcxx::strlen(
 			log, 255));
 
-	term1->out('\n');
-	term1->out('\r');
+	term1->out("\n\r");
 }

@@ -45,3 +45,18 @@ void ViewmakerFB::put_char(
 	framebuffer->print_bitmap(px, py, char_glyph);
 }	
 
+void ViewmakerFB::clear() 
+{	Framebuffer::FBRect terminal_clear;
+	terminal_clear.left_up_x_ = 0;
+	terminal_clear.left_up_y_ = 0;
+	terminal_clear.right_down_x_ = framebuffer->width();
+	terminal_clear.right_down_y_ = framebuffer->height();
+	terminal_clear.color_ = 0x00FFFFFF;
+
+	//Fill display with white color
+	framebuffer->fill_rect(terminal_clear);
+}
+
+
+
+

@@ -3,6 +3,8 @@
 
 #include <video/video.hpp>
 #include <thinlibcxx/cstdint.hpp>
+#include <thinlibcxx/cstring.hpp>
+
 using namespace thinlibcxx;
 
 Terminal::Terminal() {
@@ -35,7 +37,12 @@ void Terminal::out(char c) {
 	}
 	
 	if (c == '\r') {
-		cursor_.move_position(0, cursor_.pos_y_);
+		if (cursor_.can_move_down()) {
+			cursor_.move_position(0, cursor_.pos_y_);
+		} else {
+			cursor_.move_position(0,0);
+			viewmaker_.clear();
+		}
 		return;
 	}
 
@@ -49,11 +56,22 @@ void Terminal::out(char c) {
 }
 
 void Terminal::out(const char *str, uint64_t length) {
-	if (!str) {
+	if (!str || length == 0) {
 		return;
 	}
 
 	for (size_t i = 0 ; i < length ; i++) {
+		out(str[i]);
+	}
+}
+
+void Terminal::out(const char *str) {
+	if (!str) {
+		return;
+	}
+
+	size_t strl = strlen(str, 255);
+	for (size_t i = 0 ; i < strl ; ++i) {
 		out(str[i]);
 	}
 }

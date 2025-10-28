@@ -43,3 +43,21 @@ void Cursor::move_position(uint16_t pos_x, uint16_t pos_y) {
 	pos_y_ = pos_y;
 }
 
+bool Cursor::can_move_right() {
+	return pos_x_ + 1 < limit_x_;
+}
+
+bool Cursor::can_move_left() {
+	return pos_x_ - 1 >= 0;
+
+}
+
+bool Cursor::can_move_up() {
+	return pos_y_ - 1 > 0;
+}
+
+bool Cursor::can_move_down() {
+	return pos_y_ + 1 < limit_y_;
+}
+
+

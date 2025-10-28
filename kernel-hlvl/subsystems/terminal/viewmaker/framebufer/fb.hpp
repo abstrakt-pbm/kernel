@@ -21,5 +21,6 @@ public:
 				 uint32_t y,
 				 uint32_t fg_pixel,
 				 uint32_t bg_pixel);
+	void clear();
 };
 
