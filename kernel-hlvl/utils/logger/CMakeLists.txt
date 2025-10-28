@@ -1,23 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(kernel-utility)
-
-add_subdirectory(logger)
+project(kernel-logs)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(UTILITY_HEADERS
-    "utils.hpp")
+set(LOGGER_HEADERS
+    "logger.hpp")
 
-set(UTILITY_SRC
-    "utils.cpp")
+set(LOGGER_SRC
+    "logger.cpp")
 
 add_library(${PROJECT_NAME} STATIC
-	${UTILITY_HEADERS}
-	${UTILITY_SRC})
+	${LOGGER_HEADERS}
+	${LOGGER_SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-	kernel-logs	
+target_link_libraries(${PROJECT_NAME} 
+	PUBLIC kernel-terminal 
 	thinlibcxx
 	kernel_compiler_options)
 

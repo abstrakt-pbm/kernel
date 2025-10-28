@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 set (THINLIBCXX_HEADERS
     "cstdint.hpp"
 	"string.hpp"
+	"cstring.hpp"
 	"hwtypes.hpp"
 	"hwtypes.hpp"
 	"memory.hpp"
@@ -16,6 +17,7 @@ set (THINLIBCXX_HEADERS
 
 set (THINLIBCXX_SRC
 	"string.cpp"
+	"cstring.cpp"
     "cppruntime/stubs.cpp")
 
 add_library(${PROJECT_NAME} STATIC 
@@ -24,6 +26,7 @@ add_library(${PROJECT_NAME} STATIC
 
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC KernelBufferAllocator
+	kernel-logs
     PRIVATE kernel_compiler_options)
 
 

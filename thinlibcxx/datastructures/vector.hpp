@@ -9,6 +9,8 @@ public:
 	Vector();
 	Vector(size_t capacity);
 
+	Vector(const Vector& vec);
+
 	~Vector();
 
 	void push_back(const T &value);
@@ -21,6 +23,7 @@ public:
 	bool empty() const;
 	size_t size() const;
 	size_t capacity() const;
+	void clear();
 private:
 	void extend();
 

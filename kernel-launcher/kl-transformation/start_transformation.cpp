@@ -227,6 +227,7 @@ void init_terminal() {
 	framebuffer->fill_rect(terminal_initial_color);
 	
 	//const char* msg = "Loading Chii OS ver 0.00?\n";
+	log("init terminal");
 	term1->out(
 		String("Loading Kernel ver 0.00?"));
 }

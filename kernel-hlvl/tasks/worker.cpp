@@ -1,4 +1,3 @@
-#include "task.hpp"
 #include <tasks/worker.hpp>
 #include <tasks/task.hpp>
 #include <tasks/taskcontext.hpp>
