@@ -17,6 +17,10 @@ public:
     void* calloc(size_t object_size);
     void free(void *ptr, size_t obj_size);
 
+	// return size of pool max near
+	// blk range from right
+	uint64_t get_pool_near_size(uint64_t size);
+
 private:
 	KOAPagePool root_page_pool_;
 };

@@ -82,6 +82,19 @@ void KernelObjectAllocator::free( void* ptr, size_t obj_size ) {
     pool_where_page->free(ptr);
 }
 
+uint64_t KernelObjectAllocator::get_pool_near_size(uint64_t size) {
+	KOAPagePool *current_page_pool = &root_page_pool_;
+	uint64_t near_size = 0;
+	while (current_page_pool) {
+		if (current_page_pool->object_size_ > size) {
+			near_size = current_page_pool->object_size_;
+			break;
+		}
+		current_page_pool = current_page_pool->next_page_pool_;
+	}
+	return near_size;
+}
+
 } // KOA namespace
 
 

@@ -14,8 +14,7 @@ void KOAPage::operator delete(void *ptr, size_t size) {
 
 KOAPage::KOAPage(KOAPage* next_koa_page,
 				 uint64_t object_size) 
-	:
-	next_koa_page_(next_koa_page),
+	: next_koa_page_(next_koa_page),
 	object_size_(object_size),
 	length_(0) {
 
@@ -41,7 +40,7 @@ void* KOAPage::allocate() {
         return nullptr;
     }
 
-    void *allocated_object =  free_object_;
+    void *allocated_object = free_object_;
 
     Address next_free_obj = *reinterpret_cast<size_p*>(free_object_);
     free_object_ = reinterpret_cast<void*>(next_free_obj);

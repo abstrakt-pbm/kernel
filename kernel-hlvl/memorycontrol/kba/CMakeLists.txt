@@ -5,9 +5,11 @@ project(KernelBufferAllocator)
 set(CMAKE_CXX_STANDARD 20)
 
 set(KBA_HEADERS
+	"bufferinfo.hpp"
     "kba.hpp")
 
 set(KBA_SRC
+	"bufferinfo.cpp"
     "kba.cpp")
 
 add_library(${PROJECT_NAME} STATIC

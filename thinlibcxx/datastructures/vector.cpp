@@ -31,7 +31,7 @@ capacity_(vec.capacity_){
 template<typename T>
 Vector<T>::~Vector() {
 	kba.free(data_,
-		  capacity_);
+		  capacity_ * sizeof(T));
 }
 
 template<typename T>
