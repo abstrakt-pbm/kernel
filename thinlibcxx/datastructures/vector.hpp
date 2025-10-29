@@ -8,11 +8,14 @@ class Vector {
 public:
 	Vector();
 	Vector(size_t capacity);
-
 	Vector(const Vector& vec);
+	Vector(Vector&& vec);
 
 	~Vector();
 
+	Vector &operator=(Vector &&vec);
+	Vector &operator=(const Vector &vec);
+	
 	void push_back(const T &value);
 	void push_back(T &&value);
 

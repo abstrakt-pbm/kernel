@@ -42,6 +42,16 @@ String::String(const String& other) {
 
 String::~String() {}
 
+String &String::operator=(String &&str) {
+	buffer_ = move(str.buffer_);
+	return *this;
+}
+
+String &String::operator=(const String &str) {
+	buffer_ = str.buffer_;
+	return *this;
+}
+
 bool String::operator==(const char* c_str) {
 	return strcmp(buffer_.data(), c_str) == 0;
 }

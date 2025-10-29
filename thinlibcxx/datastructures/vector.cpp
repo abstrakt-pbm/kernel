@@ -29,9 +29,42 @@ capacity_(vec.capacity_){
 }
 
 template<typename T>
+Vector<T>::Vector(Vector&& vec) 
+: size_(vec.size_),
+capacity_(vec.capacity_){
+	data_ = vec.data_;
+	vec.data_ = nullptr;
+}
+
+template<typename T>
 Vector<T>::~Vector() {
 	kba.free(data_,
 		  capacity_ * sizeof(T));
+}
+
+template<typename T>
+Vector<T> &Vector<T>::operator=(Vector &&vec) {
+	size_ = vec.size_;
+	capacity_ = vec.capacity_;
+
+	data_ = vec.data_;
+	vec.data_ = nullptr;
+
+	return *this;
+}
+
+template<typename T>
+Vector<T> &Vector<T>::operator=(const Vector &vec) {
+	size_ = vec.size_;
+	capacity_ = vec.capacity_;
+
+	data_ = reinterpret_cast<T*>(kba.allocate(
+		capacity_ * sizeof(T)));
+	for (size_t i = 0 ; i < size_ ; ++i) {
+		new (&data_[i]) T(vec.data_[i]);
+	}
+
+	return *this;
 }
 
 template<typename T>
