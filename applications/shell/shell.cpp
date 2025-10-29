@@ -8,17 +8,31 @@ namespace SHELL {
 
 uint32_t execute_command(char* answer, char* command, uint32_t command_size) {
 	char lanswer[] = "command not found: ";
-	for (size_t i = 0 ; i < sizeof(lanswer) ; ++i) { answer[i] = lanswer[i];
+	for (size_t i = 0 ; i < sizeof(lanswer) ; ++i) {
+		answer[i] = lanswer[i];
 	}
 	return sizeof(lanswer);
 }
 
 String execute_command(String raw_command) {
-	String answer("command not found: ");
-	Vector<String> tokens = split(raw_command, '\000');
+	String answer(" ", 1);
+	answer.clear();
+	Vector<String> tokens = split(raw_command,
+							   '\000');
 
-	for (size_t i = 0 ; i < raw_command.length() ; ++i) {
-		  answer.push_char(raw_command[i]);
+	if (tokens[0] == "ECHO") {
+		for (size_t i = 0 ; i < tokens[1].length() ; ++i) {
+			answer.push_char(tokens[1][i]);
+		}
+	} else {
+		String command_not_found("command not found: ");
+		for (size_t i = 0 ; i < command_not_found.length() ; ++i) {
+			answer.push_char(command_not_found[i]);
+		}
+
+		for (size_t i = 0 ; i < raw_command.length() ; ++i) {
+			answer.push_char(raw_command[i]);
+		}
 	}
 	return answer;
 }

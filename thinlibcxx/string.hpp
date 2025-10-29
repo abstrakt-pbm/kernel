@@ -15,6 +15,7 @@ public:
 	String(const String& other);
 	~String();
 
+	bool operator==(const char* c_str);
 	const char& operator[](size_t pos) const;	
 	void push_char(char c);	
 

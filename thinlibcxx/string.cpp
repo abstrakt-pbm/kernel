@@ -1,4 +1,5 @@
 #include <thinlibcxx/string.hpp>
+#include <thinlibcxx/cstring.hpp>
 #include <thinlibcxx/memory.hpp>
 #include <thinlibcxx/cppruntime/placementnew.hpp>
 #include <kba/kba.hpp>
@@ -41,6 +42,10 @@ String::String(const String& other) {
 
 String::~String() {}
 
+bool String::operator==(const char* c_str) {
+	return strcmp(buffer_.data(), c_str) == 0;
+}
+
 const char& String::operator[](size_t pos) const {
 	return buffer_[pos];
 }
@@ -74,12 +79,12 @@ Vector<String> split(const String& str, char delimiter) {
 	size_t lp = 0;	
 	size_t rp = 0;	
 	while (rp < str.length()) {
-		while (str[lp] == delimiter && lp < str.length()) {
+		while (lp < str.length() && str[lp] == delimiter) {
 			++lp;
 		}
 		rp = lp;
 		
-		while (str[rp] != delimiter && rp < str.length()) {
+		while (rp < str.length() && str[rp] != delimiter) {
 			++rp;
 		} 
 
