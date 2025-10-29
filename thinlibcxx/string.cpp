@@ -61,7 +61,7 @@ bool String::empty() const {
 	return buffer_.empty();
 }
 
-char* String::data() {
+char* String::data() const{
 	return buffer_.data();
 }
 
@@ -72,18 +72,23 @@ void String::clear() {
 Vector<String> split(const String& str, char delimiter) {
 	Vector<String> tokens;
 	size_t lp = 0;	
-	size_t rp = 1;	
-	String tmp = str;
+	size_t rp = 0;	
 	while (rp < str.length()) {
-		if (str[rp] == delimiter) {
-			tokens.push_back(String(
-				tmp.data() + rp, rp - lp));
-			lp = rp+1;
+		while (str[lp] == delimiter && lp < str.length()) {
+			++lp;
 		}
-		++rp;
+		rp = lp;
+		
+		while (str[rp] != delimiter && rp < str.length()) {
+			++rp;
+		} 
+
+		if (rp > lp) {
+			const char* c_str = str.data() + lp;
+			tokens.push_back(String(c_str, rp - lp));
+		}
+		lp = rp;
 	}
-	tokens.push_back(String(
-		tmp.data() + rp, rp - lp));
 	return tokens;
 }
 

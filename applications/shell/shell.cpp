@@ -15,7 +15,7 @@ uint32_t execute_command(char* answer, char* command, uint32_t command_size) {
 
 String execute_command(String raw_command) {
 	String answer("command not found: ");
-	//Vector<String> tokens = split(raw_command, ' ');
+	Vector<String> tokens = split(raw_command, '\000');
 
 	for (size_t i = 0 ; i < raw_command.length() ; ++i) {
 		  answer.push_char(raw_command[i]);
@@ -29,6 +29,7 @@ int main() {
 	term1->out("> ",2);
 	char char_input;
 	String command(" ",1);
+	command.clear();
 
 	while(true){
 		bool has_input = term1->in(&char_input);

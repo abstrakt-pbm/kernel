@@ -21,7 +21,7 @@ public:
 	uint64_t length() const;
 	uint64_t capacity() const;
 	bool empty() const;
-	char* data();
+	char* data() const;
 	void clear();
 
 private:

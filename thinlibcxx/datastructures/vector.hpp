@@ -19,7 +19,7 @@ public:
 	T& operator[](size_t index);
 	const T& operator[](size_t index) const;
 
-	T *data();
+	T *data() const;
 	bool empty() const;
 	size_t size() const;
 	size_t capacity() const;

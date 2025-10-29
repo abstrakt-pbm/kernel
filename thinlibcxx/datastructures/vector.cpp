@@ -39,7 +39,7 @@ void Vector<T>::push_back(const T &value) {
 	if (size_ == capacity_) {
 		extend();
 	}
-	data_[size_] = value;
+	new (&data_[size_]) T(value);
 	++size_;
 }
 
@@ -48,7 +48,7 @@ void Vector<T>::push_back(T &&value) {
 	if (size_ == capacity_){
 		extend();
 	};
-    new (&data_[size_]) T(move(value)); // move ctor
+    new (&data_[size_]) T(move(value));
     ++size_;
 }
 
@@ -88,6 +88,7 @@ T& Vector<T>::operator[](size_t index) {
 	if (index  < size_) {
 		return data_[index];
 	}
+	log("vector overflow");
 	return data_[0];
 }
 
@@ -97,11 +98,12 @@ const T& Vector<T>::operator[](size_t index) const {
 		return data_[index];
 	}
 	//TODO: panic()
+	log("vector overflow");
 	return data_[0];
 }
 
 template<typename T>
-T *Vector<T>::data() {
+T *Vector<T>::data() const{
 	return data_;
 }
 
