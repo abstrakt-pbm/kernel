@@ -16,6 +16,7 @@ void *KernelBufferAllocator::allocate(uint64_t length) {
 	if (ptr) {
 		BufferInfo *new_buffer_info = new BufferInfo(ptr,
 											   allocation_length,
+											   BufferSource::KOA,
 											   nullptr,
 											   buffer_info_head_);
 		buffer_info_head_->prev_ = new_buffer_info;
@@ -27,7 +28,7 @@ void *KernelBufferAllocator::allocate(uint64_t length) {
 void KernelBufferAllocator::free(void *ptr, size_t obj_size) {
 	BufferInfo *current_buffer_info = buffer_info_head_;
 	while(current_buffer_info) {
-		if (current_buffer_info->ptr_ == ptr ) {
+		if (current_buffer_info->source_ == BufferSource::KOA && current_buffer_info->ptr_ == ptr ) {
 			koa.free(ptr,
 				current_buffer_info->length_);
 
