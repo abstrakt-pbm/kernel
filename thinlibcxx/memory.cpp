@@ -70,6 +70,28 @@ void unique_ptr<T, Deleter>::swap(unique_ptr& other_ptr) noexcept {
 	deleter_ = tmp_deleter;
 }
 
+template<typename T>
+observer_ptr<T>::observer_ptr(T *raw_ptr) : raw_ptr_(raw_ptr) {}
+
+template<typename T>
+T* observer_ptr<T>::get() const noexcept {
+	return raw_ptr_;	
+}
+
+template<typename T>
+T& observer_ptr<T>::operator*() const {
+	return *raw_ptr_;
+}
+
+template<typename T>
+T* observer_ptr<T>::operator->() const {
+	return raw_ptr_;	
+}
+
+template<typename T>
+void reset(T* new_raw_ptr = nullptr) noexcept {
+	raw_ptr_(new_raw_ptr);
+}
 
 } // namespace thinlibcxx
 

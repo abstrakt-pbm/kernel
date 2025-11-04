@@ -5,9 +5,13 @@ project(kernel-filesystem)
 set(CMAKE_CXX_STANDARD 20)
 
 set(FILESYSTEM_HEADERS
+	"ramfs/ramfs.hpp"
+	"fsnode.hpp"
 	"fs.hpp")
 
 set(FILESYSTEM_SRC
+	"ramfs/ramfs.cpp"
+	"fsnode.cpp"
 	"fs.cpp")
 
 

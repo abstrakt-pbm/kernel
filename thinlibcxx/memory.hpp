@@ -39,6 +39,20 @@ public:
     void swap(unique_ptr& ptr) noexcept;
 };
 
+template <typename T>
+class observer_ptr {
+private:
+	T *raw_ptr_;
+public:
+	observer_ptr() = default;
+	observer_ptr(T *raw_ptr);
+
+	T* get() const noexcept;
+    T& operator*() const;
+    T* operator->() const;
+
+    void reset(T* ptr = nullptr) noexcept;
+};
 
 }; // namespace thinlibcxx
 

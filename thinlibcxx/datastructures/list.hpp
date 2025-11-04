@@ -1,6 +1,6 @@
 #pragma once
 #include <thinlibcxx/memory.hpp>
-#include <thinlibcxx/cstdint.hpp.hpp>
+#include <thinlibcxx/cstdint.hpp>
 #include <koa/koa.hpp>
 
 namespace thinlibcxx {
@@ -18,6 +18,25 @@ public:
 	Node* prev_;
 	Node* next_;
 };
+
+template<typename T>
+class ListIterator {
+	public:
+		ListIterator(observer_ptr<Node<T>> ptr = nullptr);
+		T& operator*() const;
+		T* operator->() const;
+		ListIterator& operator++();
+		ListIterator operator++(int);
+		ListIterator& operator--();
+		ListIterator& operator--(int);
+		bool operator==(const ListIterator& other);
+		bool operator!=(const ListIterator& other);
+
+	private:
+		observer_ptr<Node<T>> ptr_;
+};
+
+	
 
 template<typename T>
 class List {
@@ -49,6 +68,9 @@ public:
 
 	bool empty() const;
 	size_t size() const;
+
+	ListIterator<T> begin();
+	ListIterator<T> end();
 
 private:
 	Node<T> *head_;

@@ -19,7 +19,7 @@ List<T>::List(const List& list) {
 			current_node->next_ = Node<T>(
 				current_foreign_next_node->value_);
 			current_node = current_node->next_;
-			current_foreign_node = current_foreign_node->next_;
+			current_foreign_next_node = current_foreign_next_node->next_;
 		}
 		tail_ = current_node->next_;
 	}
@@ -51,24 +51,25 @@ List<T>::~List() {
 }
 
 template<typename T>
-List<T>& operator=(const List& list) {
-	value_ = list.value_;
-	prev_ = list.prev_;
-	next_  = list.next_;
+List<T>& List<T>::operator=(const List& list) {
+	head_ = list.head_;
+	tail_ = list.tail_;
+	size_ = list.size_;
 }
 
 template<typename T>
-List<T>& operator=(List&& list) {
-	value_ = move(list.value_);
-	prev_ = list.prev_;
-	next_  = list.next_;
+List<T>& List<T>::operator=(List&& list) {
+	head_ = list.head_;
+	tail_ = list.tail_;
+	size_ = list.size_;
 
 	list.prev_ = nullptr;
 	list.next_ = nullptr;
+
 }
 
 template<typename T>
-void push_back(const T& value) {
+void List<T>::push_back(const T& value) {
 	if(!head_) {
 		head_ = new Node<T>(move(value));
 		tail_ = head_;
@@ -83,7 +84,7 @@ void push_back(const T& value) {
 }
 
 template<typename T>
-void push_back(T&& value) {
+void List<T>::push_back(T&& value) {
 	if(!head_) {
 		head_ = new Node<T>(move(value));
 		tail_ = head_;
@@ -98,7 +99,7 @@ void push_back(T&& value) {
 }
 
 template<typename T>
-void push_front(const T& value) {
+void List<T>::push_front(const T& value) {
 	if (head_) {
 		Node<T> *new_head = new Node<T>(value);
 		head_->prev_ = new_head;
@@ -111,7 +112,7 @@ void push_front(const T& value) {
 }
 
 template<typename T>
-void push_front(T&& value) {
+void List<T>::push_front(T&& value) {
 	if (head_) {
 		Node<T> *new_head = new Node<T>(move(value));
 		head_->prev_ = new_head;
@@ -125,9 +126,9 @@ void push_front(T&& value) {
 }
 
 template<typename T>
-void pop_back() {
+void List<T>::pop_back() {
 	if (tail_) {
-		Node<T> *new_tail = tail->prev_;
+		Node<T> *new_tail = tail_->prev_;
 		delete tail_;
 		tail_ = new_tail;
 		if (size_ > 0) {
@@ -137,7 +138,7 @@ void pop_back() {
 }
 
 template<typename T>
-void pop_front() {
+void List<T>::pop_front() {
 	if (head_) {
 		Node<T> *new_head = head_->next_;
 		delete head_;
@@ -149,7 +150,7 @@ void pop_front() {
 }
 
 template<typename T>
-void clear() {
+void List<T>::clear() {
 	if(head_) {
 		Node<T> *current_node = head_->next_;
 		delete head_;
@@ -164,33 +165,87 @@ void clear() {
 }
 
 template<typename T>
-T& front() {
+T& List<T>::front() {
 	return head_;
 }
 
 template<typename T>
-const T& front() const {
+const T& List<T>::front() const {
 	return head_;
 }
 
 template<typename T>
-T& back() {
+T& List<T>::back() {
 	return tail_;
 }
 
 template<typename T>
-const T& back() const {
+const T& List<T>::back() const {
 	return tail_;
 }
 
 template<typename T>
-bool empty() const {
+bool List<T>::empty() const {
 	return size_ == 0;
 }
 
 template<typename T>
-size_t size() const {
+size_t List<T>::size() const {
 	return size_;
+}
+
+template<typename T>
+ListIterator<T>::ListIterator(observer_ptr<Node<T>> ptr) : ptr_(ptr) {}
+
+template<typename T>
+T& ListIterator<T>::operator*() const {
+
+	return ptr_->value_;
+}
+
+template<typename T>
+T* ListIterator<T>::operator->() const {
+	return &ptr_->value_;
+}
+
+template<typename T>
+ListIterator<T>& ListIterator<T>::operator++() {
+	if (ptr_) {
+		ptr_ = ptr_->next_;
+	}
+	return *this;
+}
+
+template<typename T>
+ListIterator<T> ListIterator<T>::operator++(int) {
+	ListIterator tmp = *this;
+	++(*this);
+	return tmp;
+}
+
+template<typename T>
+ListIterator<T>& ListIterator<T>::operator--() {
+	if (ptr_) {
+		ptr_ = ptr_->prev_;
+	}
+	return *this;
+}
+
+template<typename T>
+ListIterator<T>& ListIterator<T>::operator--(int) {
+	ListIterator tmp = *this;
+	--(*this);
+	return tmp;
+}
+
+template<typename T>
+bool ListIterator<T>::operator==(const ListIterator& other) {
+	return ptr_ = other.ptr_;
+}
+
+template<typename T>
+bool ListIterator<T>::operator!=(const ListIterator& other) {
+	return !(*this == other);
 }
 
 } // namespace thinlibcxx

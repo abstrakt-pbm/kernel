@@ -53,7 +53,7 @@ String &String::operator=(const String &str) {
 }
 
 bool String::operator==(const char* c_str) {
-	return strcmp(buffer_.data(), c_str) == 0;
+	return streq(buffer_.data(), c_str);
 }
 
 const char& String::operator[](size_t pos) const {

@@ -6,14 +6,6 @@ using namespace thinlibcxx;
 
 namespace SHELL {
 
-uint32_t execute_command(char* answer, char* command, uint32_t command_size) {
-	char lanswer[] = "command not found: ";
-	for (size_t i = 0 ; i < sizeof(lanswer) ; ++i) {
-		answer[i] = lanswer[i];
-	}
-	return sizeof(lanswer);
-}
-
 String execute_command(String raw_command) {
 	String answer(" ", 1);
 	answer.clear();
