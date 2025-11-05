@@ -8,13 +8,14 @@ FSNode::FSNode(String&& name,
 : name_(name),
 type_(type) {}
 
-observer_ptr<FSNode> FSNode::GetChild(size_t child_number) {
-	if (child_number > child_count()) {
-		return nullptr;
-	}
-	return nullptr;
-}
 
+bool FSNode::mkchild(unique_ptr<FSNode> child) {
+	if (this->type_ == FSNodeType::DIR) {
+		childs_.push_back(move(child));
+		return true;
+	}
+	return false;
+}
 
 size_t FSNode::child_count() const {
 	return childs_.size();

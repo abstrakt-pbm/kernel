@@ -1,6 +1,8 @@
 #include <shell/shell.hpp>
 #include <terminal/terminal.hpp>
+#include <fs/fs.hpp>
 #include <thinlibcxx/string.hpp>
+#include <thinlibcxx/memory.hpp>
 
 using namespace thinlibcxx;
 
@@ -30,6 +32,9 @@ String execute_command(String raw_command) {
 }
 
 int main() {
+	unique_ptr<FS::FSNode> home_dir(new FS::Dirrectory("home"));
+	root_dir->mkchild(move(home_dir));
+
 	term1->out('\n');
 	term1->out('\r');
 	term1->out("> ",2);

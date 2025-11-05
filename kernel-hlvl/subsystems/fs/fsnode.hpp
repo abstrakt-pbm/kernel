@@ -18,14 +18,14 @@ public:
 		FSNodeType type);
 
 	observer_ptr<FSNode> find_subnode(const String& subnode_name);
+	
+	bool mkchild(unique_ptr<FSNode> child);
 
-	observer_ptr<FSNode> GetChild(size_t child_number);
 	size_t child_count() const;
 	const String& name() const;
 	FSNodeType type() const; 
 	bool isOpen() const;
 
-private:
 	String name_;
 	FSNodeType type_;
 	bool is_open_;
@@ -47,12 +47,6 @@ public:
 class Dirrectory : public FSNode {
 public:
 	Dirrectory(String&& name);
-
-	void mkdir(Dirrectory&& dir);
-	void rmdir(Dirrectory *dir);
-
-	void mkfile(File&& file);
-	void rmfile(File *file);
 };
 
 } // namespace FS

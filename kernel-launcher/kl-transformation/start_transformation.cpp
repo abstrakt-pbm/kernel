@@ -251,6 +251,6 @@ void init_subsystems() {
 	framebuffer = new Framebuffer::FrameBuffer(&fbdevice);
 	init_terminal();
 	new (&input) Input(true);
-	root_dir = new FS::Dirrectory("/");
+	root_dir = new FS::Dirrectory("");
 }
 
