@@ -34,5 +34,13 @@ bool FSNode::isOpen() const {
 Dirrectory::Dirrectory(String&& name)
 : FSNode(move(name), FSNodeType::DIR) {}
 
+ListIterator<unique_ptr<FSNode>> Dirrectory::begin() {
+	return childs_.begin();
+}
+
+ListIterator<unique_ptr<FSNode>> Dirrectory::end() {
+	return childs_.end();
+}
+
 } // namespace FS
 

@@ -195,6 +195,16 @@ size_t List<T>::size() const {
 }
 
 template<typename T>
+ListIterator<T> List<T>::begin() {
+	return ListIterator<T>(head_);
+}
+
+template<typename T>
+ListIterator<T> List<T>::end() {
+	return ListIterator<T>(tail_);
+}
+
+template<typename T>
 ListIterator<T>::ListIterator(observer_ptr<Node<T>> ptr) : ptr_(ptr) {}
 
 template<typename T>
@@ -247,6 +257,7 @@ template<typename T>
 bool ListIterator<T>::operator!=(const ListIterator& other) {
 	return !(*this == other);
 }
+
 
 } // namespace thinlibcxx
 

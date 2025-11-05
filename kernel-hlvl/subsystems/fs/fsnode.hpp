@@ -47,6 +47,8 @@ public:
 class Dirrectory : public FSNode {
 public:
 	Dirrectory(String&& name);
+	ListIterator<unique_ptr<FSNode>> begin();
+	ListIterator<unique_ptr<FSNode>> end();
 };
 
 } // namespace FS
