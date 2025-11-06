@@ -18,6 +18,10 @@ String execute_command(String raw_command) {
 		for (size_t i = 0 ; i < tokens[1].length() ; ++i) {
 			answer.push_char(tokens[1][i]);
 		}
+	}else if(tokens[0] == "LS") {
+		for (const auto& fsnode : *root_dir) {
+			term1->out(fsnode->name());
+		}
 	} else {
 		String command_not_found("command not found: ");
 		for (size_t i = 0 ; i < command_not_found.length() ; ++i) {
@@ -33,7 +37,11 @@ String execute_command(String raw_command) {
 
 int main() {
 	unique_ptr<FS::FSNode> home_dir(new FS::Dirrectory("home"));
+	unique_ptr<FS::FSNode> dev_dir(new FS::Dirrectory("dev"));
+	unique_ptr<FS::FSNode> mnt_dir(new FS::Dirrectory("mnt"));
 	root_dir->mkchild(move(home_dir));
+	root_dir->mkchild(move(dev_dir));
+	root_dir->mkchild(move(mnt_dir));
 
 	term1->out('\n');
 	term1->out('\r');

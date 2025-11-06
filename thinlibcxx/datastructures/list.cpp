@@ -201,7 +201,7 @@ ListIterator<T> List<T>::begin() {
 
 template<typename T>
 ListIterator<T> List<T>::end() {
-	return ListIterator<T>(tail_);
+	return ListIterator<T>(tail_->next_);
 }
 
 template<typename T>
@@ -220,7 +220,7 @@ T* ListIterator<T>::operator->() const {
 
 template<typename T>
 ListIterator<T>& ListIterator<T>::operator++() {
-	if (ptr_) {
+	if (ptr_.get()) {
 		ptr_ = ptr_->next_;
 	}
 	return *this;
@@ -235,7 +235,7 @@ ListIterator<T> ListIterator<T>::operator++(int) {
 
 template<typename T>
 ListIterator<T>& ListIterator<T>::operator--() {
-	if (ptr_) {
+	if (ptr_.get()) {
 		ptr_ = ptr_->prev_;
 	}
 	return *this;
@@ -250,7 +250,7 @@ ListIterator<T>& ListIterator<T>::operator--(int) {
 
 template<typename T>
 bool ListIterator<T>::operator==(const ListIterator& other) {
-	return ptr_ = other.ptr_;
+	return ptr_.get() == other.ptr_.get();
 }
 
 template<typename T>
