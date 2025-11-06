@@ -201,7 +201,10 @@ ListIterator<T> List<T>::begin() {
 
 template<typename T>
 ListIterator<T> List<T>::end() {
-	return ListIterator<T>(tail_->next_);
+	if (tail_) {
+		return ListIterator<T>(tail_->next_);
+	}
+	return ListIterator<T>(nullptr);
 }
 
 template<typename T>
