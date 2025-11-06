@@ -20,8 +20,12 @@ String execute_command(String raw_command) {
 		}
 	}else if(tokens[0] == "LS") {
 		for (const auto& fsnode : *root_dir) {
+			term1->out("\n\r\0");
 			term1->out(fsnode->name());
 		}
+	}else if(tokens[0] == "MKDIR") {
+		unique_ptr<FS::FSNode> new_dir(new FS::Dirrectory(move(tokens[1])));
+		root_dir->mkchild(move(new_dir));
 	} else {
 		String command_not_found("command not found: ");
 		for (size_t i = 0 ; i < command_not_found.length() ; ++i) {

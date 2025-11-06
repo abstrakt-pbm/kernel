@@ -13,14 +13,16 @@ size_t strlen(const char *str, size_t maxlen) {
 	return result;
 }
 
-bool streq(const char *s1, const char *s2) {
+bool streq(const char *s1, const char *s2, size_t char_count) {
 	if (!(s1 && s2)) {
 		return -1;
 	}
-	int s1_s = 0;
-	int s2_s = 0;
+	size_t s1_s = 0;
+	size_t s2_s = 0;
 
-	while(s1[s1_s] != '\0' || s2[s2_s] != '\0') {
+	while((s1[s1_s] != '\0' || s2[s2_s] != '\0')
+		&& s1_s < char_count
+		&& s2_s < char_count) {
 		if (s1[s1_s] != s2[s2_s] && s1[s1_s] != '\0' && s2[s2_s] != '\0') {
 			return false;
 		}
