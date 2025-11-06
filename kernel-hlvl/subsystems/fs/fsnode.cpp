@@ -34,6 +34,11 @@ bool FSNode::isOpen() const {
 Dirrectory::Dirrectory(String&& name)
 : FSNode(move(name), FSNodeType::DIR) {}
 
+File::File(String&& name,
+		String&& payload) 
+: FSNode(move(name), FSNodeType::FILE),
+payload_(move(payload)){}
+
 ListIterator<unique_ptr<FSNode>> Dirrectory::begin() {
 	return childs_.begin();
 }

@@ -36,12 +36,16 @@ public:
 
 class File : public FSNode {
 public:
+	File(String&& name,
+		String&& payload);
+
 	bool open();
 	bool close();
 
 	size_t read(char *buffer_to_write, size_t byte_count, uint64_t offset);
 	size_t write(char *buffer_to_read, size_t byte_count, uint64_t offset);
 
+	String payload_;
 };
 
 class Dirrectory : public FSNode {
