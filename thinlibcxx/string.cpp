@@ -56,6 +56,24 @@ bool String::operator==(const char* c_str) {
 	return streq(buffer_.data(), c_str, length());
 }
 
+bool String::operator==(const String& str) {
+	bool result = false;
+	if (length() == str.length()) {
+		result = streq(
+			buffer_.data(),
+			str.buffer_.data(),
+			length());
+	}
+	return result;
+}
+
+String& String::operator+=(const String& str) {
+	for (size_t i = 0 ; i < str.length() ; ++i) {
+		push_char(str[i]);
+	}
+	return *this;
+}
+
 const char& String::operator[](size_t pos) const {
 	return buffer_[pos];
 }

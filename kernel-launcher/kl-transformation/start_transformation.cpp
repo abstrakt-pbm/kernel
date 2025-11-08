@@ -252,5 +252,6 @@ void init_subsystems() {
 	init_terminal();
 	new (&input) Input(true);
 	root_dir = new FS::Dirrectory("");
+	vfs = new FS::VFS(root_dir);
 }
 
