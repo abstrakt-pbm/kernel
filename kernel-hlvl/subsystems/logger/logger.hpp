@@ -3,4 +3,3 @@
 using namespace thinlibcxx;
 
 void log(const char *log);
-

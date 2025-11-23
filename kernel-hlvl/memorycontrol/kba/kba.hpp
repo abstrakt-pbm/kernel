@@ -8,12 +8,10 @@ using namespace thinlibcxx;
 class BufferInfo;
 class KernelBufferAllocator {
 public:
-	void *allocate(uint64_t length);
-	void free(void *ptr,
-		   size_t obj_size);
+  void *allocate(uint64_t length);
+  void free(void *ptr, size_t obj_size);
 
-	BufferInfo *buffer_info_head_;
+  BufferInfo *buffer_info_head_;
 };
 
 extern KernelBufferAllocator kba;
-

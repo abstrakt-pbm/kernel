@@ -7,10 +7,9 @@ extern "C" void __attribute__((naked)) ps2keyboard_interrupt_entry();
 
 class KBDriver : public KOA::Allocatable {
 public:
-	KBDriver();
-	KBDriver(const KBDriver& kbdriver) = delete;
-	//~KBDriver();
-
+  KBDriver();
+  KBDriver(const KBDriver &kbdriver) = delete;
+  //~KBDriver();
 };
 
 extern KBDriver *kbdriver;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <thinlibcxx/string.hpp>
-#include <thinlibcxx/memory.hpp>
 #include <thinlibcxx/datastructures/list.hpp>
+#include <thinlibcxx/memory.hpp>
+#include <thinlibcxx/string.hpp>
 
 #include <koa/koa.hpp>
 
@@ -12,32 +12,31 @@ namespace FS {
 
 class Path {
 public:
-	Path(String path);
+  Path(String path);
 
-	Path parent_path() const;
-	String filename() const;
+  Path parent_path() const;
+  String filename() const;
 
-	bool had_parent() const;
-	String ToString();
+  bool had_parent() const;
+  String ToString();
+
 private:
-	Vector<String> path_tokens_;
-	String path_str_;
+  Vector<String> path_tokens_;
+  String path_str_;
 };
 
 class VFS : public KOA::Allocatable {
 public:
-	VFS(FS::Dirrectory *root_dir);
-	observer_ptr<FSNode> resolve_path(String path);
-	void mkfile(Path path,
-			 unique_ptr<FSNode> node);
+  VFS(FS::Dirrectory *root_dir);
+  observer_ptr<FSNode> resolve_path(String path);
+  void mkfile(Path path, unique_ptr<FSNode> node);
 
-	void mkdir(String path);
+  void mkdir(String path);
 
-	unique_ptr<Dirrectory> root_dir_;
+  unique_ptr<Dirrectory> root_dir_;
 };
 
-}
+} // namespace FS
 
 extern FS::VFS *vfs;
 extern FS::Dirrectory *root_dir;
-

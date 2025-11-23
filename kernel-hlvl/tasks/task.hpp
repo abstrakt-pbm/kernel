@@ -4,23 +4,19 @@
 #include <thinlibcxx/hwtypes.hpp>
 using namespace thinlibcxx;
 
-enum class TASK_STATUS : uint8_t {
-	NEW,
-	SLEEP
-};
+enum class TASK_STATUS : uint8_t { NEW, SLEEP };
 
 class Task : public KOA::Allocatable {
 public:
-	Task(uint64_t tid, Address start_address);
+  Task(uint64_t tid, Address start_address);
 
-	void updateContext(const TaskContext &updated_task_context);
+  void updateContext(const TaskContext &updated_task_context);
 
-	Task *next_task_;
-	
-	uint64_t tid_;
-	TASK_STATUS status;
+  Task *next_task_;
 
-	Address start_address_;
-	TaskContext task_context_;
+  uint64_t tid_;
+  TASK_STATUS status;
+
+  Address start_address_;
+  TaskContext task_context_;
 };
-

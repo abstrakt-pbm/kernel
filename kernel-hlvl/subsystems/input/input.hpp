@@ -4,11 +4,10 @@
 
 class Input {
 public:
-	Input() = default;
-	Input(bool enabled);
+  Input() = default;
+  Input(bool enabled);
 
-	bool enabled_;
+  bool enabled_;
 };
 
 extern Input input;
-
