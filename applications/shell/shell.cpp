@@ -27,20 +27,20 @@ String execute_command(String raw_command) {
 		}
 	}else if(tokens[0] == "MKDIR") {
 		if (tokens.size() == 2) {
-			unique_ptr<FS::FSNode> new_dir(new FS::Dirrectory(move(tokens[1])));
+			unique_ptr<FS::FSNode> new_dir(new FS::RamDir(move(tokens[1])));
 			root_dir->mkchild(move(new_dir));
 		}
 	}else if(tokens[0] == "TOUCH") {
 		if (tokens.size() == 2) {
-			unique_ptr<FS::FSNode> new_file(new FS::File(move(tokens[1]), ""));
+			unique_ptr<FS::FSNode> new_file(new FS::RamFile(move(tokens[1]), ""));
 			vfs->mkfile(tokens[1] ,move(new_file));
 		} else if ((tokens.size() == 3)) {
-			unique_ptr<FS::FSNode> new_file(new FS::File(move(tokens[1]), move(tokens[2])));
+			unique_ptr<FS::FSNode> new_file(new FS::RamFile(move(tokens[1]), move(tokens[2])));
 			vfs->mkfile(tokens[1] ,move(new_file));
 		}
 	}else if (tokens[0] == "CAT") {
 		if (tokens.size() == 2) {
-			FS::File* file = static_cast<FS::File*>(vfs->resolve_path(tokens[1]).get());
+			FS::RamFile* file = static_cast<FS::RamFile*>(vfs->resolve_path(tokens[1]).get());
 			term1->out("\n\r\0");
 			term1->out(file->payload_);
 		}

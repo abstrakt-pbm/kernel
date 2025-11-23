@@ -78,6 +78,10 @@ const char& String::operator[](size_t pos) const {
 	return buffer_[pos];
 }
 
+char& String::operator[](size_t pos) {
+	return buffer_[pos];
+}
+
 void String::push_char(char c) {
 	buffer_.push_back(c);
 }

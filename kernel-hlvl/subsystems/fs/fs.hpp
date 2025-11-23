@@ -7,6 +7,7 @@
 #include <koa/koa.hpp>
 
 #include <fs/fsnode.hpp>
+#include <fs/ramfs/ramfs.hpp>
 
 namespace FS {
 

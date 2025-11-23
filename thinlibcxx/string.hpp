@@ -8,6 +8,7 @@ namespace thinlibcxx {
 
 class String {
 public:
+	String() = default;
 	String(const char* cstr);
 	String(const char* cstr,
 		size_t length);
@@ -23,6 +24,8 @@ public:
 	String& operator+=(const String& str);
 
 	const char& operator[](size_t pos) const;	
+	char& operator[](size_t pos);	
+
 	void push_char(char c);	
 
 	uint64_t length() const;

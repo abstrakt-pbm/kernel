@@ -12,18 +12,14 @@ class FSNode : public KOA::Allocatable {
 public:
   FSNode(String &&name, FSNodeType type);
 
-  observer_ptr<FSNode> find_subnode(const String &subnode_name);
-
   bool mkchild(unique_ptr<FSNode> child);
 
   size_t child_count() const;
   const String &name() const;
   FSNodeType type() const;
-  bool isOpen() const;
 
   String name_;
   FSNodeType type_;
-  bool is_open_;
 
   observer_ptr<FSNode> parent_;
   List<unique_ptr<FSNode>> childs_;
@@ -31,15 +27,10 @@ public:
 
 class File : public FSNode {
 public:
-  File(String &&name, String &&payload);
+  File(String &&name);
 
-  bool open();
-  bool close();
-
-  size_t read(char *buffer_to_write, size_t byte_count, uint64_t offset);
-  size_t write(char *buffer_to_read, size_t byte_count, uint64_t offset);
-
-  String payload_;
+  virtual size_t read(char *buffer_to_write, size_t byte_count, uint64_t offset) = 0;
+  virtual size_t write(char *buffer_to_read, size_t byte_count, uint64_t offset) = 0;
 };
 
 class Dirrectory : public FSNode {
